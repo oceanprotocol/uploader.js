@@ -1,0 +1,19 @@
+{
+  "name": "dbs",
+  "version": "0.0.0",
+  "description": "Javascript library for calling the decentralised backend storage ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oceanprotocol/dbs.js.git"
+  },
+  "author": "Ocean Protocol Foundation <devops@oceanprotocol.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/oceanprotocol/dbs.js/issues"
+  },
+  "homepage": "https://github.com/oceanprotocol/dbs.js#readme"
+}
