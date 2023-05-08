@@ -4,7 +4,11 @@
   "description": "Javascript library for calling the decentralised backend storage ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
+    "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
+    "lint:fix": "eslint --ignore-path .gitignore --ext .ts,.tsx . --fix",
+    "docs": "typedoc --options typedoc.json --plugin typedoc-plugin-markdown"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,20 @@
   "bugs": {
     "url": "https://github.com/oceanprotocol/dbs.js/issues"
   },
-  "homepage": "https://github.com/oceanprotocol/dbs.js#readme"
+  "homepage": "https://github.com/oceanprotocol/dbs.js#readme",
+  "devDependencies": {
+    "@types/node": "^20.1.0",
+    "@types/node-fetch": "^2.6.3",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
+    "eslint-config-oceanprotocol": "^2.0.4",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "release-it": "^15.10.3",
+    "typedoc": "^0.24.7",
+    "typedoc-plugin-markdown": "^3.15.3",
+    "typescript": "^5.0.4"
+  }
 }
