@@ -9,6 +9,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
     "lint:fix": "eslint --ignore-path .gitignore --ext .ts,.tsx . --fix",
     "docs": "typedoc --options typedoc.json --plugin typedoc-plugin-markdown",
+    "doc:json": "node ./scripts/typedoc.js",
     "prepare": "husky install"
   },
   "repository": {
