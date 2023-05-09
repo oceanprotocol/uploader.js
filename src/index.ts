@@ -10,11 +10,9 @@ import {
 
 class DBSClient {
   private baseURL: string
-  private privateKeyAPIURL: string
 
-  constructor(baseURL: string, privateKeyAPIURL: string) {
+  constructor(baseURL: string) {
     this.baseURL = baseURL
-    this.privateKeyAPIURL = privateKeyAPIURL
   }
 
   async getStorageInfo(): Promise<StorageInfo[]> {
@@ -63,7 +61,7 @@ class DBSClient {
   }
 
   async registerMicroservice(args: RegisterArgs): Promise<void> {
-    await axios.post(`${this.privateKeyAPIURL}/register`, args)
+    await axios.post(`${this.baseURL}/register`, args)
   }
 }
 

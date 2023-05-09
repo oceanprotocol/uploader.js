@@ -2,9 +2,16 @@ export interface File {
   length: number
 }
 
-export interface Payment {
+interface AcceptedToken {
+  [tokenSymbol: string]: string
+}
+export interface PaymentMethod {
   chainId: number | string
-  acceptedTokens: Record<string, string>
+  acceptedTokens?: AcceptedToken[]
+}
+export interface Payment {
+  payment_method: PaymentMethod
+  wallet_address: string
 }
 
 export interface StorageInfo {
@@ -43,5 +50,5 @@ export interface RegisterArgs {
   type: string
   description: string
   url: string
-  payment: Payment[]
+  paymentMethods: PaymentMethod[]
 }
