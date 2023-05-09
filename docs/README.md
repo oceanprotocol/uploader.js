@@ -1,3 +1,3 @@
-dbs / [Exports](modules.md)
+dbs / [Modules](modules.md)
 
 # Decentralised Backend Storage Javascript Library

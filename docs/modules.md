@@ -1,9 +1,10 @@
-[dbs](README.md) / Exports
+[dbs](README.md) / Modules
 
 # dbs
 
 ## Table of contents
 
-### Classes
+### Modules
 
-- [default](classes/default.md)
+- [index](modules/index.md)
+- [types](modules/types.md)
