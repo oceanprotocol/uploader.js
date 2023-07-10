@@ -12,6 +12,7 @@
   "scripts": {
     "test": "mocha -r ts-node/register 'test/**/*.spec.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
+    "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
     "lint:fix": "eslint --ignore-path .gitignore --ext .ts,.tsx . --fix",
     "docs": "typedoc --options typedoc.json --plugin typedoc-plugin-markdown",
