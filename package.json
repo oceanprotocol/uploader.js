@@ -1,6 +1,6 @@
 {
   "name": "@oceanprotocol/dbs",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2-alpha.0",
   "description": "Javascript library for calling the decentralised backend storage ",
   "main": "./dist/lib.js",
   "umd:main": "dist/lib.umd.js",
