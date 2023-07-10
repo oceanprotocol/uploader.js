@@ -7,7 +7,6 @@ This is a TypeScript library for interacting with the DBS API. It provides a sim
 Install the library using npm or yarn:
 
 ```bash
-Copy code
 npm install @oceanprotocol/dbs
 ```
 
