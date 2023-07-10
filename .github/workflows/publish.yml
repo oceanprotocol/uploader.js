@@ -19,9 +19,9 @@ jobs:
       - run: npm ci
 
       # pre-releases, triggered by `next` as part of git tag
-      - run: npm publish --tag next
+      - run: npm publish --tag next --access public
         if: ${{ contains(github.ref, 'next') }}
 
       # production releases
-      - run: npm publish
+      - run: npm publish --access public
         if: ${{ !contains(github.ref, 'next') }}
