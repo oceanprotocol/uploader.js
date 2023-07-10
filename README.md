@@ -21,11 +21,11 @@ yarn add @oceanprotocol/dbs
 
 ```typescript
 
-import DBSClient from 'dbs-client';
+import DBSClient from '@oceanprotocol/dbs';
 import { GetQuoteArgs } from 'dbs-client/types';
 
-// Initialize the DBSClient with the API base URL
-const client = new DBSClient('https://api.example.com');
+// Initialize the DBSClient with the DBS base URL
+const client = new DBSClient('https://dbs.ocean-example.com');
 
 (async () => {
 // Fetch storage info
