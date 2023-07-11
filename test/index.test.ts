@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import DBSClient from '../src/index'
-import { GetQuoteArgs, RegisterArgs } from '../src/types'
+import { GetQuoteArgs, RegisterArgs } from '../src/@types'
 
 describe('DBSClient', () => {
   const baseURL = 'http://127.0.0.1:5001'

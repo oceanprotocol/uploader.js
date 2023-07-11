@@ -6,7 +6,7 @@ import {
   GetStatusResult,
   GetLinkResult,
   RegisterArgs
-} from './types'
+} from './@types'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
