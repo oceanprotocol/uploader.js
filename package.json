@@ -1,7 +1,11 @@
 {
   "name": "@oceanprotocol/dbs",
+  "source": "./src/index.ts",
   "version": "0.0.2-alpha.2",
   "description": "Javascript library for calling the decentralised backend storage ",
+  "files": [
+    "dist/**"
+  ],
   "main": "./dist/lib.js",
   "umd:main": "dist/lib.umd.js",
   "module": "./dist/lib.module.js",
@@ -9,6 +13,7 @@
     "require": "./dist/lib.js",
     "default": "./dist/lib.modern.js"
   },
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "test": "mocha -r ts-node/register 'test/**/*.spec.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
