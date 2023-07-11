@@ -9,7 +9,7 @@ import {
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
  */
-declare class DBSClient {
+export declare class DBSClient {
   private baseURL
   /**
    * Creates an instance of the DBSClient.
@@ -64,4 +64,3 @@ declare class DBSClient {
    */
   registerMicroservice(args: RegisterArgs): Promise<void>
 }
-export default DBSClient
