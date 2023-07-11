@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import DBSClient from '../src/index'
+import { DBSClient } from '../src/index'
 import { GetQuoteArgs, RegisterArgs } from '../src/@types'
 
 describe('DBSClient', () => {

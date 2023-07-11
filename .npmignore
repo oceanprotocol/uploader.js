@@ -10,3 +10,4 @@ tslint.json
 .eslintrc
 .vscode/
 .husky/
+dist/
