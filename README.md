@@ -16,42 +16,79 @@ or
 yarn add @oceanprotocol/dbs
 ```
 
-## Usage
+## Usage Example
 
 ```typescript
+import { ethers } from 'ethers'
+import {
+  DBSClient,
+  GetQuoteArgs,
+  File,
+  RegisterArgs,
+  Payment,
+  StorageInfo,
+  GetQuoteResult,
+  GetStatusResult,
+  GetLinkResult
+} from '@oceanprotocol/dbs'
+import dotenv from 'dotenv'
 
-import DBSClient from '@oceanprotocol/dbs';
-import { GetQuoteArgs } from 'dbs-client/types';
+dotenv.config()
 
-// Initialize the DBSClient with the DBS base URL
-const client = new DBSClient('https://dbs.ocean-example.com');
+// Set up a new instance of the DBS client
+const signer = new ethers.Wallet(process.env.PRIVATE_KEY) // Use your actual private key
+const client = new DBSClient(process.env.DBS_API_URL, signer) // Use your actual DBS API url
 
-(async () => {
-// Fetch storage info
-const storageInfo = await client.getStorageInfo();
-console.log(storageInfo);
+async function runExample() {
+  // Get storage info
+  const storageInfo: StorageInfo[] = await client.getStorageInfo()
+  console.log('Storage info:', storageInfo)
 
-// Get a quote
-const quoteArgs: GetQuoteArgs = {
-// ...
-};
-const quote = await client.getQuote(quoteArgs);
-console.log(quote);
+  // Construct an example quote request
+  const quoteArgs: GetQuoteArgs = {
+    type: 'exampleType', // Replace with an actual type
+    files: [{ length: 1000 }], // Replace with actual file info
+    duration: 10, // Replace with an actual duration
+    payment: {
+      payment_method: { chainId: 1, acceptedTokens: {} },
+      wallet_address: '0xExampleAddress' // Replace with an actual wallet address
+    },
+    userAddress: '0xExampleUserAddress' // Replace with an actual user address
+  }
 
-// Upload files
-const files: File[] = [
-// ...
-];
-await client.upload(quote.quoteId, /_ nonce _/ 123, /_ signature _/ '0xABC...', files);
+  // Fetch a quote
+  const quoteResult: GetQuoteResult = await client.getQuote(quoteArgs)
+  console.log('Quote result:', quoteResult)
 
-// Get the status of a job
-const status = await client.getStatus(quote.quoteId);
-console.log(status);
+  // Upload files
+  await client.upload(quoteResult.quoteId, quoteArgs.files)
+  console.log('Files uploaded successfully.')
 
-// Get the DDO files object for a job
-const link = await client.getLink(quote.quoteId, /_ nonce _/ 123, /_ signature _/ '0xABC...');
-console.log(link);
-})();
+  // Get and upload quote
+  const quoteAndUploadResult: GetQuoteResult = await client.getQuoteAndUpload(quoteArgs)
+  console.log('Quote and upload result:', quoteAndUploadResult)
+
+  // Fetch the status of a job
+  const statusResult: GetStatusResult = await client.getStatus(quoteResult.quoteId)
+  console.log('Status result:', statusResult)
+
+  // Fetch the DDO files object for a job
+  const linkResult: GetLinkResult[] = await client.getLink(quoteResult.quoteId)
+  console.log('Link result:', linkResult)
+
+  // Register a new microservice
+  const registerArgs: RegisterArgs = {
+    type: 'exampleType', // Replace with an actual type
+    description: 'Example microservice', // Replace with an actual description
+    url: 'http://example.com', // Replace with an actual url
+    paymentMethods: [{ chainId: 1, acceptedTokens: {} }]
+  }
+
+  await client.registerMicroservice(registerArgs)
+  console.log('Microservice registered successfully.')
+}
+
+runExample().catch(console.error)
 ```
 
 ## API
