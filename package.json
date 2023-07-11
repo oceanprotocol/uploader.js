@@ -61,7 +61,8 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "ethers": "^6.6.2"
+    "ethers": "^6.6.2",
+    "form-data": "^4.0.0"
   },
   "release-it": {
     "hooks": {

@@ -1,5 +1,6 @@
 import { ethers, Signer } from 'ethers'
 import axios from 'axios'
+import FormData from 'form-data'
 import {
   StorageInfo,
   GetQuoteArgs,
@@ -73,11 +74,12 @@ export class DBSClient {
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
-   * @returns {Promise<void>}
+   * @returns {Promise<GetQuoteResult>}
    */
-  async getQuoteAndUpload(args: GetQuoteArgs): Promise<void> {
+  async getQuoteAndUpload(args: GetQuoteArgs): Promise<GetQuoteResult> {
     const quote = await this.getQuote(args)
     await this.upload(quote.quoteId, args.files)
+    return quote
   }
 
   /**
@@ -97,16 +99,12 @@ export class DBSClient {
    * Fetches the DDO files object for a job.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {number} nonce - A timestamp (must be higher than the previously stored nonce for the user).
-   * @param {string} signature - A user-signed hash of SHA256(quoteId + nonce).
    * @returns {Promise<GetLinkResult[]>} - A promise that resolves to an array of link results.
    */
 
-  async getLink(
-    quoteId: string,
-    nonce: number,
-    signature: string
-  ): Promise<GetLinkResult[]> {
+  async getLink(quoteId: string): Promise<GetLinkResult[]> {
+    const nonce = Date.now()
+    const signature = await getSignedHash(this.signer, quoteId, nonce)
     const response = await axios.post<GetLinkResult[]>(`${this.baseURL}/getLink`, null, {
       params: { quoteId, nonce, signature }
     })
