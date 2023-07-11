@@ -1,22 +1,25 @@
+import { Signer } from 'ethers'
 import {
   StorageInfo,
   GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs
+  RegisterArgs,
+  File
 } from './@types'
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
  */
 export declare class DBSClient {
   private baseURL
+  private signer
   /**
    * Creates an instance of the DBSClient.
-   *
    * @param {string} baseURL - The base URL of the DBS API.
+   * @param {Signer} signer The signer object.
    */
-  constructor(baseURL: string)
+  constructor(baseURL: string, signer?: Signer)
   /**
    * Fetches information about supported storage types and payments.
    *
@@ -34,12 +37,16 @@ export declare class DBSClient {
    * Uploads files according to the quote request.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {number} nonce - A timestamp (must be higher than the previously stored nonce for the user).
-   * @param {string} signature - A user-signed hash of SHA256(quoteId + nonce).
    * @param {File[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, nonce: number, signature: string, files: File[]): Promise<void>
+  upload(quoteId: string, files: File[]): Promise<void>
+  /**
+   * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
+   * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
+   * @returns {Promise<GetQuoteResult>}
+   */
+  getQuoteAndUpload(args: GetQuoteArgs): Promise<GetQuoteResult>
   /**
    * Fetches the status of a job.
    *
@@ -51,11 +58,9 @@ export declare class DBSClient {
    * Fetches the DDO files object for a job.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {number} nonce - A timestamp (must be higher than the previously stored nonce for the user).
-   * @param {string} signature - A user-signed hash of SHA256(quoteId + nonce).
    * @returns {Promise<GetLinkResult[]>} - A promise that resolves to an array of link results.
    */
-  getLink(quoteId: string, nonce: number, signature: string): Promise<GetLinkResult[]>
+  getLink(quoteId: string): Promise<GetLinkResult[]>
   /**
    * Registers a new microservice that handles a storage type.
    *
