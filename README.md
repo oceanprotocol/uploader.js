@@ -1,6 +1,6 @@
 # Decentralised Backend Storage Javascript Library
 
-This is a TypeScript library for interacting with the DBS API. It provides a simple interface to call various API endpoints for managing file storage, quotes, uploads, and more.
+This is a TypeScript library for interacting with the DBS API. It provides a simple interface to call the API endpoints in Ocean Decentralised backend storage for managing file storage uploads, quotes, and more.
 
 ## Installation
 
