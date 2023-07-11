@@ -1,3 +1,4 @@
+import { ethers, Signer } from 'ethers'
 import axios from 'axios'
 import {
   StorageInfo,
@@ -5,22 +6,26 @@ import {
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs
+  RegisterArgs,
+  File
 } from './@types'
+import { getSignedHash } from './utils'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
  */
 export class DBSClient {
   private baseURL: string
+  private signer: Signer
 
   /**
    * Creates an instance of the DBSClient.
-   *
    * @param {string} baseURL - The base URL of the DBS API.
+   * @param {Signer} signer The signer object.
    */
-  constructor(baseURL: string) {
+  constructor(baseURL: string, signer?: Signer) {
     this.baseURL = baseURL
+    this.signer = signer
   }
 
   /**
@@ -48,17 +53,12 @@ export class DBSClient {
    * Uploads files according to the quote request.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {number} nonce - A timestamp (must be higher than the previously stored nonce for the user).
-   * @param {string} signature - A user-signed hash of SHA256(quoteId + nonce).
    * @param {File[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(
-    quoteId: string,
-    nonce: number,
-    signature: string,
-    files: File[]
-  ): Promise<void> {
+  async upload(quoteId: string, files: File[]): Promise<void> {
+    const nonce = Date.now()
+    const signature = await getSignedHash(this.signer, quoteId, nonce)
     const formData = new FormData()
     files.forEach((file, index) => {
       formData.append(`file${index}`, new Blob([new ArrayBuffer(file.length)]))
@@ -68,6 +68,16 @@ export class DBSClient {
       params: { quoteId, nonce, signature },
       headers: { 'Content-Type': 'multipart/form-data' }
     })
+  }
+
+  /**
+   * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
+   * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
+   * @returns {Promise<void>}
+   */
+  async getQuoteAndUpload(args: GetQuoteArgs): Promise<void> {
+    const quote = await this.getQuote(args)
+    await this.upload(quote.quoteId, args.files)
   }
 
   /**
