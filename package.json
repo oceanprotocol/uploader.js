@@ -10,8 +10,15 @@
   "umd:main": "dist/lib.umd.js",
   "module": "./dist/lib.module.js",
   "exports": {
-    "require": "./dist/lib.js",
-    "default": "./dist/lib.modern.js"
+    ".": {
+      "require": "./dist/lib.js",
+      "default": "./dist/lib.modern.mjs"
+    },
+    "./dbs": {
+      "require": "./dist/src/DBSClient.d.ts",
+      "default": "./dist/src/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/src/index.d.ts",
   "scripts": {
