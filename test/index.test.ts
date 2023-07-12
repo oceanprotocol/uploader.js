@@ -36,12 +36,12 @@ describe('DBSClient', () => {
   describe('upload', () => {
     it('should upload files successfully', async () => {
       const quoteId = 'xxxx'
-      const nonce = 1
-      const signature = '0xXXXXX'
+      // const nonce = 1
+      // const signature = '0xXXXXX'
       const files = [
         // Add proper test files here
       ]
-      await client.upload(quoteId, nonce, signature, files)
+      await client.upload(quoteId, files)
       // Add more assertions based on expected response
     })
   })
@@ -58,9 +58,9 @@ describe('DBSClient', () => {
   describe('getLink', () => {
     it('should return a link', async () => {
       const quoteId = 'xxxx'
-      const nonce = 1
-      const signature = '0xXXXXX'
-      const result = await client.getLink(quoteId, nonce, signature)
+      // const nonce = 1
+      // const signature = '0xXXXXX'
+      const result = await client.getLink(quoteId)
       expect(result).to.be.an('array')
       // Add more assertions based on expected response
     })
