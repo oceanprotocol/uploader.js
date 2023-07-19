@@ -24,7 +24,10 @@ export interface GetQuoteArgs {
   type: string
   files: File[]
   duration: number
-  payment: Payment
+  payment: {
+    chainId: number
+    tokenAddress: string
+  }
   userAddress: string
 }
 
