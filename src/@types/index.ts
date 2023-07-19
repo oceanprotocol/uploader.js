@@ -1,7 +1,3 @@
-export interface File {
-  length: number
-}
-
 interface AcceptedToken {
   [tokenSymbol: string]: string
 }
@@ -22,7 +18,7 @@ export interface StorageInfo {
 
 export interface GetQuoteArgs {
   type: string
-  files: File[]
+  files: any
   duration: number
   payment: {
     chainId: number
