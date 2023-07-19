@@ -1,11 +1,11 @@
 import t from 'axios'
 import a from 'form-data'
-import { sha256 as e, toUtf8Bytes as s, ethers as r } from 'ethers'
-const i = async (t, a, i) => {
-  const n = e(s(a + i.toString()))
-  return await t.signMessage(r.getBytes(n))
+import { sha256 as e, toUtf8Bytes as s, ethers as i } from 'ethers'
+const r = async (t, a, r) => {
+  const o = e(s(a + r.toString()))
+  return await t.signMessage(i.getBytes(o))
 }
-class n {
+class o {
   constructor(t, a) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -20,15 +20,15 @@ class n {
   }
   async upload(e, s) {
     try {
-      const r = Date.now(),
-        n = await i(this.signer, e, r),
-        o = new a()
+      const i = Date.now(),
+        o = await r(this.signer, e, i),
+        n = new a()
       return (
         s.forEach((t, a) => {
-          o.append(`file${a}`, new Blob([new ArrayBuffer(t.length)]))
+          n.append(`file${a}`, t)
         }),
-        await t.post(`${this.baseURL}/upload`, o, {
-          params: { quoteId: e, nonce: r, signature: n },
+        await t.post(`${this.baseURL}/upload`, n, {
+          params: { quoteId: e, nonce: i, signature: o },
           headers: { 'Content-Type': 'multipart/form-data' }
         })
       )
@@ -45,7 +45,7 @@ class n {
   }
   async getLink(a) {
     const e = Date.now(),
-      s = await i(this.signer, a, e)
+      s = await r(this.signer, a, e)
     return (
       await t.post(`${this.baseURL}/getLink`, null, {
         params: { quoteId: a, nonce: e, signature: s }
@@ -56,5 +56,5 @@ class n {
     await t.post(`${this.baseURL}/register`, a)
   }
 }
-export { n as DBSClient, i as getSignedHash }
+export { o as DBSClient, r as getSignedHash }
 //# sourceMappingURL=lib.modern.mjs.map

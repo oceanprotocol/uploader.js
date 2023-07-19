@@ -53,16 +53,16 @@
           (function (n, o) {
             try {
               var a =
-                ((f = Date.now()),
-                Promise.resolve(u(r.signer, e, f)).then(function (n) {
+                ((c = Date.now()),
+                Promise.resolve(u(r.signer, e, c)).then(function (n) {
                   var o = new s.default()
                   return (
                     t.forEach(function (e, t) {
-                      o.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
+                      o.append('file' + t, e)
                     }),
                     Promise.resolve(
                       i.default.post(r.baseURL + '/upload', o, {
-                        params: { quoteId: e, nonce: f, signature: n },
+                        params: { quoteId: e, nonce: c, signature: n },
                         headers: { 'Content-Type': 'multipart/form-data' }
                       })
                     )
@@ -71,7 +71,7 @@
             } catch (e) {
               return e
             }
-            var f
+            var c
             return a && a.then
               ? a.then(void 0, function (e) {
                   return e

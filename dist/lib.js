@@ -54,7 +54,7 @@ var o = /*#__PURE__*/ n(e),
                 var i = new s.default()
                 return (
                   t.forEach(function (e, t) {
-                    i.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
+                    i.append('file' + t, e)
                   }),
                   Promise.resolve(
                     o.default.post(r.baseURL + '/upload', i, {

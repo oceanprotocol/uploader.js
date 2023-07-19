@@ -49,7 +49,7 @@ var s = function (e, t, s) {
                   var i = new t()
                   return (
                     n.forEach(function (e, t) {
-                      i.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
+                      i.append('file' + t, e)
                     }),
                     Promise.resolve(
                       e.post(o.baseURL + '/upload', i, {
