@@ -63,7 +63,7 @@ export class DBSClient {
       const signature = await getSignedHash(this.signer, quoteId, nonce)
       const formData = new FormData()
       files.forEach((file, index) => {
-        formData.append(`file${index}`, new Blob([new ArrayBuffer(file.length)]))
+        formData.append(`file${index}`, file)
       })
 
       const response = await axios.post(`${this.baseURL}/upload`, formData, {
