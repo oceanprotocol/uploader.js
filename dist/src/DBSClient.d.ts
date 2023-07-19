@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Signer } from 'ethers'
 import {
   StorageInfo,
@@ -5,9 +6,9 @@ import {
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs,
-  File
+  RegisterArgs
 } from './@types'
+import { ReadStream } from 'fs'
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
  */
@@ -37,10 +38,10 @@ export declare class DBSClient {
    * Uploads files according to the quote request.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {File[]} files - An array of files to upload.
+   * @param {ReadStream[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, files: File[]): Promise<any>
+  upload(quoteId: string, files: ReadStream[]): Promise<any>
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.

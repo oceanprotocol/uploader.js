@@ -1,6 +1,5 @@
-export interface File {
-  length: number
-}
+/// <reference types="node" />
+import { ReadStream } from 'fs'
 interface AcceptedToken {
   [tokenSymbol: string]: string
 }
@@ -19,7 +18,7 @@ export interface StorageInfo {
 }
 export interface GetQuoteArgs {
   type: string
-  files: File[]
+  files: ReadStream[]
   duration: number
   payment: {
     chainId: number
