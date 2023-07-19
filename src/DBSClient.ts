@@ -58,18 +58,22 @@ export class DBSClient {
    * @returns {Promise<void>}
    */
   async upload(quoteId: string, files: File[]): Promise<any> {
-    const nonce = Date.now()
-    const signature = await getSignedHash(this.signer, quoteId, nonce)
-    const formData = new FormData()
-    files.forEach((file, index) => {
-      formData.append(`file${index}`, new Blob([new ArrayBuffer(file.length)]))
-    })
+    try {
+      const nonce = Date.now()
+      const signature = await getSignedHash(this.signer, quoteId, nonce)
+      const formData = new FormData()
+      files.forEach((file, index) => {
+        formData.append(`file${index}`, new Blob([new ArrayBuffer(file.length)]))
+      })
 
-    const response = await axios.post(`${this.baseURL}/upload`, formData, {
-      params: { quoteId, nonce, signature },
-      headers: { 'Content-Type': 'multipart/form-data' }
-    })
-    return response
+      const response = await axios.post(`${this.baseURL}/upload`, formData, {
+        params: { quoteId, nonce, signature },
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      return response
+    } catch (error) {
+      return error
+    }
   }
 
   /**
