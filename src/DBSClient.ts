@@ -57,7 +57,7 @@ export class DBSClient {
    * @param {File[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: File[]): Promise<void> {
+  async upload(quoteId: string, files: File[]): Promise<any> {
     const nonce = Date.now()
     const signature = await getSignedHash(this.signer, quoteId, nonce)
     const formData = new FormData()
@@ -65,10 +65,11 @@ export class DBSClient {
       formData.append(`file${index}`, new Blob([new ArrayBuffer(file.length)]))
     })
 
-    await axios.post(`${this.baseURL}/upload`, formData, {
+    const response = await axios.post(`${this.baseURL}/upload`, formData, {
       params: { quoteId, nonce, signature },
       headers: { 'Content-Type': 'multipart/form-data' }
     })
+    return response
   }
 
   /**
@@ -76,10 +77,10 @@ export class DBSClient {
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>}
    */
-  async getQuoteAndUpload(args: GetQuoteArgs): Promise<GetQuoteResult> {
+  async getQuoteAndUpload(args: GetQuoteArgs): Promise<any> {
     const quote = await this.getQuote(args)
-    await this.upload(quote.quoteId, args.files)
-    return quote
+    const uploadResponse = await this.upload(quote.quoteId, args.files)
+    return uploadResponse
   }
 
   /**
