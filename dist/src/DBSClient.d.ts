@@ -40,13 +40,13 @@ export declare class DBSClient {
    * @param {File[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, files: File[]): Promise<void>
+  upload(quoteId: string, files: File[]): Promise<any>
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>}
    */
-  getQuoteAndUpload(args: GetQuoteArgs): Promise<GetQuoteResult>
+  getQuoteAndUpload(args: GetQuoteArgs): Promise<any>
   /**
    * Fetches the status of a job.
    *

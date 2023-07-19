@@ -53,7 +53,7 @@ var s = function (e, t, s) {
                   params: { quoteId: r, nonce: i, signature: s },
                   headers: { 'Content-Type': 'multipart/form-data' }
                 })
-              ).then(function () {})
+              )
             )
           })
         } catch (e) {
@@ -64,9 +64,7 @@ var s = function (e, t, s) {
         try {
           var t = this
           return Promise.resolve(t.getQuote(e)).then(function (r) {
-            return Promise.resolve(t.upload(r.quoteId, e.files)).then(function () {
-              return r
-            })
+            return Promise.resolve(t.upload(r.quoteId, e.files))
           })
         } catch (e) {
           return Promise.reject(e)

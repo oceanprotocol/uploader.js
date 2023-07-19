@@ -8,8 +8,8 @@
   function o(e) {
     return e && 'object' == typeof e && 'default' in e ? e : { default: e }
   }
-  var i = /*#__PURE__*/ o(t),
-    s = /*#__PURE__*/ o(r),
+  var s = /*#__PURE__*/ o(t),
+    i = /*#__PURE__*/ o(r),
     u = function (e, t, r) {
       try {
         var o = n.sha256(n.toUtf8Bytes(t + r.toString()))
@@ -29,7 +29,7 @@
     return (
       (t.getStorageInfo = function () {
         try {
-          return Promise.resolve(i.default.get(this.baseURL + '/')).then(function (e) {
+          return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
             return e.data
           })
         } catch (e) {
@@ -38,7 +38,7 @@
       }),
       (t.getQuote = function (e) {
         try {
-          return Promise.resolve(i.default.post(this.baseURL + '/getQuote', e)).then(
+          return Promise.resolve(s.default.post(this.baseURL + '/getQuote', e)).then(
             function (e) {
               return e.data
             }
@@ -52,17 +52,17 @@
           var r = this,
             n = Date.now()
           return Promise.resolve(u(r.signer, e, n)).then(function (o) {
-            var u = new s.default()
+            var u = new i.default()
             return (
               t.forEach(function (e, t) {
                 u.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
               }),
               Promise.resolve(
-                i.default.post(r.baseURL + '/upload', u, {
+                s.default.post(r.baseURL + '/upload', u, {
                   params: { quoteId: e, nonce: n, signature: o },
                   headers: { 'Content-Type': 'multipart/form-data' }
                 })
-              ).then(function () {})
+              )
             )
           })
         } catch (e) {
@@ -73,9 +73,7 @@
         try {
           var t = this
           return Promise.resolve(t.getQuote(e)).then(function (r) {
-            return Promise.resolve(t.upload(r.quoteId, e.files)).then(function () {
-              return r
-            })
+            return Promise.resolve(t.upload(r.quoteId, e.files))
           })
         } catch (e) {
           return Promise.reject(e)
@@ -84,7 +82,7 @@
       (t.getStatus = function (e) {
         try {
           return Promise.resolve(
-            i.default.post(this.baseURL + '/getStatus', { quoteId: e })
+            s.default.post(this.baseURL + '/getStatus', { quoteId: e })
           ).then(function (e) {
             return e.data
           })
@@ -98,7 +96,7 @@
             r = Date.now()
           return Promise.resolve(u(t.signer, e, r)).then(function (n) {
             return Promise.resolve(
-              i.default.post(t.baseURL + '/getLink', null, {
+              s.default.post(t.baseURL + '/getLink', null, {
                 params: { quoteId: e, nonce: r, signature: n }
               })
             ).then(function (e) {
@@ -111,7 +109,7 @@
       }),
       (t.registerMicroservice = function (e) {
         try {
-          return Promise.resolve(i.default.post(this.baseURL + '/register', e)).then(
+          return Promise.resolve(s.default.post(this.baseURL + '/register', e)).then(
             function () {}
           )
         } catch (e) {

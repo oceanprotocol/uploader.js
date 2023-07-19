@@ -58,7 +58,7 @@ var o = /*#__PURE__*/ n(e),
                 params: { quoteId: e, nonce: n, signature: i },
                 headers: { 'Content-Type': 'multipart/form-data' }
               })
-            ).then(function () {})
+            )
           )
         })
       } catch (e) {
@@ -69,9 +69,7 @@ var o = /*#__PURE__*/ n(e),
       try {
         var t = this
         return Promise.resolve(t.getQuote(e)).then(function (r) {
-          return Promise.resolve(t.upload(r.quoteId, e.files)).then(function () {
-            return r
-          })
+          return Promise.resolve(t.upload(r.quoteId, e.files))
         })
       } catch (e) {
         return Promise.reject(e)
