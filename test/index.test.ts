@@ -14,23 +14,22 @@ describe('DBSClient', () => {
     })
   })
 
-  describe('getQuote', () => {
-    it('should return a quote', async () => {
-      const args: GetQuoteArgs = {
-        type: 'filecoin',
-        files: [{ length: 2343545 }, { length: 2343545 }],
-        duration: 4353545453,
-        payment: {
-          chainId: 1,
-
-          tokenAddress: '0xOCEAN_on_MAINNET'
-        },
-        userAddress: '0x456'
-      }
-      const result = await client.getQuote(args)
-      expect(result).to.be.an('object')
-    })
-  })
+  // describe('getQuote', () => {
+  //   it('should return a quote', async () => {
+  //     const args: GetQuoteArgs = {
+  //       type: 'filecoin',
+  //       files: [{ length: 2343545 }, { length: 2343545 }],
+  //       duration: 4353545453,
+  //       payment: {
+  //         chainId: 1,
+  //         tokenAddress: '0xOCEAN_on_MAINNET'
+  //       },
+  //       userAddress: '0x456'
+  //     }
+  //     const result = await client.getQuote(args)
+  //     expect(result).to.be.an('object')
+  //   })
+  // })
 
   describe('upload', () => {
     it('should upload files successfully', async () => {

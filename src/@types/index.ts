@@ -1,3 +1,4 @@
+import { ReadStream } from 'fs'
 interface AcceptedToken {
   [tokenSymbol: string]: string
 }
@@ -18,7 +19,7 @@ export interface StorageInfo {
 
 export interface GetQuoteArgs {
   type: string
-  files: any
+  files: ReadStream[]
   duration: number
   payment: {
     chainId: number

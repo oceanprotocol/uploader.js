@@ -7,10 +7,10 @@ import {
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs,
-  File
+  RegisterArgs
 } from './@types'
 import { getSignedHash } from './utils'
+import { ReadStream } from 'fs'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -54,10 +54,10 @@ export class DBSClient {
    * Uploads files according to the quote request.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {File[]} files - An array of files to upload.
+   * @param {ReadStream[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: File[]): Promise<any> {
+  async upload(quoteId: string, files: ReadStream[]): Promise<any> {
     try {
       const nonce = Date.now()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
