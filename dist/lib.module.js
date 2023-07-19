@@ -39,26 +39,37 @@ var s = function (e, t, s) {
         }
       }),
       (n.upload = function (r, n) {
-        try {
-          var o = this,
-            i = Date.now()
-          return Promise.resolve(s(o.signer, r, i)).then(function (s) {
-            var u = new t()
-            return (
-              n.forEach(function (e, t) {
-                u.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
-              }),
-              Promise.resolve(
-                e.post(o.baseURL + '/upload', u, {
-                  params: { quoteId: r, nonce: i, signature: s },
-                  headers: { 'Content-Type': 'multipart/form-data' }
+        var o = this
+        return Promise.resolve(
+          (function (i, u) {
+            try {
+              var a =
+                ((c = Date.now()),
+                Promise.resolve(s(o.signer, r, c)).then(function (s) {
+                  var i = new t()
+                  return (
+                    n.forEach(function (e, t) {
+                      i.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
+                    }),
+                    Promise.resolve(
+                      e.post(o.baseURL + '/upload', i, {
+                        params: { quoteId: r, nonce: c, signature: s },
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                      })
+                    )
+                  )
+                }))
+            } catch (e) {
+              return e
+            }
+            var c
+            return a && a.then
+              ? a.then(void 0, function (e) {
+                  return e
                 })
-              )
-            )
-          })
-        } catch (e) {
-          return Promise.reject(e)
-        }
+              : a
+          })()
+        )
       }),
       (n.getQuoteAndUpload = function (e) {
         try {

@@ -44,26 +44,37 @@ var o = /*#__PURE__*/ n(e),
       }
     }),
     (t.upload = function (e, t) {
-      try {
-        var r = this,
-          n = Date.now()
-        return Promise.resolve(i(r.signer, e, n)).then(function (i) {
-          var u = new s.default()
-          return (
-            t.forEach(function (e, t) {
-              u.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
-            }),
-            Promise.resolve(
-              o.default.post(r.baseURL + '/upload', u, {
-                params: { quoteId: e, nonce: n, signature: i },
-                headers: { 'Content-Type': 'multipart/form-data' }
+      var r = this
+      return Promise.resolve(
+        (function (n, u) {
+          try {
+            var a =
+              ((c = Date.now()),
+              Promise.resolve(i(r.signer, e, c)).then(function (n) {
+                var i = new s.default()
+                return (
+                  t.forEach(function (e, t) {
+                    i.append('file' + t, new Blob([new ArrayBuffer(e.length)]))
+                  }),
+                  Promise.resolve(
+                    o.default.post(r.baseURL + '/upload', i, {
+                      params: { quoteId: e, nonce: c, signature: n },
+                      headers: { 'Content-Type': 'multipart/form-data' }
+                    })
+                  )
+                )
+              }))
+          } catch (e) {
+            return e
+          }
+          var c
+          return a && a.then
+            ? a.then(void 0, function (e) {
+                return e
               })
-            )
-          )
-        })
-      } catch (e) {
-        return Promise.reject(e)
-      }
+            : a
+        })()
+      )
     }),
     (t.getQuoteAndUpload = function (e) {
       try {
