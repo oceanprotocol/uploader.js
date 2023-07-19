@@ -1,4 +1,4 @@
-import { ethers, Signer } from 'ethers'
+import { Signer } from 'ethers'
 import axios from 'axios'
 import FormData from 'form-data'
 import {
