@@ -10,7 +10,7 @@ import {
   RegisterArgs
 } from './@types'
 import { getSignedHash } from './utils'
-import { ReadStream } from 'fs'
+import validator from 'validator'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -25,8 +25,20 @@ export class DBSClient {
    * @param {Signer} signer The signer object.
    */
   constructor(baseURL: string, signer?: Signer) {
+    this.validateBaseURL(baseURL)
     this.baseURL = baseURL
     this.signer = signer
+  }
+
+  private validateBaseURL(baseURL: string): void {
+    if (!baseURL || typeof baseURL !== 'string' || baseURL.trim() === '') {
+      throw new Error('Invalid baseURL provided. baseURL cannot be empty or undefined.')
+    }
+
+    // Using the validator library to check for a valid URL.
+    if (!validator.isURL(baseURL)) {
+      throw new Error('Invalid baseURL format provided.')
+    }
   }
 
   /**
@@ -57,7 +69,7 @@ export class DBSClient {
    * @param {ReadStream[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: ReadStream[]): Promise<any> {
+  async upload(quoteId: string, files: Buffer[]): Promise<any> {
     try {
       const nonce = Date.now()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
