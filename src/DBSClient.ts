@@ -10,6 +10,7 @@ import {
   RegisterArgs
 } from './@types'
 import { getSignedHash } from './utils'
+import { ReadStream } from 'fs'
 import validator from 'validator'
 
 /**
@@ -69,7 +70,7 @@ export class DBSClient {
    * @param {ReadStream[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: Buffer[]): Promise<any> {
+  async upload(quoteId: string, files: ReadStream[]): Promise<any> {
     try {
       const nonce = Date.now()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
