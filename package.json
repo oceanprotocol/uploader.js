@@ -22,7 +22,7 @@
   },
   "types": "./dist/src/index.d.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register 'test/**/*.spec.ts'",
+    "test": "npm run mocha --  'test/**/*.test.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
@@ -31,7 +31,8 @@
     "doc:json": "node ./scripts/typedoc.js",
     "prepare": "husky install",
     "release": "release-it",
-    "build": "npm run clean && microbundle build --format modern,esm,cjs,umd --compress --tsconfig tsconfig.json"
+    "build": "npm run clean && microbundle build --format modern,esm,cjs,umd --compress --tsconfig tsconfig.json",
+    "mocha": "TS_NODE_PROJECT='./test/tsconfig.json' mocha --config=test/.mocharc.json --node-env=test --exit"
   },
   "repository": {
     "type": "git",
@@ -68,8 +69,10 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "ethers": "^6.6.2",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.6.4",
     "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
     "validator": "^13.9.0"
   },
   "release-it": {
