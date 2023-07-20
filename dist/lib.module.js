@@ -1,24 +1,38 @@
 import e from 'axios'
-import t from 'form-data'
-import { sha256 as r, toUtf8Bytes as n, ethers as o } from 'ethers'
+import r from 'form-data'
+import { sha256 as t, toUtf8Bytes as n, ethers as o } from 'ethers'
 import i from 'validator'
-var s = function (e, t, i) {
+function s() {
+  return (
+    (s = Object.assign
+      ? Object.assign.bind()
+      : function (e) {
+          for (var r = 1; r < arguments.length; r++) {
+            var t = arguments[r]
+            for (var n in t) Object.prototype.hasOwnProperty.call(t, n) && (e[n] = t[n])
+          }
+          return e
+        }),
+    s.apply(this, arguments)
+  )
+}
+var a = function (e, r, i) {
     try {
-      var s = r(n(t + i.toString()))
+      var s = t(n(r + i.toString()))
       return Promise.resolve(e.signMessage(o.getBytes(s)))
     } catch (e) {
       return Promise.reject(e)
     }
   },
-  a = /*#__PURE__*/ (function () {
-    function r(e, t) {
+  u = /*#__PURE__*/ (function () {
+    function t(e, r) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),
         this.validateBaseURL(e),
         (this.baseURL = e),
-        (this.signer = t)
+        (this.signer = r)
     }
-    var n = r.prototype
+    var n = t.prototype
     return (
       (n.validateBaseURL = function (e) {
         if (!e || 'string' != typeof e || '' === e.trim())
@@ -36,9 +50,9 @@ var s = function (e, t, i) {
           return Promise.reject(e)
         }
       }),
-      (n.getQuote = function (t) {
+      (n.getQuote = function (r) {
         try {
-          return Promise.resolve(e.post(this.baseURL + '/getQuote', t)).then(function (
+          return Promise.resolve(e.post(this.baseURL + '/getQuote', r)).then(function (
             e
           ) {
             return e.data
@@ -47,53 +61,57 @@ var s = function (e, t, i) {
           return Promise.reject(e)
         }
       }),
-      (n.upload = function (r, n) {
-        var o = this
-        return Promise.resolve(
-          (function (i, a) {
-            try {
-              var u =
-                ((c = Date.now()),
-                Promise.resolve(s(o.signer, r, c)).then(function (i) {
-                  var s = new t()
-                  return (
-                    n.forEach(function (e, t) {
-                      s.append('file' + t, e)
-                    }),
-                    Promise.resolve(
-                      e.post(o.baseURL + '/upload', s, {
-                        params: { quoteId: r, nonce: c, signature: i },
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                      })
+      (n.upload = function (t, n) {
+        try {
+          var o = this
+          return Promise.resolve(
+            (function (i, u) {
+              try {
+                var c =
+                  ((f = Date.now()),
+                  Promise.resolve(a(o.signer, t, f)).then(function (i) {
+                    var a = new r()
+                    return (
+                      n.forEach(function (e, r) {
+                        a.append('file' + r, e, { filename: 'file' + r + '.bin' })
+                      }),
+                      Promise.resolve(
+                        e.post(o.baseURL + '/upload', a, {
+                          params: { quoteId: t, nonce: f, signature: i },
+                          headers: s({}, a.getHeaders(), {
+                            'Content-Type': 'multipart/form-data'
+                          })
+                        })
+                      )
                     )
-                  )
-                }))
-            } catch (e) {
-              return e
-            }
-            var c
-            return u && u.then
-              ? u.then(void 0, function (e) {
-                  return e
-                })
-              : u
-          })()
-        )
+                  }))
+              } catch (e) {
+                return u(e)
+              }
+              var f
+              return c && c.then ? c.then(void 0, u) : c
+            })(0, function (e) {
+              throw (console.error('Error:', e), e)
+            })
+          )
+        } catch (e) {
+          return Promise.reject(e)
+        }
       }),
       (n.getQuoteAndUpload = function (e) {
         try {
-          var t = this
-          return Promise.resolve(t.getQuote(e)).then(function (r) {
-            return Promise.resolve(t.upload(r.quoteId, e.files))
+          var r = this
+          return Promise.resolve(r.getQuote(e)).then(function (t) {
+            return Promise.resolve(r.upload(t.quoteId, e.files))
           })
         } catch (e) {
           return Promise.reject(e)
         }
       }),
-      (n.getStatus = function (t) {
+      (n.getStatus = function (r) {
         try {
           return Promise.resolve(
-            e.post(this.baseURL + '/getStatus', { quoteId: t })
+            e.post(this.baseURL + '/getStatus', { quoteId: r })
           ).then(function (e) {
             return e.data
           })
@@ -101,14 +119,14 @@ var s = function (e, t, i) {
           return Promise.reject(e)
         }
       }),
-      (n.getLink = function (t) {
+      (n.getLink = function (r) {
         try {
-          var r = this,
+          var t = this,
             n = Date.now()
-          return Promise.resolve(s(r.signer, t, n)).then(function (o) {
+          return Promise.resolve(a(t.signer, r, n)).then(function (o) {
             return Promise.resolve(
-              e.post(r.baseURL + '/getLink', null, {
-                params: { quoteId: t, nonce: n, signature: o }
+              e.post(t.baseURL + '/getLink', null, {
+                params: { quoteId: r, nonce: n, signature: o }
               })
             ).then(function (e) {
               return e.data
@@ -118,17 +136,17 @@ var s = function (e, t, i) {
           return Promise.reject(e)
         }
       }),
-      (n.registerMicroservice = function (t) {
+      (n.registerMicroservice = function (r) {
         try {
-          return Promise.resolve(e.post(this.baseURL + '/register', t)).then(
+          return Promise.resolve(e.post(this.baseURL + '/register', r)).then(
             function () {}
           )
         } catch (e) {
           return Promise.reject(e)
         }
       }),
-      r
+      t
     )
   })()
-export { a as DBSClient, s as getSignedHash }
+export { u as DBSClient, a as getSignedHash }
 //# sourceMappingURL=lib.module.js.map

@@ -14,17 +14,31 @@
   function i(e) {
     return e && 'object' == typeof e && 'default' in e ? e : { default: e }
   }
-  var s = /*#__PURE__*/ i(t),
-    a = /*#__PURE__*/ i(r),
-    u = /*#__PURE__*/ i(o),
-    f = function (e, t, r) {
-      try {
-        var o = n.sha256(n.toUtf8Bytes(t + r.toString()))
-        return Promise.resolve(e.signMessage(n.ethers.getBytes(o)))
-      } catch (e) {
-        return Promise.reject(e)
-      }
+  var a = /*#__PURE__*/ i(t),
+    s = /*#__PURE__*/ i(r),
+    u = /*#__PURE__*/ i(o)
+  function c() {
+    return (
+      (c = Object.assign
+        ? Object.assign.bind()
+        : function (e) {
+            for (var t = 1; t < arguments.length; t++) {
+              var r = arguments[t]
+              for (var n in r) Object.prototype.hasOwnProperty.call(r, n) && (e[n] = r[n])
+            }
+            return e
+          }),
+      c.apply(this, arguments)
+    )
+  }
+  var f = function (e, t, r) {
+    try {
+      var o = n.sha256(n.toUtf8Bytes(t + r.toString()))
+      return Promise.resolve(e.signMessage(n.ethers.getBytes(o)))
+    } catch (e) {
+      return Promise.reject(e)
     }
+  }
   ;(e.DBSClient = /*#__PURE__*/ (function () {
     function e(e, t) {
       ;(this.baseURL = void 0),
@@ -44,7 +58,7 @@
       }),
       (t.getStorageInfo = function () {
         try {
-          return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
+          return Promise.resolve(a.default.get(this.baseURL + '/')).then(function (e) {
             return e.data
           })
         } catch (e) {
@@ -53,7 +67,7 @@
       }),
       (t.getQuote = function (e) {
         try {
-          return Promise.resolve(s.default.post(this.baseURL + '/getQuote', e)).then(
+          return Promise.resolve(a.default.post(this.baseURL + '/getQuote', e)).then(
             function (e) {
               return e.data
             }
@@ -63,37 +77,41 @@
         }
       }),
       (t.upload = function (e, t) {
-        var r = this
-        return Promise.resolve(
-          (function (n, o) {
-            try {
-              var i =
-                ((u = Date.now()),
-                Promise.resolve(f(r.signer, e, u)).then(function (n) {
-                  var o = new a.default()
-                  return (
-                    t.forEach(function (e, t) {
-                      o.append('file' + t, e)
-                    }),
-                    Promise.resolve(
-                      s.default.post(r.baseURL + '/upload', o, {
-                        params: { quoteId: e, nonce: u, signature: n },
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                      })
+        try {
+          var r = this
+          return Promise.resolve(
+            (function (n, o) {
+              try {
+                var i =
+                  ((u = Date.now()),
+                  Promise.resolve(f(r.signer, e, u)).then(function (n) {
+                    var o = new s.default()
+                    return (
+                      t.forEach(function (e, t) {
+                        o.append('file' + t, e, { filename: 'file' + t + '.bin' })
+                      }),
+                      Promise.resolve(
+                        a.default.post(r.baseURL + '/upload', o, {
+                          params: { quoteId: e, nonce: u, signature: n },
+                          headers: c({}, o.getHeaders(), {
+                            'Content-Type': 'multipart/form-data'
+                          })
+                        })
+                      )
                     )
-                  )
-                }))
-            } catch (e) {
-              return e
-            }
-            var u
-            return i && i.then
-              ? i.then(void 0, function (e) {
-                  return e
-                })
-              : i
-          })()
-        )
+                  }))
+              } catch (e) {
+                return o(e)
+              }
+              var u
+              return i && i.then ? i.then(void 0, o) : i
+            })(0, function (e) {
+              throw (console.error('Error:', e), e)
+            })
+          )
+        } catch (e) {
+          return Promise.reject(e)
+        }
       }),
       (t.getQuoteAndUpload = function (e) {
         try {
@@ -108,7 +126,7 @@
       (t.getStatus = function (e) {
         try {
           return Promise.resolve(
-            s.default.post(this.baseURL + '/getStatus', { quoteId: e })
+            a.default.post(this.baseURL + '/getStatus', { quoteId: e })
           ).then(function (e) {
             return e.data
           })
@@ -122,7 +140,7 @@
             r = Date.now()
           return Promise.resolve(f(t.signer, e, r)).then(function (n) {
             return Promise.resolve(
-              s.default.post(t.baseURL + '/getLink', null, {
+              a.default.post(t.baseURL + '/getLink', null, {
                 params: { quoteId: e, nonce: r, signature: n }
               })
             ).then(function (e) {
@@ -135,7 +153,7 @@
       }),
       (t.registerMicroservice = function (e) {
         try {
-          return Promise.resolve(s.default.post(this.baseURL + '/register', e)).then(
+          return Promise.resolve(a.default.post(this.baseURL + '/register', e)).then(
             function () {}
           )
         } catch (e) {

@@ -1,12 +1,26 @@
 import t from 'axios'
 import a from 'form-data'
-import { sha256 as e, toUtf8Bytes as s, ethers as r } from 'ethers'
+import { sha256 as e, toUtf8Bytes as r, ethers as s } from 'ethers'
 import i from 'validator'
-const o = async (t, a, i) => {
-  const o = e(s(a + i.toString()))
-  return await t.signMessage(r.getBytes(o))
+function o() {
+  return (
+    (o = Object.assign
+      ? Object.assign.bind()
+      : function (t) {
+          for (var a = 1; a < arguments.length; a++) {
+            var e = arguments[a]
+            for (var r in e) Object.prototype.hasOwnProperty.call(e, r) && (t[r] = e[r])
+          }
+          return t
+        }),
+    o.apply(this, arguments)
+  )
 }
-class n {
+const n = async (t, a, i) => {
+  const o = e(r(a + i.toString()))
+  return await t.signMessage(s.getBytes(o))
+}
+class d {
   constructor(t, a) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -25,22 +39,22 @@ class n {
   async getQuote(a) {
     return (await t.post(`${this.baseURL}/getQuote`, a)).data
   }
-  async upload(e, s) {
+  async upload(e, r) {
     try {
-      const r = Date.now(),
-        i = await o(this.signer, e, r),
-        n = new a()
+      const s = Date.now(),
+        i = await n(this.signer, e, s),
+        d = new a()
       return (
-        s.forEach((t, a) => {
-          n.append(`file${a}`, t)
+        r.forEach((t, a) => {
+          d.append(`file${a}`, t, { filename: `file${a}.bin` })
         }),
-        await t.post(`${this.baseURL}/upload`, n, {
-          params: { quoteId: e, nonce: r, signature: i },
-          headers: { 'Content-Type': 'multipart/form-data' }
+        await t.post(`${this.baseURL}/upload`, d, {
+          params: { quoteId: e, nonce: s, signature: i },
+          headers: o({}, d.getHeaders(), { 'Content-Type': 'multipart/form-data' })
         })
       )
     } catch (t) {
-      return t
+      throw (console.error('Error:', t), t)
     }
   }
   async getQuoteAndUpload(t) {
@@ -52,10 +66,10 @@ class n {
   }
   async getLink(a) {
     const e = Date.now(),
-      s = await o(this.signer, a, e)
+      r = await n(this.signer, a, e)
     return (
       await t.post(`${this.baseURL}/getLink`, null, {
-        params: { quoteId: a, nonce: e, signature: s }
+        params: { quoteId: a, nonce: e, signature: r }
       })
     ).data
   }
@@ -63,5 +77,5 @@ class n {
     await t.post(`${this.baseURL}/register`, a)
   }
 }
-export { n as DBSClient, o as getSignedHash }
+export { d as DBSClient, n as getSignedHash }
 //# sourceMappingURL=lib.modern.mjs.map
