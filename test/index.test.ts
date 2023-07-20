@@ -1,48 +1,62 @@
 import { ethers } from 'ethers'
 import { assert, expect } from 'chai'
 import dotenv from 'dotenv'
-import fs from 'fs'
+import fs, { readFileSync } from 'fs'
 import FormData from 'form-data'
 
 import { DBSClient } from '../src/index'
-import { RegisterArgs } from '../src/@types'
+import { StorageInfo, GetQuoteArgs } from '../src/@types'
 
 dotenv.config()
 
+function readFileIntoBuffer(filePath: string): Buffer {
+  return fs.readFileSync(filePath)
+}
+
 describe('DBSClient', () => {
+  let info: StorageInfo[]
   // Set up a new instance of the DBS client
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY) // Use your actual private key
   const client = new DBSClient(process.env.DBS_API_URL, signer) // Use your actual DBS API url
 
   describe('getStorageInfo', () => {
     it('should return an array of storage info', async () => {
-      const result = await client.getStorageInfo()
-      expect(result).to.be.an('array')
-      expect(result[0].payment).to.be.an('array')
-      expect(result[0].payment).to.be.an('array')
-      assert(result[0].type === 'filecoin')
-      assert(result[0].description === 'File storage on FileCoin')
-      assert(result[1].type === 'arweave')
-      assert(result[1].description === 'File storage on Arweave')
+      info = await client.getStorageInfo()
+      console.log(info[0].payment[0])
+      expect(info).to.be.an('array')
+      expect(info[0].payment).to.be.an('array')
+      expect(info[0].payment).to.be.an('array')
+      assert(info[0].type === 'filecoin')
+      assert(info[0].description === 'File storage on FileCoin')
+      assert(info[1].type === 'arweave')
+      assert(info[1].description === 'File storage on Arweave')
     })
   })
 
-  // describe('getQuote', () => {
-  //   it('should return a quote', async () => {
-  //     const args: GetQuoteArgs = {
-  //       type: 'filecoin',
-  //       files: [{ length: 2343545 }, { length: 2343545 }],
-  //       duration: 4353545453,
-  //       payment: {
-  //         chainId: 1,
-  //         tokenAddress: '0xOCEAN_on_MAINNET'
-  //       },
-  //       userAddress: '0x456'
-  //     }
-  //     const result = await client.getQuote(args)
-  //     expect(result).to.be.an('object')
-  //   })
-  // })
+  describe('getQuote', () => {
+    it('should return a quote', async () => {
+      const formData = new FormData()
+      const fileBuffers = ['test/test.txt'].map(readFileIntoBuffer)
+
+      fileBuffers.forEach((buffer, index) => {
+        formData.append(`file${index}`, buffer, { filename: `file${index}.bin` })
+      })
+
+      const args: GetQuoteArgs = {
+        type: info[0].type,
+        files: fileBuffers,
+        duration: 4353545453,
+        payment: {
+          chainId: info[0].payment[0].chainId,
+          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+        },
+        userAddress: process.env.USER_ADDRESS
+      }
+      const result = await client.getQuote(args)
+      console.log(result)
+      expect(result).to.be.an('object')
+    })
+  })
 
   // describe('upload', () => {
   //   it('should upload files successfully', async () => {
