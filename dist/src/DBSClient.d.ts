@@ -21,6 +21,7 @@ export declare class DBSClient {
    * @param {Signer} signer The signer object.
    */
   constructor(baseURL: string, signer?: Signer)
+  private validateBaseURL
   /**
    * Fetches information about supported storage types and payments.
    *

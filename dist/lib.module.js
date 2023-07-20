@@ -1,23 +1,32 @@
 import e from 'axios'
 import t from 'form-data'
 import { sha256 as r, toUtf8Bytes as n, ethers as o } from 'ethers'
-var s = function (e, t, s) {
+import i from 'validator'
+var s = function (e, t, i) {
     try {
-      var i = r(n(t + s.toString()))
-      return Promise.resolve(e.signMessage(o.getBytes(i)))
+      var s = r(n(t + i.toString()))
+      return Promise.resolve(e.signMessage(o.getBytes(s)))
     } catch (e) {
       return Promise.reject(e)
     }
   },
-  i = /*#__PURE__*/ (function () {
+  a = /*#__PURE__*/ (function () {
     function r(e, t) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),
+        this.validateBaseURL(e),
         (this.baseURL = e),
         (this.signer = t)
     }
     var n = r.prototype
     return (
+      (n.validateBaseURL = function (e) {
+        if (!e || 'string' != typeof e || '' === e.trim())
+          throw new Error(
+            'Invalid baseURL provided. baseURL cannot be empty or undefined.'
+          )
+        if (!i.isURL(e)) throw new Error('Invalid baseURL format provided.')
+      }),
       (n.getStorageInfo = function () {
         try {
           return Promise.resolve(e.get(this.baseURL + '/')).then(function (e) {
@@ -41,19 +50,19 @@ var s = function (e, t, s) {
       (n.upload = function (r, n) {
         var o = this
         return Promise.resolve(
-          (function (i, u) {
+          (function (i, a) {
             try {
-              var a =
+              var u =
                 ((c = Date.now()),
-                Promise.resolve(s(o.signer, r, c)).then(function (s) {
-                  var i = new t()
+                Promise.resolve(s(o.signer, r, c)).then(function (i) {
+                  var s = new t()
                   return (
                     n.forEach(function (e, t) {
-                      i.append('file' + t, e)
+                      s.append('file' + t, e)
                     }),
                     Promise.resolve(
-                      e.post(o.baseURL + '/upload', i, {
-                        params: { quoteId: r, nonce: c, signature: s },
+                      e.post(o.baseURL + '/upload', s, {
+                        params: { quoteId: r, nonce: c, signature: i },
                         headers: { 'Content-Type': 'multipart/form-data' }
                       })
                     )
@@ -63,11 +72,11 @@ var s = function (e, t, s) {
               return e
             }
             var c
-            return a && a.then
-              ? a.then(void 0, function (e) {
+            return u && u.then
+              ? u.then(void 0, function (e) {
                   return e
                 })
-              : a
+              : u
           })()
         )
       }),
@@ -121,5 +130,5 @@ var s = function (e, t, s) {
       r
     )
   })()
-export { i as DBSClient, s as getSignedHash }
+export { a as DBSClient, s as getSignedHash }
 //# sourceMappingURL=lib.module.js.map
