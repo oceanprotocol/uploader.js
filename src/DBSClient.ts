@@ -10,7 +10,6 @@ import {
   RegisterArgs
 } from './@types'
 import { getSignedHash } from './utils'
-import { ReadStream } from 'fs'
 import validator from 'validator'
 
 /**
@@ -67,25 +66,26 @@ export class DBSClient {
    * Uploads files according to the quote request.
    *
    * @param {string} quoteId - The quote ID.
-   * @param {ReadStream[]} files - An array of files to upload.
+   * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: ReadStream[]): Promise<any> {
+  async upload(quoteId: string, files: Buffer[]): Promise<any> {
     try {
       const nonce = Date.now()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
       const formData = new FormData()
-      files.forEach((file, index) => {
-        formData.append(`file${index}`, file)
+      files.forEach((buffer, index) => {
+        formData.append(`file${index}`, buffer, { filename: `file${index}.bin` })
       })
 
-      const response = await axios.post(`${this.baseURL}/upload`, formData, {
+      const response = await axios.post<any>(`${this.baseURL}/upload`, formData, {
         params: { quoteId, nonce, signature },
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { ...formData.getHeaders(), 'Content-Type': 'multipart/form-data' }
       })
       return response
     } catch (error) {
-      return error
+      console.error('Error:', error)
+      throw error
     }
   }
 
