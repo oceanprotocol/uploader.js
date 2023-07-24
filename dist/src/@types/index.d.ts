@@ -1,28 +1,26 @@
 /// <reference types="node" />
 interface AcceptedToken {
-  [tokenSymbol: string]: string
-}
-export interface PaymentMethod {
-  chainId: number | string
-  acceptedTokens?: AcceptedToken[]
+  title: string
+  value: string
 }
 export interface Payment {
-  payment_method: PaymentMethod
-  wallet_address: string
+  chainId: string
+  acceptedTokens?: AcceptedToken[]
 }
 export interface StorageInfo {
   type: string
   description: string
   payment: Payment[]
 }
+export interface AcceptedPayment {
+  chainId: string
+  tokenAddress: string
+}
 export interface GetQuoteArgs {
   type: string
   files: Buffer[]
   duration: number
-  payment: {
-    chainId: number
-    tokenAddress: string
-  }
+  payment: AcceptedPayment
   userAddress: string
 }
 export interface GetQuoteResult {
@@ -44,6 +42,6 @@ export interface RegisterArgs {
   type: string
   description: string
   url: string
-  paymentMethods: PaymentMethod[]
+  paymentMethods: Payment[]
 }
 export {}

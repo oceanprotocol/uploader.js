@@ -54,7 +54,8 @@
           throw new Error(
             'Invalid baseURL provided. baseURL cannot be empty or undefined.'
           )
-        if (!u.default.isURL(e)) throw new Error('Invalid baseURL format provided.')
+        if (!u.default.isURL(e, { require_tld: !1 }))
+          throw new Error('Invalid baseURL format provided.')
       }),
       (t.getStorageInfo = function () {
         try {
