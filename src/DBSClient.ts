@@ -36,7 +36,8 @@ export class DBSClient {
     }
 
     // Using the validator library to check for a valid URL.
-    if (!validator.isURL(baseURL)) {
+    // Including { require_tld: false } to allow 'localhost' as a valid URL.
+    if (!validator.isURL(baseURL, { require_tld: false })) {
       throw new Error('Invalid baseURL format provided.')
     }
   }
