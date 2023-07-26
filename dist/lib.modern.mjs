@@ -1,26 +1,27 @@
 import t from 'axios'
 import e from 'form-data'
-import { sha256 as a, toUtf8Bytes as r, ethers as s } from 'ethers'
+import { sha256 as r, toUtf8Bytes as a, ethers as s } from 'ethers'
 import i from 'validator'
-function o() {
+import o from 'fs'
+function n() {
   return (
-    (o = Object.assign
+    (n = Object.assign
       ? Object.assign.bind()
       : function (t) {
           for (var e = 1; e < arguments.length; e++) {
-            var a = arguments[e]
-            for (var r in a) Object.prototype.hasOwnProperty.call(a, r) && (t[r] = a[r])
+            var r = arguments[e]
+            for (var a in r) Object.prototype.hasOwnProperty.call(r, a) && (t[a] = r[a])
           }
           return t
         }),
-    o.apply(this, arguments)
+    n.apply(this, arguments)
   )
 }
-const n = async (t, e, i) => {
-  const o = a(r(e + i.toString()))
+const d = async (t, e, i) => {
+  const o = r(a(e + i.toString()))
   return await t.signMessage(s.getBytes(o))
 }
-class d {
+class p {
   constructor(t, e) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -34,43 +35,50 @@ class d {
     if (!i.isURL(t, { require_tld: !1 }))
       throw new Error('Invalid baseURL format provided.')
   }
+  getFileSizes(t) {
+    return t.map((t) => ({ length: o.statSync(t).size }))
+  }
   async getStorageInfo() {
     return (await t.get(`${this.baseURL}/`)).data
   }
-  async getQuote(e) {
-    return (await t.post(`${this.baseURL}/getQuote`, e)).data
+  async getQuote(e, r, a, s, i, o) {
+    if (!i && !o) throw new Error('Either filePath or fileInfo must be provided.')
+    const n = {
+      type: e,
+      files: o || this.getFileSizes(i),
+      duration: r,
+      payment: a,
+      userAddress: s
+    }
+    return (await t.post(`${this.baseURL}/getQuote`, n)).data
   }
-  async upload(a, r) {
+  async upload(r, a) {
     try {
       const s = Date.now(),
-        i = await n(this.signer, a, s),
-        d = new e()
+        i = await d(this.signer, r, s),
+        o = new e()
       return (
-        r.forEach((t, e) => {
-          d.append(`file${e}`, t, { filename: `file${e}.bin` })
+        a.forEach((t, e) => {
+          o.append(`file${e}`, t, { filename: `file${e}.bin` })
         }),
-        await t.post(`${this.baseURL}/upload`, d, {
-          params: { quoteId: a, nonce: s, signature: i },
-          headers: o({}, d.getHeaders(), { 'Content-Type': 'multipart/form-data' })
+        await t.post(`${this.baseURL}/upload`, o, {
+          params: { quoteId: r, nonce: s, signature: i },
+          headers: n({}, o.getHeaders(), { 'Content-Type': 'multipart/form-data' })
         })
       )
     } catch (t) {
       throw (console.error('Error:', t), t)
     }
   }
-  async getQuoteAndUpload(t) {
-    const e = await this.getQuote(t)
-    return await this.upload(e.quoteId, t.files)
-  }
   async getStatus(e) {
     return (await t.post(`${this.baseURL}/getStatus`, { quoteId: e })).data
   }
   async getLink(e) {
-    const a = Date.now(),
-      r = await n(this.signer, e, a)
+    const r = Date.now(),
+      a = await d(this.signer, e, r)
     return (
       await t.post(`${this.baseURL}/getLink`, null, {
-        params: { quoteId: e, nonce: a, signature: r }
+        params: { quoteId: e, nonce: r, signature: a }
       })
     ).data
   }
@@ -78,5 +86,5 @@ class d {
     await t.post(`${this.baseURL}/register`, e)
   }
 }
-export { d as DBSClient, n as getSignedHash }
+export { p as DBSClient, d as getSignedHash }
 //# sourceMappingURL=lib.modern.mjs.map

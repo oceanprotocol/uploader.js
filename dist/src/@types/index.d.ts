@@ -1,4 +1,3 @@
-/// <reference types="node" />
 interface AcceptedToken {
   title: string
   value: string
@@ -16,9 +15,12 @@ export interface AcceptedPayment {
   chainId: string
   tokenAddress: string
 }
+export interface FileData {
+  length: number
+}
 export interface GetQuoteArgs {
   type: string
-  files: Buffer[]
+  files: FileData[]
   duration: number
   payment: AcceptedPayment
   userAddress: string
