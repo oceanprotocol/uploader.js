@@ -41,24 +41,35 @@ const client = new DBSClient(process.env.DBS_API_URL, signer) // Use your actual
 
 async function runExample() {
   // Get storage info
-  const storageInfo: StorageInfo[] = await client.getStorageInfo()
-  console.log('Storage info:', storageInfo)
+  const info: StorageInfo[] = await client.getStorageInfo()
+  console.log('Storage info:', info)
 
-  // Construct an example quote request
-  const quoteArgs: GetQuoteArgs = {
-    type: 'exampleType', // Replace with an actual type
-    files: [{ length: 1000 }], // Replace with actual file info
-    duration: 10, // Replace with an actual duration
-    payment: {
-      payment_method: { chainId: 1, acceptedTokens: {} },
-      wallet_address: '0xExampleAddress' // Replace with an actual wallet address
+  // Fetch a quote using the local file path
+  const quote1 = await client.getQuote(
+    info[0].type,
+    4353545453,
+    {
+      chainId: info[0].payment[0].chainId,
+      tokenAddress: info[0].payment[0].acceptedTokens[0].value
     },
-    userAddress: '0xExampleUserAddress' // Replace with an actual user address
-  }
+    process.env.USER_ADDRESS,
+    ['/home/username/ocean/test1.txt']
+  )
+  console.log('Quote 1:' quote1)
 
-  // Fetch a quote
-  const quoteResult: GetQuoteResult = await client.getQuote(quoteArgs)
-  console.log('Quote result:', quoteResult)
+  // Fetch a quote using the file length
+  const quote2 = await client.getQuote(
+    info[0].type,
+    4353545453,
+    {
+      chainId: info[0].payment[0].chainId,
+      tokenAddress: info[0].payment[0].acceptedTokens[0].value
+    },
+    process.env.USER_ADDRESS,
+    undefined,
+    [{ length: 1000 }]
+  )
+  console.log('Quote 2: ', quote2)
 
   // Upload files
   await client.upload(quoteResult.quoteId, quoteArgs.files)
