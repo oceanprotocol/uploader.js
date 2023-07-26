@@ -1,6 +1,5 @@
 import { Signer } from 'ethers'
 import axios from 'axios'
-import FormData from 'form-data'
 import {
   StorageInfo,
   GetQuoteArgs,
@@ -14,6 +13,9 @@ import {
 import { getSignedHash } from './utils'
 import validator from 'validator'
 import fs from 'fs'
+import { createHelia } from 'helia'
+import { unixfs } from '@helia/unixfs'
+import { promisify } from 'util'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -102,24 +104,34 @@ export class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: Buffer[]): Promise<any> {
-    try {
-      const nonce = Date.now()
-      const signature = await getSignedHash(this.signer, quoteId, nonce)
-      const formData = new FormData()
-      files.forEach((buffer, index) => {
-        formData.append(`file${index}`, buffer, { filename: `file${index}.bin` })
-      })
+  async upload(quoteId: string, filePath: string): Promise<any> {
+    // Create a Helia node
+    const helia = await createHelia()
 
-      const response = await axios.post<any>(`${this.baseURL}/upload`, formData, {
-        params: { quoteId, nonce, signature },
-        headers: { ...formData.getHeaders(), 'Content-Type': 'multipart/form-data' }
-      })
-      return response
-    } catch (error) {
-      console.error('Error:', error)
-      throw error
+    // Create a filesystem on top of Helia, in this case it's UnixFS
+    const fileSystem = unixfs(helia)
+    const readFileAsync = promisify(fs.readFile)
+    const fileContent = await readFileAsync(filePath)
+
+    // Add the bytes to your node and receive a unique content identifier (CID)
+    const cid = await fileSystem.addFile({
+      path: filePath,
+      content: fileContent
+    })
+
+    console.log('Added file:', cid.toString())
+    const nonce = Date.now()
+    const signature = await getSignedHash(this.signer, quoteId, nonce)
+
+    const payload = {
+      quoteId,
+      nonce,
+      signature,
+      files: [cid]
     }
+    const response = await axios.post<GetQuoteResult>(`${this.baseURL}/upload`, payload)
+
+    return response.data
   }
 
   /**
