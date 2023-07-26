@@ -74,6 +74,47 @@ describe('DBSClient', () => {
       expect(result.chainId).to.be.a('string')
       expect(result.tokenAddress).to.be.a('string')
     })
+
+    it('should return a quote for uploading a file to Arweave when using file paths', async () => {
+      const result = await client.getQuote(
+        info[1].type,
+        4353545453,
+        {
+          chainId: info[1].payment[0].chainId,
+          tokenAddress: info[1].payment[0].acceptedTokens[0].value
+        },
+        process.env.USER_ADDRESS,
+        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      )
+
+      expect(result).to.be.an('object')
+      expect(result.quoteId).to.be.a('string')
+      expect(result.tokenAmount).to.be.a('number')
+      expect(result.approveAddress).to.be.a('string')
+      expect(result.chainId).to.be.a('string')
+      expect(result.tokenAddress).to.be.a('string')
+    })
+
+    it('should return a quote for uploading a file to Arweave when using file sizes', async () => {
+      const result = await client.getQuote(
+        info[1].type,
+        4353545453,
+        {
+          chainId: info[1].payment[0].chainId,
+          tokenAddress: info[1].payment[0].acceptedTokens[0].value
+        },
+        process.env.USER_ADDRESS,
+        undefined,
+        [{ length: 1000 }, { length: 9999 }]
+      )
+
+      expect(result).to.be.an('object')
+      expect(result.quoteId).to.be.a('string')
+      expect(result.tokenAmount).to.be.a('number')
+      expect(result.approveAddress).to.be.a('string')
+      expect(result.chainId).to.be.a('string')
+      expect(result.tokenAddress).to.be.a('string')
+    })
   })
   // describe('upload', () => {
   //   it('should upload files successfully', async () => {
