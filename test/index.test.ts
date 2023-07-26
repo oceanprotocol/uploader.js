@@ -22,7 +22,7 @@ describe('DBSClient', () => {
   describe('getStorageInfo', () => {
     it('should return an array of storage info', async () => {
       info = await client.getStorageInfo()
-      console.log(info[0].payment[0])
+
       expect(info).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
@@ -34,22 +34,47 @@ describe('DBSClient', () => {
   })
 
   describe('getQuote', () => {
-    it('should return a quote', async () => {
+    it('should return a quote for uploading a file to Filecoin when using file paths', async () => {
       const result = await client.getQuote(
         info[0].type,
-        ['/home/jamie/Desktop/ocean/dbs.js/test/test.txt'],
         4353545453,
         {
           chainId: info[0].payment[0].chainId,
           tokenAddress: info[0].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS
+        process.env.USER_ADDRESS,
+        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
       )
-      console.log(result)
+
       expect(result).to.be.an('object')
+      expect(result.quoteId).to.be.a('string')
+      expect(result.tokenAmount).to.be.a('number')
+      expect(result.approveAddress).to.be.a('string')
+      expect(result.chainId).to.be.a('string')
+      expect(result.tokenAddress).to.be.a('string')
+    })
+
+    it('should return a quote for uploading a file to Filecoin when using file sizes', async () => {
+      const result = await client.getQuote(
+        info[0].type,
+        4353545453,
+        {
+          chainId: info[0].payment[0].chainId,
+          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+        },
+        process.env.USER_ADDRESS,
+        undefined,
+        [{ length: 1000 }, { length: 9999 }]
+      )
+
+      expect(result).to.be.an('object')
+      expect(result.quoteId).to.be.a('string')
+      expect(result.tokenAmount).to.be.a('number')
+      expect(result.approveAddress).to.be.a('string')
+      expect(result.chainId).to.be.a('string')
+      expect(result.tokenAddress).to.be.a('string')
     })
   })
-
   // describe('upload', () => {
   //   it('should upload files successfully', async () => {
   //     const quoteId = 'xxxx'

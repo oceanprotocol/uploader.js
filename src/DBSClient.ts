@@ -72,12 +72,17 @@ export class DBSClient {
    */
   async getQuote(
     type: string,
-    filePath: string[],
     duration: number,
     payment: AcceptedPayment,
-    userAddress: string
+    userAddress: string,
+    filePath?: string[],
+    fileInfo?: FileData[]
   ): Promise<GetQuoteResult> {
-    const fileSizes = this.getFileSizes(filePath)
+    if (!filePath && !fileInfo) {
+      throw new Error('Either filePath or fileInfo must be provided.')
+    }
+    const fileSizes: FileData[] = fileInfo || this.getFileSizes(filePath)
+
     const args: GetQuoteArgs = {
       type,
       files: fileSizes,
