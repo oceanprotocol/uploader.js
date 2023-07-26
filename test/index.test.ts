@@ -35,24 +35,16 @@ describe('DBSClient', () => {
 
   describe('getQuote', () => {
     it('should return a quote', async () => {
-      const formData = new FormData()
-      const fileBuffers = ['test/test.txt'].map(readFileIntoBuffer)
-
-      fileBuffers.forEach((buffer, index) => {
-        formData.append(`file${index}`, buffer, { filename: `file${index}.bin` })
-      })
-
-      const args: GetQuoteArgs = {
-        type: info[0].type,
-        files: fileBuffers,
-        duration: 4353545453,
-        payment: {
+      const result = await client.getQuote(
+        info[0].type,
+        ['/home/jamie/Desktop/ocean/dbs.js/test/test.txt'],
+        4353545453,
+        {
           chainId: info[0].payment[0].chainId,
           tokenAddress: info[0].payment[0].acceptedTokens[0].value
         },
-        userAddress: process.env.USER_ADDRESS
-      }
-      const result = await client.getQuote(args)
+        process.env.USER_ADDRESS
+      )
       console.log(result)
       expect(result).to.be.an('object')
     })

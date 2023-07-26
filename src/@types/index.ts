@@ -17,9 +17,13 @@ export interface AcceptedPayment {
   tokenAddress: string
 }
 
+export interface FileData {
+  length: number
+}
+
 export interface GetQuoteArgs {
   type: string
-  files: Buffer[]
+  files: FileData[]
   duration: number
   payment: AcceptedPayment
   userAddress: string

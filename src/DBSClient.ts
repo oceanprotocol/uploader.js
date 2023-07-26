@@ -7,10 +7,13 @@ import {
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs
+  RegisterArgs,
+  AcceptedPayment,
+  FileData
 } from './@types'
 import { getSignedHash } from './utils'
 import validator from 'validator'
+import fs from 'fs'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -42,6 +45,15 @@ export class DBSClient {
     }
   }
 
+  private getFileSizes(files: string[]): FileData[] {
+    return files.map((file) => {
+      const stats = fs.statSync(file)
+      return {
+        length: stats.size
+      }
+    })
+  }
+
   /**
    * Fetches information about supported storage types and payments.
    *
@@ -58,7 +70,22 @@ export class DBSClient {
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>} - A promise that resolves to the quote result.
    */
-  async getQuote(args: GetQuoteArgs): Promise<GetQuoteResult> {
+  async getQuote(
+    type: string,
+    filePath: string[],
+    duration: number,
+    payment: AcceptedPayment,
+    userAddress: string
+  ): Promise<GetQuoteResult> {
+    const fileSizes = this.getFileSizes(filePath)
+    const args: GetQuoteArgs = {
+      type,
+      files: fileSizes,
+      duration,
+      payment,
+      userAddress
+    }
+
     const response = await axios.post<GetQuoteResult>(`${this.baseURL}/getQuote`, args)
     return response.data
   }
@@ -95,11 +122,11 @@ export class DBSClient {
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>}
    */
-  async getQuoteAndUpload(args: GetQuoteArgs): Promise<any> {
-    const quote = await this.getQuote(args)
-    const uploadResponse = await this.upload(quote.quoteId, args.files)
-    return uploadResponse
-  }
+  // async getQuoteAndUpload(args: GetQuoteArgs): Promise<any> {
+  //   const quote = await this.getQuote(args)
+  //   const uploadResponse = await this.upload(quote.quoteId, args.files)
+  //   return uploadResponse
+  // }
 
   /**
    * Fetches the status of a job.
