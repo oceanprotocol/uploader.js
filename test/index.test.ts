@@ -2,7 +2,6 @@ import { ethers } from 'ethers'
 import { assert, expect } from 'chai'
 import dotenv from 'dotenv'
 import fs, { readFileSync } from 'fs'
-import FormData from 'form-data'
 
 import { DBSClient } from '../src/index'
 import { StorageInfo, GetQuoteArgs } from '../src/@types'
@@ -116,18 +115,28 @@ describe('DBSClient', () => {
       expect(result.tokenAddress).to.be.a('string')
     })
   })
-  // describe('upload', () => {
-  //   it('should upload files successfully', async () => {
-  //     const quoteId = 'xxxx'
-  //     // const nonce = 1
-  //     // const signature = '0xXXXXX'
-  //     const files = [
-  //       // Add proper test files here
-  //     ]
-  //     await client.upload(quoteId, files)
-  //     // Add more assertions based on expected response
-  //   })
-  // })
+  describe('upload', () => {
+    it('should upload files successfully', async () => {
+      const address = signer.getAddress()
+      console.log(address)
+
+      const result = await client.getQuote(
+        info[0].type,
+        4353545453,
+        {
+          chainId: info[0].payment[0].chainId,
+          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+        },
+        process.env.USER_ADDRESS,
+        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      )
+      await client.upload(result.quoteId, [
+        process.env.TEST_FILE_1,
+        process.env.TEST_FILE_2
+      ])
+      // Add more assertions based on expected response
+    })
+  })
 
   // describe('getStatus', () => {
   //   it('should return a status', async () => {

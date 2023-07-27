@@ -1,6 +1,5 @@
 import { Signer } from 'ethers'
 import axios from 'axios'
-import FormData from 'form-data'
 import {
   StorageInfo,
   GetQuoteArgs,
@@ -14,6 +13,7 @@ import {
 import { getSignedHash } from './utils'
 import validator from 'validator'
 import fs from 'fs'
+import FormData from 'form-data'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -102,20 +102,25 @@ export class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, files: Buffer[]): Promise<any> {
+  async upload(quoteId: string, filePaths: string[]): Promise<any> {
     try {
-      const nonce = Date.now()
+      const nonce = Math.round(Date.now() / 1000)
       const signature = await getSignedHash(this.signer, quoteId, nonce)
       const formData = new FormData()
-      files.forEach((buffer, index) => {
-        formData.append(`file${index}`, buffer, { filename: `file${index}.bin` })
+      // Add each file to the form data
+      filePaths.forEach((path, index) => {
+        formData.append(`file${index + 1}`, fs.createReadStream(path))
       })
 
-      const response = await axios.post<any>(`${this.baseURL}/upload`, formData, {
-        params: { quoteId, nonce, signature },
-        headers: { ...formData.getHeaders(), 'Content-Type': 'multipart/form-data' }
+      const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
+
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          ...formData.getHeaders()
+        }
       })
-      return response
+
+      return response.data
     } catch (error) {
       console.error('Error:', error)
       throw error
