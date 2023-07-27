@@ -45,30 +45,33 @@ async function runExample() {
   console.log('Storage info:', info)
 
   // Fetch a quote using the local file path
-  const quote1 = await client.getQuote(
-    info[0].type,
-    4353545453,
-    {
+  const args1: GetQuoteArgs = {
+    type: info[0].type,
+    duration: 4353545453,
+    payment: {
       chainId: info[0].payment[0].chainId,
       tokenAddress: info[0].payment[0].acceptedTokens[0].value
     },
-    process.env.USER_ADDRESS,
-    ['/home/username/ocean/test1.txt']
-  )
+    userAddress: process.env.USER_ADDRESS,
+    filePath: ['/home/username/ocean/test1.txt', '/home/username/ocean/test2.txt']
+  }
+  const quote1 = await client.getQuote(args1)
+
   console.log('Quote 1:' quote1)
 
   // Fetch a quote using the file length
-  const quote2 = await client.getQuote(
-    info[0].type,
-    4353545453,
-    {
+  const args2: GetQuoteArgs = {
+    type: info[0].type,
+    duration: 4353545453,
+    payment: {
       chainId: info[0].payment[0].chainId,
       tokenAddress: info[0].payment[0].acceptedTokens[0].value
     },
-    process.env.USER_ADDRESS,
-    undefined,
-    [{ length: 1000 }]
-  )
+    userAddress: process.env.USER_ADDRESS,
+    filePath: undefined,
+    fileInfo: [{ length: 1000 }, { length: 9999 }]
+  }
+  const quote2 = await client.getQuote(args2)
   console.log('Quote 2: ', quote2)
 
   // Upload files

@@ -8,6 +8,7 @@ import {
   GetLinkResult,
   RegisterArgs,
   AcceptedPayment,
+  DBSGetQuoteArgs,
   FileData
 } from './@types'
 import { getSignedHash } from './utils'
@@ -70,28 +71,21 @@ export class DBSClient {
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>} - A promise that resolves to the quote result.
    */
-  async getQuote(
-    type: string,
-    duration: number,
-    payment: AcceptedPayment,
-    userAddress: string,
-    filePath?: string[],
-    fileInfo?: FileData[]
-  ): Promise<GetQuoteResult> {
-    if (!filePath && !fileInfo) {
+  async getQuote(args: GetQuoteArgs): Promise<GetQuoteResult> {
+    if (!args.filePath && !args.fileInfo) {
       throw new Error('Either filePath or fileInfo must be provided.')
     }
-    const fileSizes: FileData[] = fileInfo || this.getFileSizes(filePath)
+    const fileSizes: FileData[] = args.fileInfo || this.getFileSizes(args.filePath)
 
-    const args: GetQuoteArgs = {
-      type,
+    const payload: DBSGetQuoteArgs = {
+      type: args.type,
       files: fileSizes,
-      duration,
-      payment,
-      userAddress
+      duration: args.duration,
+      payment: args.payment,
+      userAddress: args.userAddress
     }
 
-    const response = await axios.post<GetQuoteResult>(`${this.baseURL}/getQuote`, args)
+    const response = await axios.post<GetQuoteResult>(`${this.baseURL}/getQuote`, payload)
     return response.data
   }
 

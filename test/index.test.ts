@@ -34,16 +34,17 @@ describe('DBSClient', () => {
 
   describe('getQuote', () => {
     it('should return a quote for uploading a file to Filecoin when using file paths', async () => {
-      const result = await client.getQuote(
-        info[0].type,
-        4353545453,
-        {
+      const args: GetQuoteArgs = {
+        type: info[0].type,
+        duration: 4353545453,
+        payment: {
           chainId: info[0].payment[0].chainId,
           tokenAddress: info[0].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS,
-        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      )
+        userAddress: process.env.USER_ADDRESS,
+        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      }
+      const result = await client.getQuote(args)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -54,17 +55,18 @@ describe('DBSClient', () => {
     })
 
     it('should return a quote for uploading a file to Filecoin when using file sizes', async () => {
-      const result = await client.getQuote(
-        info[0].type,
-        4353545453,
-        {
+      const args: GetQuoteArgs = {
+        type: info[0].type,
+        duration: 4353545453,
+        payment: {
           chainId: info[0].payment[0].chainId,
           tokenAddress: info[0].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS,
-        undefined,
-        [{ length: 1000 }, { length: 9999 }]
-      )
+        userAddress: process.env.USER_ADDRESS,
+        filePath: undefined,
+        fileInfo: [{ length: 1000 }, { length: 9999 }]
+      }
+      const result = await client.getQuote(args)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -75,16 +77,17 @@ describe('DBSClient', () => {
     })
 
     it('should return a quote for uploading a file to Arweave when using file paths', async () => {
-      const result = await client.getQuote(
-        info[1].type,
-        4353545453,
-        {
+      const args: GetQuoteArgs = {
+        type: info[1].type,
+        duration: 4353545453,
+        payment: {
           chainId: info[1].payment[0].chainId,
           tokenAddress: info[1].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS,
-        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      )
+        userAddress: process.env.USER_ADDRESS,
+        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      }
+      const result = await client.getQuote(args)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -95,17 +98,18 @@ describe('DBSClient', () => {
     })
 
     it('should return a quote for uploading a file to Arweave when using file sizes', async () => {
-      const result = await client.getQuote(
-        info[1].type,
-        4353545453,
-        {
+      const args: GetQuoteArgs = {
+        type: info[1].type,
+        duration: 4353545453,
+        payment: {
           chainId: info[1].payment[0].chainId,
           tokenAddress: info[1].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS,
-        undefined,
-        [{ length: 1000 }, { length: 9999 }]
-      )
+        userAddress: process.env.USER_ADDRESS,
+        filePath: undefined,
+        fileInfo: [{ length: 1000 }, { length: 9999 }]
+      }
+      const result = await client.getQuote(args)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -120,16 +124,18 @@ describe('DBSClient', () => {
       const address = signer.getAddress()
       console.log(address)
 
-      const result = await client.getQuote(
-        info[0].type,
-        4353545453,
-        {
+      const args: GetQuoteArgs = {
+        type: info[0].type,
+        duration: 4353545453,
+        payment: {
           chainId: info[0].payment[0].chainId,
           tokenAddress: info[0].payment[0].acceptedTokens[0].value
         },
-        process.env.USER_ADDRESS,
-        [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      )
+        userAddress: process.env.USER_ADDRESS,
+        filePath: undefined,
+        fileInfo: [{ length: 1000 }, { length: 9999 }]
+      }
+      const result = await client.getQuote(args)
       await client.upload(result.quoteId, [
         process.env.TEST_FILE_1,
         process.env.TEST_FILE_2
