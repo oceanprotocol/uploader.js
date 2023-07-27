@@ -20,6 +20,14 @@ export interface FileData {
 }
 export interface GetQuoteArgs {
   type: string
+  duration: number
+  payment: AcceptedPayment
+  userAddress: string
+  filePath?: string[]
+  fileInfo?: FileData[]
+}
+export interface DBSGetQuoteArgs {
+  type: string
   files: FileData[]
   duration: number
   payment: AcceptedPayment

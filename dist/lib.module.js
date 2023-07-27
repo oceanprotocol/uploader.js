@@ -1,54 +1,54 @@
 import e from 'axios'
-import r from 'form-data'
-import { sha256 as t, toUtf8Bytes as n, ethers as o } from 'ethers'
-import i from 'validator'
-import s from 'fs'
+import { sha256 as t, toUtf8Bytes as r, ethers as n } from 'ethers'
+import o from 'validator'
+import i from 'fs'
+import s from 'form-data'
 function a() {
   return (
     (a = Object.assign
       ? Object.assign.bind()
       : function (e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = arguments[r]
-            for (var n in t) Object.prototype.hasOwnProperty.call(t, n) && (e[n] = t[n])
+          for (var t = 1; t < arguments.length; t++) {
+            var r = arguments[t]
+            for (var n in r) Object.prototype.hasOwnProperty.call(r, n) && (e[n] = r[n])
           }
           return e
         }),
     a.apply(this, arguments)
   )
 }
-var u = function (e, r, i) {
+var u = function (e, o, i) {
     try {
-      var s = t(n(r + i.toString()))
-      return Promise.resolve(e.signMessage(o.getBytes(s)))
+      var s = t(r(o + i.toString()))
+      return Promise.resolve(e.signMessage(n.getBytes(s)))
     } catch (e) {
       return Promise.reject(e)
     }
   },
   c = /*#__PURE__*/ (function () {
-    function t(e, r) {
+    function t(e, t) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),
         this.validateBaseURL(e),
         (this.baseURL = e),
-        (this.signer = r)
+        (this.signer = t)
     }
-    var n = t.prototype
+    var r = t.prototype
     return (
-      (n.validateBaseURL = function (e) {
+      (r.validateBaseURL = function (e) {
         if (!e || 'string' != typeof e || '' === e.trim())
           throw new Error(
             'Invalid baseURL provided. baseURL cannot be empty or undefined.'
           )
-        if (!i.isURL(e, { require_tld: !1 }))
+        if (!o.isURL(e, { require_tld: !1 }))
           throw new Error('Invalid baseURL format provided.')
       }),
-      (n.getFileSizes = function (e) {
+      (r.getFileSizes = function (e) {
         return e.map(function (e) {
-          return { length: s.statSync(e).size }
+          return { length: i.statSync(e).size }
         })
       }),
-      (n.getStorageInfo = function () {
+      (r.getStorageInfo = function () {
         try {
           return Promise.resolve(e.get(this.baseURL + '/')).then(function (e) {
             return e.data
@@ -57,17 +57,18 @@ var u = function (e, r, i) {
           return Promise.reject(e)
         }
       }),
-      (n.getQuote = function (r, t, n, o, i, s) {
+      (r.getQuote = function (t) {
         try {
-          if (!i && !s) throw new Error('Either filePath or fileInfo must be provided.')
-          var a = s || this.getFileSizes(i)
+          if (!t.filePath && !t.fileInfo)
+            throw new Error('Either filePath or fileInfo must be provided.')
+          var r = t.fileInfo || this.getFileSizes(t.filePath)
           return Promise.resolve(
             e.post(this.baseURL + '/getQuote', {
-              type: r,
-              files: a,
-              duration: t,
-              payment: n,
-              userAddress: o
+              type: t.type,
+              files: r,
+              duration: t.duration,
+              payment: t.payment,
+              userAddress: t.userAddress
             })
           ).then(function (e) {
             return e.data
@@ -76,35 +77,42 @@ var u = function (e, r, i) {
           return Promise.reject(e)
         }
       }),
-      (n.upload = function (t, n) {
+      (r.upload = function (t, r) {
         try {
-          var o = this
+          var n = this
           return Promise.resolve(
-            (function (i, s) {
+            (function (o, c) {
               try {
-                var c =
-                  ((f = Date.now()),
-                  Promise.resolve(u(o.signer, t, f)).then(function (i) {
-                    var s = new r()
+                var f =
+                  ((h = Math.round(Date.now() / 1e3)),
+                  Promise.resolve(u(n.signer, t, h)).then(function (o) {
+                    var u = new s()
                     return (
-                      n.forEach(function (e, r) {
-                        s.append('file' + r, e, { filename: 'file' + r + '.bin' })
+                      r.forEach(function (e, t) {
+                        u.append('file' + (t + 1), i.createReadStream(e))
                       }),
                       Promise.resolve(
-                        e.post(o.baseURL + '/upload', s, {
-                          params: { quoteId: t, nonce: f, signature: i },
-                          headers: a({}, s.getHeaders(), {
-                            'Content-Type': 'multipart/form-data'
-                          })
-                        })
-                      )
+                        e.post(
+                          n.baseURL +
+                            '/upload?quoteId=' +
+                            t +
+                            '&nonce=' +
+                            h +
+                            '&signature=' +
+                            o,
+                          u,
+                          { headers: a({}, u.getHeaders()) }
+                        )
+                      ).then(function (e) {
+                        return e.data
+                      })
                     )
                   }))
               } catch (e) {
-                return s(e)
+                return c(e)
               }
-              var f
-              return c && c.then ? c.then(void 0, s) : c
+              var h
+              return f && f.then ? f.then(void 0, c) : f
             })(0, function (e) {
               throw (console.error('Error:', e), e)
             })
@@ -113,10 +121,10 @@ var u = function (e, r, i) {
           return Promise.reject(e)
         }
       }),
-      (n.getStatus = function (r) {
+      (r.getStatus = function (t) {
         try {
           return Promise.resolve(
-            e.post(this.baseURL + '/getStatus', { quoteId: r })
+            e.post(this.baseURL + '/getStatus', { quoteId: t })
           ).then(function (e) {
             return e.data
           })
@@ -124,14 +132,14 @@ var u = function (e, r, i) {
           return Promise.reject(e)
         }
       }),
-      (n.getLink = function (r) {
+      (r.getLink = function (t) {
         try {
-          var t = this,
+          var r = this,
             n = Date.now()
-          return Promise.resolve(u(t.signer, r, n)).then(function (o) {
+          return Promise.resolve(u(r.signer, t, n)).then(function (o) {
             return Promise.resolve(
-              e.post(t.baseURL + '/getLink', null, {
-                params: { quoteId: r, nonce: n, signature: o }
+              e.post(r.baseURL + '/getLink', null, {
+                params: { quoteId: t, nonce: n, signature: o }
               })
             ).then(function (e) {
               return e.data
@@ -141,9 +149,9 @@ var u = function (e, r, i) {
           return Promise.reject(e)
         }
       }),
-      (n.registerMicroservice = function (r) {
+      (r.registerMicroservice = function (t) {
         try {
-          return Promise.resolve(e.post(this.baseURL + '/register', r)).then(
+          return Promise.resolve(e.post(this.baseURL + '/register', t)).then(
             function () {}
           )
         } catch (e) {

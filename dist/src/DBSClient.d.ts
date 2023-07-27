@@ -1,13 +1,11 @@
-/// <reference types="node" />
 import { Signer } from 'ethers'
 import {
   StorageInfo,
+  GetQuoteArgs,
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult,
-  RegisterArgs,
-  AcceptedPayment,
-  FileData
+  RegisterArgs
 } from './@types'
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -35,14 +33,7 @@ export declare class DBSClient {
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
    * @returns {Promise<GetQuoteResult>} - A promise that resolves to the quote result.
    */
-  getQuote(
-    type: string,
-    duration: number,
-    payment: AcceptedPayment,
-    userAddress: string,
-    filePath?: string[],
-    fileInfo?: FileData[]
-  ): Promise<GetQuoteResult>
+  getQuote(args: GetQuoteArgs): Promise<GetQuoteResult>
   /**
    * Uploads files according to the quote request.
    *
@@ -50,7 +41,7 @@ export declare class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, files: Buffer[]): Promise<any>
+  upload(quoteId: string, filePaths: string[]): Promise<any>
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.

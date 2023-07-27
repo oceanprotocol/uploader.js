@@ -3,22 +3,22 @@
     ? t(
         exports,
         require('axios'),
-        require('form-data'),
         require('ethers'),
         require('validator'),
-        require('fs')
+        require('fs'),
+        require('form-data')
       )
     : 'function' == typeof define && define.amd
-    ? define(['exports', 'axios', 'form-data', 'ethers', 'validator', 'fs'], t)
-    : t(((e || self).dbs = {}), e.axios, e.formData, e.ethers, e.validator, e.fs)
+    ? define(['exports', 'axios', 'ethers', 'validator', 'fs', 'form-data'], t)
+    : t(((e || self).dbs = {}), e.axios, e.ethers, e.validator, e.fs, e.formData)
 })(this, function (e, t, r, n, o, i) {
-  function s(e) {
+  function a(e) {
     return e && 'object' == typeof e && 'default' in e ? e : { default: e }
   }
-  var a = /*#__PURE__*/ s(t),
-    u = /*#__PURE__*/ s(r),
-    f = /*#__PURE__*/ s(o),
-    c = /*#__PURE__*/ s(i)
+  var s = /*#__PURE__*/ a(t),
+    u = /*#__PURE__*/ a(n),
+    f = /*#__PURE__*/ a(o),
+    c = /*#__PURE__*/ a(i)
   function d() {
     return (
       (d = Object.assign
@@ -33,10 +33,10 @@
       d.apply(this, arguments)
     )
   }
-  var l = function (e, t, r) {
+  var l = function (e, t, n) {
     try {
-      var o = n.sha256(n.toUtf8Bytes(t + r.toString()))
-      return Promise.resolve(e.signMessage(n.ethers.getBytes(o)))
+      var o = r.sha256(r.toUtf8Bytes(t + n.toString()))
+      return Promise.resolve(e.signMessage(r.ethers.getBytes(o)))
     } catch (e) {
       return Promise.reject(e)
     }
@@ -56,34 +56,35 @@
           throw new Error(
             'Invalid baseURL provided. baseURL cannot be empty or undefined.'
           )
-        if (!f.default.isURL(e, { require_tld: !1 }))
+        if (!u.default.isURL(e, { require_tld: !1 }))
           throw new Error('Invalid baseURL format provided.')
       }),
       (t.getFileSizes = function (e) {
         return e.map(function (e) {
-          return { length: c.default.statSync(e).size }
+          return { length: f.default.statSync(e).size }
         })
       }),
       (t.getStorageInfo = function () {
         try {
-          return Promise.resolve(a.default.get(this.baseURL + '/')).then(function (e) {
+          return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
             return e.data
           })
         } catch (e) {
           return Promise.reject(e)
         }
       }),
-      (t.getQuote = function (e, t, r, n, o, i) {
+      (t.getQuote = function (e) {
         try {
-          if (!o && !i) throw new Error('Either filePath or fileInfo must be provided.')
-          var s = i || this.getFileSizes(o)
+          if (!e.filePath && !e.fileInfo)
+            throw new Error('Either filePath or fileInfo must be provided.')
+          var t = e.fileInfo || this.getFileSizes(e.filePath)
           return Promise.resolve(
-            a.default.post(this.baseURL + '/getQuote', {
-              type: e,
-              files: s,
-              duration: t,
-              payment: r,
-              userAddress: n
+            s.default.post(this.baseURL + '/getQuote', {
+              type: e.type,
+              files: t,
+              duration: e.duration,
+              payment: e.payment,
+              userAddress: e.userAddress
             })
           ).then(function (e) {
             return e.data
@@ -99,27 +100,34 @@
             (function (n, o) {
               try {
                 var i =
-                  ((s = Date.now()),
-                  Promise.resolve(l(r.signer, e, s)).then(function (n) {
-                    var o = new u.default()
+                  ((a = Math.round(Date.now() / 1e3)),
+                  Promise.resolve(l(r.signer, e, a)).then(function (n) {
+                    var o = new c.default()
                     return (
                       t.forEach(function (e, t) {
-                        o.append('file' + t, e, { filename: 'file' + t + '.bin' })
+                        o.append('file' + (t + 1), f.default.createReadStream(e))
                       }),
                       Promise.resolve(
-                        a.default.post(r.baseURL + '/upload', o, {
-                          params: { quoteId: e, nonce: s, signature: n },
-                          headers: d({}, o.getHeaders(), {
-                            'Content-Type': 'multipart/form-data'
-                          })
-                        })
-                      )
+                        s.default.post(
+                          r.baseURL +
+                            '/upload?quoteId=' +
+                            e +
+                            '&nonce=' +
+                            a +
+                            '&signature=' +
+                            n,
+                          o,
+                          { headers: d({}, o.getHeaders()) }
+                        )
+                      ).then(function (e) {
+                        return e.data
+                      })
                     )
                   }))
               } catch (e) {
                 return o(e)
               }
-              var s
+              var a
               return i && i.then ? i.then(void 0, o) : i
             })(0, function (e) {
               throw (console.error('Error:', e), e)
@@ -132,7 +140,7 @@
       (t.getStatus = function (e) {
         try {
           return Promise.resolve(
-            a.default.post(this.baseURL + '/getStatus', { quoteId: e })
+            s.default.post(this.baseURL + '/getStatus', { quoteId: e })
           ).then(function (e) {
             return e.data
           })
@@ -146,7 +154,7 @@
             r = Date.now()
           return Promise.resolve(l(t.signer, e, r)).then(function (n) {
             return Promise.resolve(
-              a.default.post(t.baseURL + '/getLink', null, {
+              s.default.post(t.baseURL + '/getLink', null, {
                 params: { quoteId: e, nonce: r, signature: n }
               })
             ).then(function (e) {
@@ -159,7 +167,7 @@
       }),
       (t.registerMicroservice = function (e) {
         try {
-          return Promise.resolve(a.default.post(this.baseURL + '/register', e)).then(
+          return Promise.resolve(s.default.post(this.baseURL + '/register', e)).then(
             function () {}
           )
         } catch (e) {
