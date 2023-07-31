@@ -7,11 +7,11 @@ import { ethers, Signer, sha256, toUtf8Bytes } from 'ethers'
  * @returns {Promise<string>} - A promise that resolves to the signed hash.
  */
 export const getSignedHash = async (signer: Signer, quoteId: string, nonce: number) => {
-  // Create a hash
-  const hash = sha256(toUtf8Bytes(quoteId + nonce.toString()))
+  // Concatenate the message
+  const message = quoteId + nonce.toString()
 
-  // Sign the hash
-  const signedHash = await signer.signMessage(ethers.getBytes(hash))
+  // Sign the message directly
+  const signature = await signer.signMessage(message)
 
-  return signedHash
+  return signature
 }
