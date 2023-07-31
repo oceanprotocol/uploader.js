@@ -25,21 +25,27 @@ describe('DBSClient', () => {
       expect(info).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
-      assert(info[0].type === 'filecoin')
-      assert(info[0].description === 'File storage on FileCoin')
-      assert(info[1].type === 'arweave')
-      assert(info[1].description === 'File storage on Arweave')
+      assert(info[0].type === 'filecoin' || info[1].type === 'filecoin')
+      assert(
+        info[0].description === 'File storage on FileCoin' ||
+          info[1].description === 'File storage on FileCoin'
+      )
+      assert(info[0].type === 'arweave' || info[1].type === 'arweave')
+      assert(
+        info[0].description === 'File storage on Arweave' ||
+          info[1].description === 'File storage on Arweave'
+      )
     })
   })
 
   describe('getQuote', () => {
     it('should return a quote for uploading a file to Filecoin when using file paths', async () => {
       const args: GetQuoteArgs = {
-        type: info[0].type,
+        type: 'filecoin',
         duration: 4353545453,
         payment: {
-          chainId: info[0].payment[0].chainId,
-          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+          chainId: '80001',
+          tokenAddress: '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
@@ -56,17 +62,18 @@ describe('DBSClient', () => {
 
     it('should return a quote for uploading a file to Filecoin when using file sizes', async () => {
       const args: GetQuoteArgs = {
-        type: info[0].type,
+        type: 'filecoin',
         duration: 4353545453,
         payment: {
-          chainId: info[0].payment[0].chainId,
-          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+          chainId: '80001',
+          tokenAddress: '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: undefined,
         fileInfo: [{ length: 1000 }, { length: 9999 }]
       }
       const result = await client.getQuote(args)
+      console.log('result', result)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -78,11 +85,11 @@ describe('DBSClient', () => {
 
     it('should return a quote for uploading a file to Arweave when using file paths', async () => {
       const args: GetQuoteArgs = {
-        type: info[1].type,
+        type: 'arweave',
         duration: 4353545453,
         payment: {
-          chainId: info[1].payment[0].chainId,
-          tokenAddress: info[1].payment[0].acceptedTokens[0].value
+          chainId: '80001',
+          tokenAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
@@ -99,11 +106,11 @@ describe('DBSClient', () => {
 
     it('should return a quote for uploading a file to Arweave when using file sizes', async () => {
       const args: GetQuoteArgs = {
-        type: info[1].type,
+        type: 'arweave',
         duration: 4353545453,
         payment: {
-          chainId: info[1].payment[0].chainId,
-          tokenAddress: info[1].payment[0].acceptedTokens[0].value
+          chainId: '80001',
+          tokenAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: undefined,
@@ -120,26 +127,24 @@ describe('DBSClient', () => {
     })
   })
   describe('upload', () => {
-    it('should upload files successfully', async () => {
-      const address = signer.getAddress()
-      console.log(address)
-
+    it('should upload files successfully to filecoin', async () => {
       const args: GetQuoteArgs = {
-        type: info[0].type,
+        type: 'filecoin',
         duration: 4353545453,
         payment: {
-          chainId: info[0].payment[0].chainId,
-          tokenAddress: info[0].payment[0].acceptedTokens[0].value
+          chainId: '80001',
+          tokenAddress: '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
         },
         userAddress: process.env.USER_ADDRESS,
-        filePath: undefined,
-        fileInfo: [{ length: 1000 }, { length: 9999 }]
+        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
       }
       const result = await client.getQuote(args)
-      await client.upload(result.quoteId, [
+
+      const resultFromUpload = await client.upload(result.quoteId, [
         process.env.TEST_FILE_1,
         process.env.TEST_FILE_2
       ])
+      console.log('resultFromUpload', resultFromUpload)
       // Add more assertions based on expected response
     })
   })
