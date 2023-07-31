@@ -1,4 +1,4 @@
-import { Signer } from 'ethers'
+import { Signer, MaxInt256, Contract } from 'ethers'
 import axios from 'axios'
 import {
   StorageInfo,
@@ -11,7 +11,7 @@ import {
   DBSGetQuoteArgs,
   FileData
 } from './@types'
-import { getSignedHash } from './utils'
+import { getSignedHash, minErc20Abi } from './utils'
 import validator from 'validator'
 import fs from 'fs'
 import FormData from 'form-data'
@@ -86,6 +86,7 @@ export class DBSClient {
     }
 
     const response = await axios.post<GetQuoteResult>(`${this.baseURL}/getQuote`, payload)
+
     return response.data
   }
 
@@ -96,10 +97,16 @@ export class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  async upload(quoteId: string, filePaths: string[]): Promise<any> {
+  async upload(quoteId: string, tokenAddress: string, filePaths: string[]): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
+      const address = await this.signer.getAddress()
+
+      const token = new Contract(tokenAddress, minErc20Abi, this.signer)
+
+      await (await token.approve(address, MaxInt256)).wait()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
+
       const formData = new FormData()
       // Add each file to the form data
       filePaths.forEach((path, index) => {
@@ -114,10 +121,10 @@ export class DBSClient {
         }
       })
 
-      return response.data
+      return response
     } catch (error) {
       console.error('Error:', error)
-      throw error
+      return error.data
     }
   }
 
@@ -139,8 +146,10 @@ export class DBSClient {
    * @returns {Promise<GetStatusResult>} - A promise that resolves to the status result.
    */
   async getStatus(quoteId: string): Promise<GetStatusResult> {
-    const response = await axios.post<GetStatusResult>(`${this.baseURL}/getStatus`, {
-      quoteId
+    const response = await axios.get<GetStatusResult>(`${this.baseURL}/getStatus`, {
+      params: {
+        quoteId
+      }
     })
     return response.data
   }
