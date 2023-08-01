@@ -1,5 +1,5 @@
 import { Signer, MaxInt256, Contract } from 'ethers'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {
   StorageInfo,
   GetQuoteArgs,
@@ -211,7 +211,8 @@ export class DBSClient {
    * @param {RegisterArgs} args - The arguments needed for registering a microservice.
    * @returns {Promise<void>}
    */
-  async registerMicroservice(args: RegisterArgs): Promise<void> {
-    await axios.post(`${this.baseURL}/register`, args)
+  async registerMicroservice(args: RegisterArgs): Promise<AxiosResponse> {
+    const response = await axios.post(`${this.baseURL}/register`, args)
+    return response
   }
 }
