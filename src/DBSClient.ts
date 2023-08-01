@@ -128,6 +128,41 @@ export class DBSClient {
     }
   }
 
+  async uploadBrowser(
+    quoteId: string,
+    tokenAddress: string,
+    files: FileList
+  ): Promise<any> {
+    try {
+      const nonce = Math.round(Date.now() / 1000)
+      const address = await this.signer.getAddress()
+
+      const token = new Contract(tokenAddress, minErc20Abi, this.signer)
+
+      await (await token.approve(address, MaxInt256)).wait()
+      const signature = await getSignedHash(this.signer, quoteId, nonce) // Make sure this works in a browser context or offload to a server
+
+      const formData = new FormData()
+      // Add each file to the form data
+      Array.from(files).forEach((file, index) => {
+        formData.append(`file${index + 1}`, file)
+      })
+
+      const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
+
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          ...formData.getHeaders()
+        }
+      })
+
+      return response
+    } catch (error) {
+      console.error('Error:', error)
+      return error.data
+    }
+  }
+
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
