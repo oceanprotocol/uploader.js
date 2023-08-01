@@ -162,9 +162,9 @@ export class DBSClient {
    */
 
   async getLink(quoteId: string): Promise<GetLinkResult[]> {
-    const nonce = Date.now()
+    const nonce = Math.round(Date.now() / 1000)
     const signature = await getSignedHash(this.signer, quoteId, nonce)
-    const response = await axios.post<GetLinkResult[]>(`${this.baseURL}/getLink`, null, {
+    const response = await axios.get<GetLinkResult[]>(`${this.baseURL}/getLink`, {
       params: { quoteId, nonce, signature }
     })
     return response.data
