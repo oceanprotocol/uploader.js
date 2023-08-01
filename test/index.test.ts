@@ -120,8 +120,10 @@ describe('DBSClient', () => {
       expect(result.tokenAddress).to.be.a('string')
     })
   })
-  describe('upload', async function () {
+  describe('Testing the upload and status endpoints', async function () {
     this.timeout(200000)
+    let arweaveQuote: any
+
     it('should upload files successfully to filecoin', async () => {
       const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
       const args: GetQuoteArgs = {
@@ -146,8 +148,8 @@ describe('DBSClient', () => {
 
     it('should upload files successfully to Arweave', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
-      const token = new Contract(tokenAddress, minErc20Abi, signer)
-      const userBalanceBefore = await token.balanceOf(process.env.USER_ADDRESS)
+      // const token = new Contract(tokenAddress, minErc20Abi, signer)
+      // const userBalanceBefore = await token.balanceOf(process.env.USER_ADDRESS)
 
       const args: GetQuoteArgs = {
         type: 'arweave',
@@ -159,9 +161,9 @@ describe('DBSClient', () => {
         userAddress: process.env.USER_ADDRESS,
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
       }
-      const quote = await client.getQuote(args)
+      arweaveQuote = await client.getQuote(args)
 
-      const result = await client.upload(quote.quoteId, tokenAddress, [
+      const result = await client.upload(arweaveQuote.quoteId, tokenAddress, [
         process.env.TEST_FILE_1,
         process.env.TEST_FILE_2
       ])
@@ -171,22 +173,54 @@ describe('DBSClient', () => {
       assert(result.statusText === 'OK', 'Upload failed')
       assert(result.data === 'File upload succeeded.', 'Upload failed')
 
-      let status
-      while (status !== 400) {
-        status = await client.getStatus(quote.quoteId)
-        console.log('status', status)
-      }
-
       // check that user's balance was reduced by the right token amount
 
-      const userBalanceAfter = await token.balanceOf(process.env.USER_ADDRESS)
-      console.log('userBalanceBefore', userBalanceBefore.toString())
-      console.log('userBalanceAfter', userBalanceAfter.toString())
-      console.log('quote.tokenAmount', quote.tokenAmount.toString())
+      // const userBalanceAfter = await token.balanceOf(process.env.USER_ADDRESS)
+      // console.log('userBalanceBefore', userBalanceBefore.toString())
+      // console.log('userBalanceAfter', userBalanceAfter.toString())
+      // console.log('quote.tokenAmount', quote.tokenAmount.toString())
       // assert(
       //   Number(userBalanceBefore) - Number(userBalanceAfter) === quote.tokenAmount,
       //   'User balance reduced by wrong tokenAmount'
       // )
+    })
+
+    it('Arweave upload should return 400 status', async () => {
+      let status
+      while (status !== 400) {
+        await new Promise((resolve) => setTimeout(resolve, 5000))
+        status = (await client.getStatus(arweaveQuote.quoteId)).status
+        console.log('status', status)
+        assert(
+          status !== 200,
+          'Upload failed with status: QUOTE_STATUS_PAYMENT_PULL_FAILED'
+        )
+        assert(
+          status !== 201,
+          'Upload failed with status: QUOTE_STATUS_PAYMENT_UNWRAP_FAILED'
+        )
+        assert(
+          status !== 202,
+          'Upload failed with status: QUOTE_STATUS_PAYMENT_PUSH_FAILED'
+        )
+        assert(
+          status !== 401,
+          'Upload failed with status: QUOTE_STATUS_UPLOAD_INTERNAL_ERROR'
+        )
+        assert(
+          status !== 402,
+          'Upload failed with status: QUOTE_STATUS_UPLOAD_ACTUAL_FILE_LEN_EXCEEDS_QUOTE'
+        )
+        assert(
+          status !== 403,
+          'Upload failed with status: QUOTE_STATUS_UPLOAD_DOWNLOAD_FAILED'
+        )
+        assert(
+          status !== 404,
+          'Upload failed with status: QUOTE_STATUS_UPLOAD_UPLOAD_FAILED'
+        )
+      }
+      assert(status === 400, 'Upload succeeded with status: QUOTE_STATUS_UPLOAD_END')
     })
   })
 
