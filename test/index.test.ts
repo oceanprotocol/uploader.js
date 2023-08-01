@@ -2,10 +2,12 @@ import { ethers, JsonRpcProvider, Contract } from 'ethers'
 import { assert, expect } from 'chai'
 import dotenv from 'dotenv'
 import fs, { readFileSync } from 'fs'
+import Arweave from 'arweave'
 
 import { DBSClient } from '../src/index'
 import { StorageInfo, GetQuoteArgs } from '../src/@types'
 import { minErc20Abi } from '../src/utils'
+import { getTransactionWithRetry, getDataWithRetry } from './helpers'
 
 dotenv.config()
 
@@ -21,7 +23,13 @@ describe('DBSClient', () => {
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
   const client = new DBSClient(process.env.DBS_API_URL, signer)
 
-  describe('getStorageInfo', () => {
+  const arweave = Arweave.init({
+    host: 'arweave.net',
+    port: 443,
+    protocol: 'https'
+  })
+
+  describe('Testing getStorageInfo endpoint', () => {
     it('should return an array of storage info', async () => {
       info = await client.getStorageInfo()
       expect(info).to.be.an('array')
@@ -39,7 +47,7 @@ describe('DBSClient', () => {
       )
     })
   })
-  describe('getQuote', () => {
+  describe('Testing getQuote endpoint', () => {
     it('should return a quote for uploading a file to Filecoin when using file paths', async () => {
       const args: GetQuoteArgs = {
         type: 'filecoin',
@@ -72,7 +80,7 @@ describe('DBSClient', () => {
         fileInfo: [{ length: 1000 }, { length: 9999 }]
       }
       const result = await client.getQuote(args)
-      console.log('result', result)
+
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
       expect(result.tokenAmount).to.be.a('number')
@@ -120,7 +128,7 @@ describe('DBSClient', () => {
       expect(result.tokenAddress).to.be.a('string')
     })
   })
-  describe('Testing the upload and status endpoints', async function () {
+  describe('Testing the upload, status and getLink endpoints', async function () {
     this.timeout(200000)
     let arweaveQuote: any
 
@@ -188,7 +196,6 @@ describe('DBSClient', () => {
     it('Arweave upload should return 400 status', async () => {
       let status
       while (status !== 400) {
-        await new Promise((resolve) => setTimeout(resolve, 5000))
         status = (await client.getStatus(arweaveQuote.quoteId)).status
         console.log('status', status)
         assert(
@@ -219,30 +226,56 @@ describe('DBSClient', () => {
           status !== 404,
           'Upload failed with status: QUOTE_STATUS_UPLOAD_UPLOAD_FAILED'
         )
+        await new Promise((resolve) => setTimeout(resolve, 5000))
       }
       assert(status === 400, 'Upload succeeded with status: QUOTE_STATUS_UPLOAD_END')
     })
+
+    it('should return a link for arweave', async () => {
+      let result
+      try {
+        result = await client.getLink(arweaveQuote.quoteId)
+        console.log('result', result)
+      } catch (error) {
+        console.log('error', error)
+      }
+
+      assert(result, 'No response returned from getLink request')
+      expect(result).to.be.an('array', 'Response is not an array')
+      assert(result[0].type === 'arweave', 'Wrong type')
+      assert(result[1].type === 'arweave', 'Wrong type')
+      assert(result[0].transactionHash, 'Missing the first transaction hash')
+      assert(result[1].transactionHash, 'Missing the second transaction hash')
+      console.log('1 tests passed')
+
+      const transactionHash1 = result[0].transactionHash
+      const transactionHash2 = result[1].transactionHash
+
+      assert(transactionHash1 !== transactionHash2, 'Transaction hashes are the same')
+      const formatRegex = /^[a-zA-Z0-9_-]{43}$/
+      assert(formatRegex.test(transactionHash1), 'Wrong format for transactionHash1')
+      assert(formatRegex.test(transactionHash2), 'Wrong format for transactionHash2')
+
+      console.log('2 tests passed')
+
+      // const transaction1 = await getTransactionWithRetry(transactionHash1)
+      // const transaction2 = await getTransactionWithRetry(transactionHash2)
+
+      // console.log(transaction1)
+      // console.log(transaction2)
+
+      // assert(transaction1, 'No transaction returned for transactionHash1')
+      // assert(transaction2, 'No transaction returned for transactionHash2')
+      // assert(transaction1.id, 'No id for transactionHash1')
+      // assert(transaction2.id, 'No id for transactionHash2')
+
+      const data1 = await getDataWithRetry(transactionHash1)
+      const data2 = await getDataWithRetry(transactionHash1)
+
+      console.log('data1', data1)
+      console.log('data2', data2)
+    })
   })
-
-  // describe('getStatus', () => {
-  //   it('should return a status', async () => {
-  //     const quoteId = 'xxxx'
-  //     const result = await client.getStatus(quoteId)
-  //     expect(result).to.be.an('object')
-  //     // Add more assertions based on expected response
-  //   })
-  // })
-
-  // describe('getLink', () => {
-  //   it('should return a link', async () => {
-  //     const quoteId = 'xxxx'
-  //     // const nonce = 1
-  //     // const signature = '0xXXXXX'
-  //     const result = await client.getLink(quoteId)
-  //     expect(result).to.be.an('array')
-  //     // Add more assertions based on expected response
-  //   })
-  // })
 
   // describe('registerMicroservice', () => {
   //   it('should register a microservice successfully', async () => {
