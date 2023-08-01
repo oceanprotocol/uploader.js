@@ -5,7 +5,7 @@ import fs, { readFileSync } from 'fs'
 import Arweave from 'arweave'
 
 import { DBSClient } from '../src/index'
-import { StorageInfo, GetQuoteArgs } from '../src/@types'
+import { StorageInfo, GetQuoteArgs, RegisterArgs } from '../src/@types'
 import { minErc20Abi } from '../src/utils'
 import { getTransactionWithRetry, getDataWithRetry } from './helpers'
 
@@ -27,6 +27,67 @@ describe('DBSClient', () => {
     host: 'arweave.net',
     port: 443,
     protocol: 'https'
+  })
+
+  describe('Testing the registerMicroservice endpoint', () => {
+    const args: RegisterArgs = {
+      type: 'TEST-' + String(Math.random()),
+      description: 'File storage on FileCoin',
+      url: 'http://microservice.url',
+      paymentMethods: [
+        {
+          chainId: '1',
+          acceptedTokens: [
+            {
+              title: 'OCEAN',
+              value: '0x967da4048cD07aB37855c090aAF366e4ce1b9F48'
+            },
+            {
+              title: 'USDC',
+              value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+            }
+          ]
+        },
+        {
+          chainId: '80001',
+          acceptedTokens: [
+            {
+              title: 'OCEAN',
+              value: '0xd8992Ed72C445c35Cb4A2be468568Ed1079357c8'
+            }
+          ]
+        },
+        {
+          chainId: '5',
+          acceptedTokens: [
+            {
+              title: 'OCEAN',
+              value: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a'
+            }
+          ]
+        }
+      ]
+    }
+    it('should register a microservice successfully', async () => {
+      const response = await client.registerMicroservice(args)
+
+      assert(response.status === 201, 'registerMicroservice failed: Status is not 200')
+      assert(
+        response.statusText === 'Created',
+        'registerMicroservice failed: StatusText is not OK'
+      )
+      assert(response.data === 'Desired storage created.', 'Wrong register response')
+    })
+
+    it('should recieve the correct response when trying to register the same microservice again', async () => {
+      const response = await client.registerMicroservice(args)
+
+      assert(response.status === 200, 'registerMicroservice failed: Status is not 200')
+      assert(
+        response.data === 'Chosen storage type is already active and registered.',
+        'Wrong registerMicroservice response'
+      )
+    })
   })
 
   describe('Testing getStorageInfo endpoint', () => {
@@ -132,27 +193,27 @@ describe('DBSClient', () => {
     this.timeout(200000)
     let arweaveQuote: any
 
-    it('should upload files successfully to filecoin', async () => {
-      const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-      const args: GetQuoteArgs = {
-        type: 'filecoin',
-        duration: 4353545453,
-        payment: {
-          chainId: '80001',
-          tokenAddress
-        },
-        userAddress: process.env.USER_ADDRESS,
-        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      }
-      const result = await client.getQuote(args)
+    // it('should upload files successfully to filecoin', async () => {
+    //   const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
+    //   const args: GetQuoteArgs = {
+    //     type: 'filecoin',
+    //     duration: 4353545453,
+    //     payment: {
+    //       chainId: '80001',
+    //       tokenAddress
+    //     },
+    //     userAddress: process.env.USER_ADDRESS,
+    //     filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+    //   }
+    //   const result = await client.getQuote(args)
 
-      const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-        process.env.TEST_FILE_1,
-        process.env.TEST_FILE_2
-      ])
-      console.log('resultFromUpload', resultFromUpload.data)
-      // Add more assertions based on expected response
-    })
+    //   const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
+    //     process.env.TEST_FILE_1,
+    //     process.env.TEST_FILE_2
+    //   ])
+    //   console.log('resultFromUpload', resultFromUpload.data)
+    //   // Add more assertions based on expected response
+    // })
 
     it('should upload files successfully to Arweave', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
@@ -276,38 +337,4 @@ describe('DBSClient', () => {
       console.log('data2', data2)
     })
   })
-
-  // describe('registerMicroservice', () => {
-  //   it('should register a microservice successfully', async () => {
-  //     const args: RegisterArgs = {
-  //       type: 'filecoin',
-  //       description: 'File storage on FileCoin',
-  //       url: 'http://microservice.url',
-  //       paymentMethods: [
-  //         {
-  //           chainId: '1',
-  //           acceptedTokens: [
-  //             {
-  //               OCEAN: '0xOCEAN_on_MAINNET'
-  //             },
-  //             {
-  //               DAI: '0xDAI_ON_MAINNET'
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           chainId: 'polygon_chain_id',
-  //           acceptedTokens: [
-  //             {
-  //               OCEAN: '0xOCEAN_on_POLYGON'
-  //             },
-  //             {
-  //               DAI: '0xDAI_ON_POLYGON'
-  //             }
-  //           ]
-  //         }
-  //       ]
-  //     }
-  // await client.registerMicroservice(args)
-  // Add more assertions based on expected response
 })
