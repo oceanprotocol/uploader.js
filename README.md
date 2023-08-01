@@ -16,7 +16,7 @@ or
 yarn add @oceanprotocol/dbs
 ```
 
-## Usage Example
+## Node.js Usage Example
 
 ```typescript
 import { ethers } from 'ethers'
@@ -103,6 +103,33 @@ async function runExample() {
 }
 
 runExample().catch(console.error)
+```
+
+## Browser Usage
+
+Ensure that the Signer object (signer in this case) you're passing to the function when you call it from the browser is properly initialized and is compatible with the browser. For instance, if you're using something like MetaMask as your Ethereum provider in the browser, you'd typically use the ethers.Web3Provider to generate a signer.
+
+1. Setting up a Signer: with MetaMask or similar browser wallets, you can set up an ethers signer as follows:
+
+```javascript
+const provider = new Web3Provider(window.ethereum)
+const signer = provider.getSigner()
+```
+
+2. Initialize DBSClient:
+1. HTML Setup: Provide a file input for users to select multiple files.
+
+```html
+<input type="file" multiple id="fileInput" />
+```
+
+2. JavaScript: Get the files from the input and call the upload function.
+
+```javascript
+document.getElementById('fileInput').addEventListener('change', async function () {
+  const files = this.files
+  await uploadBrowser(quoteId, tokenAddress, files)
+})
 ```
 
 ## API
