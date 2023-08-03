@@ -14,7 +14,6 @@ export const minErc20Abi = [
 export const getSignedHash = async (signer: Signer, quoteId: string, nonce: number) => {
   // Concatenate the message
   const message = sha256(toUtf8Bytes(quoteId + nonce.toString()))
-  // const message = quoteId + nonce.toString()
 
   // Sign the original message directly
   const signature = await signer.signMessage(message)
