@@ -22,7 +22,7 @@
   },
   "types": "./dist/src/index.d.ts",
   "scripts": {
-    "test": "npm run mocha --  'test/**/*.test.ts'",
+    "test": "npm run mocha 'test/**/*.test.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
@@ -68,6 +68,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "arweave": "^1.14.4",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "ethers": "^6.6.4",
