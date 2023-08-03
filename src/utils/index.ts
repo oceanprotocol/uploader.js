@@ -1,4 +1,4 @@
-import { ethers, Signer, sha256, toUtf8Bytes } from 'ethers'
+import { Signer, sha256, toUtf8Bytes } from 'ethers'
 
 export const minErc20Abi = [
   'function approve(address, uint256) external returns (bool)',

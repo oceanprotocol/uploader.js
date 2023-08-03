@@ -7,7 +7,6 @@ import {
   GetStatusResult,
   GetLinkResult,
   RegisterArgs,
-  AcceptedPayment,
   DBSGetQuoteArgs,
   FileData
 } from './@types'

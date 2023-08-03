@@ -1,19 +1,12 @@
-import { ethers, JsonRpcProvider, Contract } from 'ethers'
+import { ethers, JsonRpcProvider } from 'ethers'
 import { assert, expect } from 'chai'
 import dotenv from 'dotenv'
-import fs, { readFileSync } from 'fs'
-import Arweave from 'arweave'
 
 import { DBSClient } from '../src/index'
 import { StorageInfo, GetQuoteArgs, RegisterArgs } from '../src/@types'
-import { minErc20Abi } from '../src/utils'
-import { getTransactionWithRetry, getDataWithRetry } from './helpers'
+import { getDataWithRetry } from './helpers'
 
 dotenv.config()
-
-function readFileIntoBuffer(filePath: string): Buffer {
-  return fs.readFileSync(filePath)
-}
 
 describe('DBSClient', () => {
   let info: StorageInfo[]
@@ -23,11 +16,7 @@ describe('DBSClient', () => {
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
   const client = new DBSClient(process.env.DBS_API_URL, signer)
 
-  const arweave = Arweave.init({
-    host: 'arweave.net',
-    port: 443,
-    protocol: 'https'
-  })
+  describe('Initial setup', () => {})
 
   describe('Testing the registerMicroservice endpoint', () => {
     const args: RegisterArgs = {
@@ -190,35 +179,33 @@ describe('DBSClient', () => {
     })
   })
   describe('Testing the upload, status and getLink endpoints', async function () {
-    this.timeout(200000)
+    this.timeout(2000000)
     let arweaveQuote: any
 
-    // it('should upload files successfully to filecoin', async () => {
-    //   const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-    //   const args: GetQuoteArgs = {
-    //     type: 'filecoin',
-    //     duration: 4353545453,
-    //     payment: {
-    //       chainId: '80001',
-    //       tokenAddress
-    //     },
-    //     userAddress: process.env.USER_ADDRESS,
-    //     filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-    //   }
-    //   const result = await client.getQuote(args)
+    it('should upload files successfully to filecoin', async () => {
+      const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
+      const args: GetQuoteArgs = {
+        type: 'filecoin',
+        duration: 4353545453,
+        payment: {
+          chainId: '80001',
+          tokenAddress
+        },
+        userAddress: process.env.USER_ADDRESS,
+        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      }
+      const result = await client.getQuote(args)
 
-    //   const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-    //     process.env.TEST_FILE_1,
-    //     process.env.TEST_FILE_2
-    //   ])
-    //   console.log('resultFromUpload', resultFromUpload.data)
-    //   // Add more assertions based on expected response
-    // })
+      const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
+        process.env.TEST_FILE_1,
+        process.env.TEST_FILE_2
+      ])
+      console.log('resultFromUpload', resultFromUpload.data)
+      // Add more assertions based on expected response
+    })
 
     it('should upload files successfully to Arweave', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
-      // const token = new Contract(tokenAddress, minErc20Abi, signer)
-      // const userBalanceBefore = await token.balanceOf(process.env.USER_ADDRESS)
 
       const args: GetQuoteArgs = {
         type: 'arweave',
