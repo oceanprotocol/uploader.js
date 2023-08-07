@@ -1,4 +1,5 @@
 import { Signer } from 'ethers'
+export declare const minErc20Abi: string[]
 /**
  * @param {string} quoteId - The quote ID.
  * @param {Signer} signer The signer object.

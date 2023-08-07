@@ -45,8 +45,9 @@ export interface GetStatusResult {
 }
 export interface GetLinkResult {
   type: string
-  CID: string
-  dealIDs: string[]
+  CID?: string
+  dealIDs?: string[]
+  transactionHash?: string
 }
 export interface RegisterArgs {
   type: string

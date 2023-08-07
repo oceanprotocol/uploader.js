@@ -1,4 +1,5 @@
 import { Signer } from 'ethers'
+import { AxiosResponse } from 'axios'
 import {
   StorageInfo,
   GetQuoteArgs,
@@ -41,7 +42,8 @@ export declare class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, filePaths: string[]): Promise<any>
+  upload(quoteId: string, tokenAddress: string, filePaths: string[]): Promise<any>
+  uploadBrowser(quoteId: string, tokenAddress: string, files: FileList): Promise<any>
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
@@ -67,5 +69,5 @@ export declare class DBSClient {
    * @param {RegisterArgs} args - The arguments needed for registering a microservice.
    * @returns {Promise<void>}
    */
-  registerMicroservice(args: RegisterArgs): Promise<void>
+  registerMicroservice(args: RegisterArgs): Promise<AxiosResponse>
 }
