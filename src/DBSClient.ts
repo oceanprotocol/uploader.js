@@ -144,7 +144,11 @@ export class DBSClient {
       const formData = new FormData()
       // Add each file to the form data
       Array.from(files).forEach((file, index) => {
-        formData.append(`file${index + 1}`, file)
+        formData.append(`file${index + 1}`, file.stream, {
+          knownLength: file.size,
+          filename: file.name,
+          contentType: file.type
+        })
       })
 
       const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
