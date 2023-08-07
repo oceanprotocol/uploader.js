@@ -14,6 +14,7 @@ import { getSignedHash, minErc20Abi } from './utils'
 import validator from 'validator'
 import fs from 'fs'
 import FormData from 'form-data'
+import { DepositABI } from './depositAbi'
 
 /**
  * DBSClient is a TypeScript library for interacting with the DBS API.
@@ -31,6 +32,22 @@ export class DBSClient {
     this.validateBaseURL(baseURL)
     this.baseURL = baseURL
     this.signer = signer
+  }
+
+  async whitelist(userAddress: string): Promise<void> {
+    try {
+      const deposit = new Contract(
+        '0x77f520bAF6BD969f0279E2A7ea700336de1BB4fF', /// '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866', // '0xedfA6E7A7eAdF11B7842101B09A90993538eF8e0',
+        DepositABI,
+        this.signer
+      )
+      const owner = await deposit.owner()
+      console.log('owner', owner)
+      const tx = await deposit.setWhiteListAddress(userAddress, true)
+      console.log('tx', tx)
+    } catch (error) {
+      console.log('ERROR', error)
+    }
   }
 
   private validateBaseURL(baseURL: string): void {
@@ -98,7 +115,7 @@ export class DBSClient {
    */
   async upload(quoteId: string, tokenAddress: string, filePaths: string[]): Promise<any> {
     try {
-      const nonce = Math.round(Date.now() / 1000)
+      const nonce = Math.round(Date.now() / 1000) + 1000000
       const address = await this.signer.getAddress()
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
@@ -123,7 +140,7 @@ export class DBSClient {
       return response
     } catch (error) {
       console.error('Error:', error)
-      return error.data
+      return error
     }
   }
 
