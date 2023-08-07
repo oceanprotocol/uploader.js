@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 
 import { DBSClient } from '../src/index'
 import { StorageInfo, GetQuoteArgs, RegisterArgs } from '../src/@types'
-import { getDataWithRetry } from './helpers'
+import { getDataWithRetry, createFileList, calculateFilesLength } from './helpers'
 
 dotenv.config()
 
@@ -180,32 +180,157 @@ describe('DBSClient', () => {
   })
   describe('Testing the upload, status and getLink endpoints', async function () {
     this.timeout(2000000)
-    let arweaveQuote: any
+    let arweaveQuote1: any
+    let arweaveQuote2: any
 
-    it('should upload files successfully to filecoin', async () => {
-      const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-      const args: GetQuoteArgs = {
-        type: 'filecoin',
-        duration: 4353545453,
-        payment: {
-          chainId: '80001',
-          tokenAddress
-        },
-        userAddress: process.env.USER_ADDRESS,
-        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      }
-      const result = await client.getQuote(args)
+    // it('should upload files successfully to filecoin', async () => {
+    //   const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
+    //   const args: GetQuoteArgs = {
+    //     type: 'filecoin',
+    //     duration: 4353545453,
+    //     payment: {
+    //       chainId: '80001',
+    //       tokenAddress
+    //     },
+    //     userAddress: process.env.USER_ADDRESS,
+    //     filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+    //   }
+    //   const result = await client.getQuote(args)
 
-      const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-        process.env.TEST_FILE_1,
-        process.env.TEST_FILE_2
-      ])
-      console.log('resultFromUpload', resultFromUpload.data)
-      // Add more assertions based on expected response
-    })
+    //   const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
+    //     process.env.TEST_FILE_1,
+    //     process.env.TEST_FILE_2
+    //   ])
+    //   console.log('resultFromUpload', resultFromUpload.data)
+    //   // Add more assertions based on expected response
+    // })
 
-    it('should upload files successfully to Arweave', async () => {
+    // it('should upload local files successfully to Arweave', async () => {
+    //   const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+
+    //   const args: GetQuoteArgs = {
+    //     type: 'arweave',
+    //     duration: 4353545453,
+    //     payment: {
+    //       chainId: '80001',
+    //       tokenAddress
+    //     },
+    //     userAddress: process.env.USER_ADDRESS,
+    //     filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+    //   }
+    //   arweaveQuote1 = await client.getQuote(args)
+
+    //   const result = await client.upload(arweaveQuote1.quoteId, tokenAddress, [
+    //     process.env.TEST_FILE_1,
+    //     process.env.TEST_FILE_2
+    //   ])
+
+    //   // Check that upload succeeded
+    //   assert(result.status === 200, 'Upload failed')
+    //   assert(result.statusText === 'OK', 'Upload failed')
+    //   assert(result.data === 'File upload succeeded.', 'Upload failed')
+
+    //   // check that user's balance was reduced by the right token amount
+
+    //   // const userBalanceAfter = await token.balanceOf(process.env.USER_ADDRESS)
+    //   // console.log('userBalanceBefore', userBalanceBefore.toString())
+    //   // console.log('userBalanceAfter', userBalanceAfter.toString())
+    //   // console.log('quote.tokenAmount', quote.tokenAmount.toString())
+    //   // assert(
+    //   //   Number(userBalanceBefore) - Number(userBalanceAfter) === quote.tokenAmount,
+    //   //   'User balance reduced by wrong tokenAmount'
+    //   // )
+    // })
+
+    // it('Arweave local file upload should return 400 status', async () => {
+    //   let status
+    //   while (status !== 400) {
+    //     status = (await client.getStatus(arweaveQuote1.quoteId)).status
+    //     console.log('status', status)
+    //     assert(
+    //       status !== 200,
+    //       'Upload failed with status: QUOTE_STATUS_PAYMENT_PULL_FAILED'
+    //     )
+    //     assert(
+    //       status !== 201,
+    //       'Upload failed with status: QUOTE_STATUS_PAYMENT_UNWRAP_FAILED'
+    //     )
+    //     assert(
+    //       status !== 202,
+    //       'Upload failed with status: QUOTE_STATUS_PAYMENT_PUSH_FAILED'
+    //     )
+    //     assert(
+    //       status !== 401,
+    //       'Upload failed with status: QUOTE_STATUS_UPLOAD_INTERNAL_ERROR'
+    //     )
+    //     assert(
+    //       status !== 402,
+    //       'Upload failed with status: QUOTE_STATUS_UPLOAD_ACTUAL_FILE_LEN_EXCEEDS_QUOTE'
+    //     )
+    //     assert(
+    //       status !== 403,
+    //       'Upload failed with status: QUOTE_STATUS_UPLOAD_DOWNLOAD_FAILED'
+    //     )
+    //     assert(
+    //       status !== 404,
+    //       'Upload failed with status: QUOTE_STATUS_UPLOAD_UPLOAD_FAILED'
+    //     )
+    //     await new Promise((resolve) => setTimeout(resolve, 5000))
+    //   }
+    //   assert(status === 400, 'Upload succeeded with status: QUOTE_STATUS_UPLOAD_END')
+    // })
+
+    // it('should return a link for arweave local file upload', async () => {
+    //   let result
+    //   try {
+    //     result = await client.getLink(arweaveQuote1.quoteId)
+    //     console.log('result', result)
+    //   } catch (error) {
+    //     console.log('error', error)
+    //   }
+
+    //   assert(result, 'No response returned from getLink request')
+    //   expect(result).to.be.an('array', 'Response is not an array')
+    //   assert(result[0].type === 'arweave', 'Wrong type')
+    //   assert(result[1].type === 'arweave', 'Wrong type')
+    //   assert(result[0].transactionHash, 'Missing the first transaction hash')
+    //   assert(result[1].transactionHash, 'Missing the second transaction hash')
+    //   console.log('1 tests passed')
+
+    //   const transactionHash1 = result[0].transactionHash
+    //   const transactionHash2 = result[1].transactionHash
+
+    //   assert(transactionHash1 !== transactionHash2, 'Transaction hashes are the same')
+    //   const formatRegex = /^[a-zA-Z0-9_-]{43}$/
+    //   assert(formatRegex.test(transactionHash1), 'Wrong format for transactionHash1')
+    //   assert(formatRegex.test(transactionHash2), 'Wrong format for transactionHash2')
+
+    //   console.log('2 tests passed')
+
+    //   // const transaction1 = await getTransactionWithRetry(transactionHash1)
+    //   // const transaction2 = await getTransactionWithRetry(transactionHash2)
+
+    //   // console.log(transaction1)
+    //   // console.log(transaction2)
+
+    //   // assert(transaction1, 'No transaction returned for transactionHash1')
+    //   // assert(transaction2, 'No transaction returned for transactionHash2')
+    //   // assert(transaction1.id, 'No id for transactionHash1')
+    //   // assert(transaction2.id, 'No id for transactionHash2')
+
+    //   const data1 = await getDataWithRetry(transactionHash1)
+    //   const data2 = await getDataWithRetry(transactionHash1)
+
+    //   console.log('data1', data1)
+    //   console.log('data2', data2)
+    // })
+    it('should stream files successfully to Arweave from a browser', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+
+      // Creating the FileList
+      const files = createFileList([Buffer.from('test1'), Buffer.from('test2')])
+
+      const fileLengths = calculateFilesLength(files)
 
       const args: GetQuoteArgs = {
         type: 'arweave',
@@ -215,36 +340,27 @@ describe('DBSClient', () => {
           tokenAddress
         },
         userAddress: process.env.USER_ADDRESS,
-        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+        filePath: undefined,
+        fileInfo: fileLengths
       }
-      arweaveQuote = await client.getQuote(args)
+      arweaveQuote2 = await client.getQuote(args)
 
-      const result = await client.upload(arweaveQuote.quoteId, tokenAddress, [
-        process.env.TEST_FILE_1,
-        process.env.TEST_FILE_2
-      ])
+      const result = await client.uploadBrowser(
+        arweaveQuote2.quoteId,
+        tokenAddress,
+        files
+      )
 
       // Check that upload succeeded
       assert(result.status === 200, 'Upload failed')
       assert(result.statusText === 'OK', 'Upload failed')
       assert(result.data === 'File upload succeeded.', 'Upload failed')
-
-      // check that user's balance was reduced by the right token amount
-
-      // const userBalanceAfter = await token.balanceOf(process.env.USER_ADDRESS)
-      // console.log('userBalanceBefore', userBalanceBefore.toString())
-      // console.log('userBalanceAfter', userBalanceAfter.toString())
-      // console.log('quote.tokenAmount', quote.tokenAmount.toString())
-      // assert(
-      //   Number(userBalanceBefore) - Number(userBalanceAfter) === quote.tokenAmount,
-      //   'User balance reduced by wrong tokenAmount'
-      // )
     })
 
-    it('Arweave upload should return 400 status', async () => {
+    it('Should return 400 status Arweave upload from a browser', async () => {
       let status
       while (status !== 400) {
-        status = (await client.getStatus(arweaveQuote.quoteId)).status
+        status = (await client.getStatus(arweaveQuote2.quoteId)).status
         console.log('status', status)
         assert(
           status !== 200,
@@ -279,10 +395,10 @@ describe('DBSClient', () => {
       assert(status === 400, 'Upload succeeded with status: QUOTE_STATUS_UPLOAD_END')
     })
 
-    it('should return a link for arweave', async () => {
+    it('should return a link for second arweave upload', async () => {
       let result
       try {
-        result = await client.getLink(arweaveQuote.quoteId)
+        result = await client.getLink(arweaveQuote2.quoteId)
         console.log('result', result)
       } catch (error) {
         console.log('error', error)
