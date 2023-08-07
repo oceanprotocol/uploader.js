@@ -165,7 +165,11 @@
                         var t = new c.default()
                         return (
                           Array.from(n).forEach(function (e, r) {
-                            t.append('file' + (r + 1), e)
+                            t.append('file' + (r + 1), e.stream, {
+                              knownLength: e.size,
+                              filename: e.name,
+                              contentType: e.type
+                            })
                           }),
                           Promise.resolve(
                             s.default.post(

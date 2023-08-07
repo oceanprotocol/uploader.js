@@ -147,7 +147,11 @@ var h = /*#__PURE__*/ (function () {
                       var t = new a()
                       return (
                         Array.from(i).forEach(function (e, r) {
-                          t.append('file' + (r + 1), e)
+                          t.append('file' + (r + 1), e.stream, {
+                            knownLength: e.size,
+                            filename: e.name,
+                            contentType: e.type
+                          })
                         }),
                         Promise.resolve(
                           o.post(

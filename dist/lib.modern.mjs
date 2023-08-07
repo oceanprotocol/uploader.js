@@ -1,7 +1,7 @@
 import { sha256 as t, toUtf8Bytes as e, Contract as a, MaxInt256 as r } from 'ethers'
 import s from 'axios'
-import i from 'validator'
-import n from 'fs'
+import n from 'validator'
+import i from 'fs'
 import o from 'form-data'
 function d() {
   return (
@@ -17,15 +17,15 @@ function d() {
     d.apply(this, arguments)
   )
 }
-const u = [
+const c = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
-  c = async (a, r, s) => {
-    const i = t(e(r + s.toString()))
-    return await a.signMessage(i)
+  u = async (a, r, s) => {
+    const n = t(e(r + s.toString()))
+    return await a.signMessage(n)
   }
-class h {
+class p {
   constructor(t, e) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -36,11 +36,11 @@ class h {
   validateBaseURL(t) {
     if (!t || 'string' != typeof t || '' === t.trim())
       throw new Error('Invalid baseURL provided. baseURL cannot be empty or undefined.')
-    if (!i.isURL(t, { require_tld: !1 }))
+    if (!n.isURL(t, { require_tld: !1 }))
       throw new Error('Invalid baseURL format provided.')
   }
   getFileSizes(t) {
-    return t.map((t) => ({ length: n.statSync(t).size }))
+    return t.map((t) => ({ length: i.statSync(t).size }))
   }
   async getStorageInfo() {
     return (await s.get(`${this.baseURL}/`)).data
@@ -58,35 +58,39 @@ class h {
       }
     return (await s.post(`${this.baseURL}/getQuote`, a)).data
   }
-  async upload(t, e, i) {
+  async upload(t, e, n) {
     try {
-      const h = Math.round(Date.now() / 1e3),
-        p = await this.signer.getAddress(),
-        g = new a(e, u, this.signer)
-      await (await g.approve(p, r)).wait()
-      const f = await c(this.signer, t, h),
+      const p = Math.round(Date.now() / 1e3),
+        h = await this.signer.getAddress(),
+        g = new a(e, c, this.signer)
+      await (await g.approve(h, r)).wait()
+      const f = await u(this.signer, t, p),
         w = new o()
-      i.forEach((t, e) => {
-        w.append(`file${e + 1}`, n.createReadStream(t))
+      n.forEach((t, e) => {
+        w.append(`file${e + 1}`, i.createReadStream(t))
       })
-      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${h}&signature=${f}`
+      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${p}&signature=${f}`
       return await s.post(l, w, { headers: d({}, w.getHeaders()) })
     } catch (t) {
       return console.error('Error:', t), t.data
     }
   }
-  async uploadBrowser(t, e, i) {
+  async uploadBrowser(t, e, n) {
     try {
-      const n = Math.round(Date.now() / 1e3),
-        h = await this.signer.getAddress(),
-        p = new a(e, u, this.signer)
-      await (await p.approve(h, r)).wait()
-      const g = await c(this.signer, t, n),
+      const i = Math.round(Date.now() / 1e3),
+        p = await this.signer.getAddress(),
+        h = new a(e, c, this.signer)
+      await (await h.approve(p, r)).wait()
+      const g = await u(this.signer, t, i),
         f = new o()
-      Array.from(i).forEach((t, e) => {
-        f.append(`file${e + 1}`, t)
+      Array.from(n).forEach((t, e) => {
+        f.append(`file${e + 1}`, t.stream, {
+          knownLength: t.size,
+          filename: t.name,
+          contentType: t.type
+        })
       })
-      const w = `${this.baseURL}/upload?quoteId=${t}&nonce=${n}&signature=${g}`
+      const w = `${this.baseURL}/upload?quoteId=${t}&nonce=${i}&signature=${g}`
       return await s.post(w, f, { headers: d({}, f.getHeaders()) })
     } catch (t) {
       return console.error('Error:', t), t.data
@@ -97,7 +101,7 @@ class h {
   }
   async getLink(t) {
     const e = Math.round(Date.now() / 1e3),
-      a = await c(this.signer, t, e)
+      a = await u(this.signer, t, e)
     return (
       await s.get(`${this.baseURL}/getLink`, {
         params: { quoteId: t, nonce: e, signature: a }
@@ -108,5 +112,5 @@ class h {
     return await s.post(`${this.baseURL}/register`, t)
   }
 }
-export { h as DBSClient, c as getSignedHash, u as minErc20Abi }
+export { p as DBSClient, u as getSignedHash, c as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map
