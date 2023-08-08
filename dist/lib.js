@@ -164,8 +164,7 @@ function h(e, r) {
                             i +
                             '&signature=' +
                             e,
-                          t,
-                          { headers: f({}, t.getHeaders()) }
+                          t
                         )
                       )
                     )

@@ -175,8 +175,7 @@
                               i +
                               '&signature=' +
                               r,
-                            t,
-                            { headers: d({}, t.getHeaders()) }
+                            t
                           )
                         )
                       )

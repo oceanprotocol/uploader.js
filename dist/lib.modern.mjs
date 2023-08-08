@@ -25,7 +25,7 @@ const u = [
     const n = t(e(a + s.toString()))
     return await r.signMessage(n)
   }
-class h {
+class p {
   constructor(t, e) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -60,16 +60,16 @@ class h {
   }
   async upload(t, e, n) {
     try {
-      const h = Math.round(Date.now() / 1e3),
-        p = await this.signer.getAddress(),
+      const p = Math.round(Date.now() / 1e3),
+        h = await this.signer.getAddress(),
         g = new r(e, u, this.signer)
-      await (await g.approve(p, a)).wait()
-      const f = await c(this.signer, t, h),
+      await (await g.approve(h, a)).wait()
+      const f = await c(this.signer, t, p),
         w = new o()
       n.forEach((t, e) => {
         w.append(`file${e + 1}`, i.createReadStream(t))
       })
-      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${h}&signature=${f}`
+      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${p}&signature=${f}`
       return await s.post(l, w, { headers: d({}, w.getHeaders()) })
     } catch (t) {
       return console.error('Error:', t), t.data
@@ -78,16 +78,16 @@ class h {
   async uploadBrowser(t, e, n) {
     try {
       const i = Math.round(Date.now() / 1e3),
-        h = await this.signer.getAddress(),
+        d = await this.signer.getAddress(),
         p = new r(e, u, this.signer)
-      await p.approve(h, a)
-      const g = await c(this.signer, t, i),
-        f = new o()
+      await p.approve(d, a)
+      const h = await c(this.signer, t, i),
+        g = new o()
       Array.from(n).forEach((t, e) => {
-        f.append(`file${e + 1}`, t, t.name)
+        g.append(`file${e + 1}`, t, t.name)
       })
-      const w = `${this.baseURL}/upload?quoteId=${t}&nonce=${i}&signature=${g}`
-      return await s.post(w, f, { headers: d({}, f.getHeaders()) })
+      const f = `${this.baseURL}/upload?quoteId=${t}&nonce=${i}&signature=${h}`
+      return await s.post(f, g)
     } catch (t) {
       return console.error('Error:', t), t.data
     }
@@ -108,5 +108,5 @@ class h {
     return await s.post(`${this.baseURL}/register`, t)
   }
 }
-export { h as DBSClient, c as getSignedHash, u as minErc20Abi }
+export { p as DBSClient, c as getSignedHash, u as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map

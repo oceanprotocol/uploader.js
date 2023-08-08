@@ -138,11 +138,11 @@ var h = /*#__PURE__*/ (function () {
         return Promise.resolve(
           d(
             function () {
-              var d = Math.round(Date.now() / 1e3)
-              return Promise.resolve(s.signer.getAddress()).then(function (h) {
-                var v = new t(r, c, s.signer)
-                return Promise.resolve(v.approve(h, n)).then(function () {
-                  return Promise.resolve(f(s.signer, e, d)).then(function (r) {
+              var u = Math.round(Date.now() / 1e3)
+              return Promise.resolve(s.signer.getAddress()).then(function (d) {
+                var h = new t(r, c, s.signer)
+                return Promise.resolve(h.approve(d, n)).then(function () {
+                  return Promise.resolve(f(s.signer, e, u)).then(function (r) {
                     var t = new a()
                     return (
                       Array.from(i).forEach(function (e, r) {
@@ -154,11 +154,10 @@ var h = /*#__PURE__*/ (function () {
                             '/upload?quoteId=' +
                             e +
                             '&nonce=' +
-                            d +
+                            u +
                             '&signature=' +
                             r,
-                          t,
-                          { headers: u({}, t.getHeaders()) }
+                          t
                         )
                       )
                     )
