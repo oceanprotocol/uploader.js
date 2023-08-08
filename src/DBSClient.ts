@@ -138,17 +138,13 @@ export class DBSClient {
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
-      await (await token.approve(address, MaxInt256)).wait()
+      await token.approve(address, MaxInt256)
       const signature = await getSignedHash(this.signer, quoteId, nonce) // Make sure this works in a browser context or offload to a server
 
       const formData = new FormData()
       // Add each file to the form data
       Array.from(files).forEach((file, index) => {
-        formData.append(`file${index + 1}`, file.stream, {
-          knownLength: file.size,
-          filename: file.name,
-          contentType: file.type
-        })
+        formData.append(`file${index + 1}`, file, file.name)
       })
 
       const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
