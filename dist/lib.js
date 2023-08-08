@@ -148,33 +148,27 @@ function h(e, r) {
               var i = Math.round(Date.now() / 1e3)
               return Promise.resolve(o.signer.getAddress()).then(function (s) {
                 var u = new e.Contract(t, d, o.signer)
-                return Promise.resolve(u.approve(s, e.MaxInt256)).then(function (e) {
-                  return Promise.resolve(e.wait()).then(function () {
-                    return Promise.resolve(l(o.signer, r, i)).then(function (e) {
-                      var t = new c.default()
-                      return (
-                        Array.from(n).forEach(function (e, r) {
-                          t.append('file' + (r + 1), e.stream, {
-                            knownLength: e.size,
-                            filename: e.name,
-                            contentType: e.type
-                          })
-                        }),
-                        Promise.resolve(
-                          a.default.post(
-                            o.baseURL +
-                              '/upload?quoteId=' +
-                              r +
-                              '&nonce=' +
-                              i +
-                              '&signature=' +
-                              e,
-                            t,
-                            { headers: f({}, t.getHeaders()) }
-                          )
+                return Promise.resolve(u.approve(s, e.MaxInt256)).then(function () {
+                  return Promise.resolve(l(o.signer, r, i)).then(function (e) {
+                    var t = new c.default()
+                    return (
+                      Array.from(n).forEach(function (e, r) {
+                        t.append('file' + (r + 1), e, e.name)
+                      }),
+                      Promise.resolve(
+                        a.default.post(
+                          o.baseURL +
+                            '/upload?quoteId=' +
+                            r +
+                            '&nonce=' +
+                            i +
+                            '&signature=' +
+                            e,
+                          t,
+                          { headers: f({}, t.getHeaders()) }
                         )
                       )
-                    })
+                    )
                   })
                 })
               })

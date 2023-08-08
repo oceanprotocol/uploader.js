@@ -141,33 +141,27 @@ var h = /*#__PURE__*/ (function () {
               var d = Math.round(Date.now() / 1e3)
               return Promise.resolve(s.signer.getAddress()).then(function (h) {
                 var v = new t(r, c, s.signer)
-                return Promise.resolve(v.approve(h, n)).then(function (r) {
-                  return Promise.resolve(r.wait()).then(function () {
-                    return Promise.resolve(f(s.signer, e, d)).then(function (r) {
-                      var t = new a()
-                      return (
-                        Array.from(i).forEach(function (e, r) {
-                          t.append('file' + (r + 1), e.stream, {
-                            knownLength: e.size,
-                            filename: e.name,
-                            contentType: e.type
-                          })
-                        }),
-                        Promise.resolve(
-                          o.post(
-                            s.baseURL +
-                              '/upload?quoteId=' +
-                              e +
-                              '&nonce=' +
-                              d +
-                              '&signature=' +
-                              r,
-                            t,
-                            { headers: u({}, t.getHeaders()) }
-                          )
+                return Promise.resolve(v.approve(h, n)).then(function () {
+                  return Promise.resolve(f(s.signer, e, d)).then(function (r) {
+                    var t = new a()
+                    return (
+                      Array.from(i).forEach(function (e, r) {
+                        t.append('file' + (r + 1), e, e.name)
+                      }),
+                      Promise.resolve(
+                        o.post(
+                          s.baseURL +
+                            '/upload?quoteId=' +
+                            e +
+                            '&nonce=' +
+                            d +
+                            '&signature=' +
+                            r,
+                          t,
+                          { headers: u({}, t.getHeaders()) }
                         )
                       )
-                    })
+                    )
                   })
                 })
               })

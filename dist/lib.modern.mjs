@@ -1,4 +1,4 @@
-import { sha256 as t, toUtf8Bytes as e, Contract as a, MaxInt256 as r } from 'ethers'
+import { sha256 as t, toUtf8Bytes as e, Contract as r, MaxInt256 as a } from 'ethers'
 import s from 'axios'
 import n from 'validator'
 import i from 'fs'
@@ -9,23 +9,23 @@ function d() {
       ? Object.assign.bind()
       : function (t) {
           for (var e = 1; e < arguments.length; e++) {
-            var a = arguments[e]
-            for (var r in a) Object.prototype.hasOwnProperty.call(a, r) && (t[r] = a[r])
+            var r = arguments[e]
+            for (var a in r) Object.prototype.hasOwnProperty.call(r, a) && (t[a] = r[a])
           }
           return t
         }),
     d.apply(this, arguments)
   )
 }
-const c = [
+const u = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
-  u = async (a, r, s) => {
-    const n = t(e(r + s.toString()))
-    return await a.signMessage(n)
+  c = async (r, a, s) => {
+    const n = t(e(a + s.toString()))
+    return await r.signMessage(n)
   }
-class p {
+class h {
   constructor(t, e) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -49,27 +49,27 @@ class p {
     if (!t.filePath && !t.fileInfo)
       throw new Error('Either filePath or fileInfo must be provided.')
     const e = t.fileInfo || this.getFileSizes(t.filePath),
-      a = {
+      r = {
         type: t.type,
         files: e,
         duration: t.duration,
         payment: t.payment,
         userAddress: t.userAddress
       }
-    return (await s.post(`${this.baseURL}/getQuote`, a)).data
+    return (await s.post(`${this.baseURL}/getQuote`, r)).data
   }
   async upload(t, e, n) {
     try {
-      const p = Math.round(Date.now() / 1e3),
-        h = await this.signer.getAddress(),
-        g = new a(e, c, this.signer)
-      await (await g.approve(h, r)).wait()
-      const f = await u(this.signer, t, p),
+      const h = Math.round(Date.now() / 1e3),
+        p = await this.signer.getAddress(),
+        g = new r(e, u, this.signer)
+      await (await g.approve(p, a)).wait()
+      const f = await c(this.signer, t, h),
         w = new o()
       n.forEach((t, e) => {
         w.append(`file${e + 1}`, i.createReadStream(t))
       })
-      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${p}&signature=${f}`
+      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${h}&signature=${f}`
       return await s.post(l, w, { headers: d({}, w.getHeaders()) })
     } catch (t) {
       return console.error('Error:', t), t.data
@@ -78,17 +78,13 @@ class p {
   async uploadBrowser(t, e, n) {
     try {
       const i = Math.round(Date.now() / 1e3),
-        p = await this.signer.getAddress(),
-        h = new a(e, c, this.signer)
-      await (await h.approve(p, r)).wait()
-      const g = await u(this.signer, t, i),
+        h = await this.signer.getAddress(),
+        p = new r(e, u, this.signer)
+      await p.approve(h, a)
+      const g = await c(this.signer, t, i),
         f = new o()
       Array.from(n).forEach((t, e) => {
-        f.append(`file${e + 1}`, t.stream, {
-          knownLength: t.size,
-          filename: t.name,
-          contentType: t.type
-        })
+        f.append(`file${e + 1}`, t, t.name)
       })
       const w = `${this.baseURL}/upload?quoteId=${t}&nonce=${i}&signature=${g}`
       return await s.post(w, f, { headers: d({}, f.getHeaders()) })
@@ -101,10 +97,10 @@ class p {
   }
   async getLink(t) {
     const e = Math.round(Date.now() / 1e3),
-      a = await u(this.signer, t, e)
+      r = await c(this.signer, t, e)
     return (
       await s.get(`${this.baseURL}/getLink`, {
-        params: { quoteId: t, nonce: e, signature: a }
+        params: { quoteId: t, nonce: e, signature: r }
       })
     ).data
   }
@@ -112,5 +108,5 @@ class p {
     return await s.post(`${this.baseURL}/register`, t)
   }
 }
-export { p as DBSClient, u as getSignedHash, c as minErc20Abi }
+export { h as DBSClient, c as getSignedHash, u as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map
