@@ -149,11 +149,7 @@ export class DBSClient {
 
       const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
 
-      const response = await axios.post(uploadUrl, formData, {
-        headers: {
-          ...formData.getHeaders()
-        }
-      })
+      const response = await axios.post(uploadUrl, formData)
 
       return response
     } catch (error) {
