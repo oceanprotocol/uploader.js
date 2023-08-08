@@ -139,7 +139,7 @@ export class DBSClient {
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
       await token.approve(address, MaxInt256)
-      const signature = await getSignedHash(this.signer, quoteId, nonce) // Make sure this works in a browser context or offload to a server
+      const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
       // Add each file to the form data
