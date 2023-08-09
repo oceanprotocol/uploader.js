@@ -12,16 +12,16 @@
     ? define(['exports', 'ethers', 'axios', 'validator', 'fs', 'form-data'], r)
     : r(((e || self).dbs = {}), e.ethers, e.axios, e.validator, e.fs, e.formData)
 })(this, function (e, r, t, n, o, i) {
-  function a(e) {
+  function s(e) {
     return e && 'object' == typeof e && 'default' in e ? e : { default: e }
   }
-  var s = /*#__PURE__*/ a(t),
-    u = /*#__PURE__*/ a(n),
-    f = /*#__PURE__*/ a(o),
-    c = /*#__PURE__*/ a(i)
-  function d() {
+  var a = /*#__PURE__*/ s(t),
+    u = /*#__PURE__*/ s(n),
+    f = /*#__PURE__*/ s(o),
+    d = /*#__PURE__*/ s(i)
+  function c() {
     return (
-      (d = Object.assign
+      (c = Object.assign
         ? Object.assign.bind()
         : function (e) {
             for (var r = 1; r < arguments.length; r++) {
@@ -30,7 +30,7 @@
             }
             return e
           }),
-      d.apply(this, arguments)
+      c.apply(this, arguments)
     )
   }
   var l = [
@@ -54,12 +54,14 @@
     return t && t.then ? t.then(void 0, r) : t
   }
   ;(e.DBSClient = /*#__PURE__*/ (function () {
-    function e(e, r) {
+    function e(e, r, t) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),
+        (this.dbsAddress = void 0),
         this.validateBaseURL(e),
         (this.baseURL = e),
-        (this.signer = r)
+        (this.signer = t),
+        (this.dbsAddress = r)
     }
     var t = e.prototype
     return (
@@ -78,7 +80,7 @@
       }),
       (t.getStorageInfo = function () {
         try {
-          return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
+          return Promise.resolve(a.default.get(this.baseURL + '/')).then(function (e) {
             return e.data
           })
         } catch (e) {
@@ -91,7 +93,7 @@
             throw new Error('Either filePath or fileInfo must be provided.')
           var r = e.fileInfo || this.getFileSizes(e.filePath)
           return Promise.resolve(
-            s.default.post(this.baseURL + '/getQuote', {
+            a.default.post(this.baseURL + '/getQuote', {
               type: e.type,
               files: r,
               duration: e.duration,
@@ -111,19 +113,19 @@
           return Promise.resolve(
             v(
               function () {
-                var i = Math.round(Date.now() / 1e3)
-                return Promise.resolve(o.signer.getAddress()).then(function (a) {
-                  var u = new r.Contract(t, l, o.signer)
-                  return Promise.resolve(u.approve(a, r.MaxInt256)).then(function (r) {
+                var i = Math.round(Date.now() / 1e3),
+                  s = new r.Contract(t, l, o.signer)
+                return Promise.resolve(s.approve(o.dbsAddress, r.MaxInt256)).then(
+                  function (r) {
                     return Promise.resolve(r.wait()).then(function () {
                       return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                        var t = new c.default()
+                        var t = new d.default()
                         return (
                           n.forEach(function (e, r) {
                             t.append('file' + (r + 1), f.default.createReadStream(e))
                           }),
                           Promise.resolve(
-                            s.default.post(
+                            a.default.post(
                               o.baseURL +
                                 '/upload?quoteId=' +
                                 e +
@@ -132,14 +134,14 @@
                                 '&signature=' +
                                 r,
                               t,
-                              { headers: d({}, t.getHeaders()) }
+                              { headers: c({}, t.getHeaders()) }
                             )
                           )
                         )
                       })
                     })
-                  })
-                })
+                  }
+                )
               },
               function (e) {
                 return console.error('Error:', e), e.data
@@ -156,18 +158,18 @@
           return Promise.resolve(
             v(
               function () {
-                var i = Math.round(Date.now() / 1e3)
-                return Promise.resolve(o.signer.getAddress()).then(function (a) {
-                  var u = new r.Contract(t, l, o.signer)
-                  return Promise.resolve(u.approve(a, r.MaxInt256)).then(function () {
+                var i = Math.round(Date.now() / 1e3),
+                  s = new r.Contract(t, l, o.signer)
+                return Promise.resolve(s.approve(o.dbsAddress, r.MaxInt256)).then(
+                  function () {
                     return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                      var t = new c.default()
+                      var t = new d.default()
                       return (
                         Array.from(n).forEach(function (e, r) {
                           t.append('file' + (r + 1), e, e.name)
                         }),
                         Promise.resolve(
-                          s.default.post(
+                          a.default.post(
                             o.baseURL +
                               '/upload?quoteId=' +
                               e +
@@ -180,8 +182,8 @@
                         )
                       )
                     })
-                  })
-                })
+                  }
+                )
               },
               function (e) {
                 return console.error('Error:', e), e.data
@@ -195,7 +197,7 @@
       (t.getStatus = function (e) {
         try {
           return Promise.resolve(
-            s.default.get(this.baseURL + '/getStatus', { params: { quoteId: e } })
+            a.default.get(this.baseURL + '/getStatus', { params: { quoteId: e } })
           ).then(function (e) {
             return e.data
           })
@@ -209,7 +211,7 @@
             t = Math.round(Date.now() / 1e3)
           return Promise.resolve(h(r.signer, e, t)).then(function (n) {
             return Promise.resolve(
-              s.default.get(r.baseURL + '/getLink', {
+              a.default.get(r.baseURL + '/getLink', {
                 params: { quoteId: e, nonce: t, signature: n }
               })
             ).then(function (e) {
@@ -222,7 +224,7 @@
       }),
       (t.registerMicroservice = function (e) {
         try {
-          return Promise.resolve(s.default.post(this.baseURL + '/register', e))
+          return Promise.resolve(a.default.post(this.baseURL + '/register', e))
         } catch (e) {
           return Promise.reject(e)
         }

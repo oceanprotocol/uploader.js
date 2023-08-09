@@ -38,12 +38,14 @@ function d(e, r) {
   return t && t.then ? t.then(void 0, r) : t
 }
 var h = /*#__PURE__*/ (function () {
-  function e(e, r) {
+  function e(e, r, t) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
+      (this.dbsAddress = void 0),
       this.validateBaseURL(e),
       (this.baseURL = e),
-      (this.signer = r)
+      (this.signer = t),
+      (this.dbsAddress = r)
   }
   var r = e.prototype
   return (
@@ -93,32 +95,30 @@ var h = /*#__PURE__*/ (function () {
         return Promise.resolve(
           d(
             function () {
-              var d = Math.round(Date.now() / 1e3)
-              return Promise.resolve(h.signer.getAddress()).then(function (v) {
-                var l = new t(r, c, h.signer)
-                return Promise.resolve(l.approve(v, n)).then(function (r) {
-                  return Promise.resolve(r.wait()).then(function () {
-                    return Promise.resolve(f(h.signer, e, d)).then(function (r) {
-                      var t = new a()
-                      return (
-                        i.forEach(function (e, r) {
-                          t.append('file' + (r + 1), s.createReadStream(e))
-                        }),
-                        Promise.resolve(
-                          o.post(
-                            h.baseURL +
-                              '/upload?quoteId=' +
-                              e +
-                              '&nonce=' +
-                              d +
-                              '&signature=' +
-                              r,
-                            t,
-                            { headers: u({}, t.getHeaders()) }
-                          )
+              var d = Math.round(Date.now() / 1e3),
+                v = new t(r, c, h.signer)
+              return Promise.resolve(v.approve(h.dbsAddress, n)).then(function (r) {
+                return Promise.resolve(r.wait()).then(function () {
+                  return Promise.resolve(f(h.signer, e, d)).then(function (r) {
+                    var t = new a()
+                    return (
+                      i.forEach(function (e, r) {
+                        t.append('file' + (r + 1), s.createReadStream(e))
+                      }),
+                      Promise.resolve(
+                        o.post(
+                          h.baseURL +
+                            '/upload?quoteId=' +
+                            e +
+                            '&nonce=' +
+                            d +
+                            '&signature=' +
+                            r,
+                          t,
+                          { headers: u({}, t.getHeaders()) }
                         )
                       )
-                    })
+                    )
                   })
                 })
               })
@@ -138,30 +138,28 @@ var h = /*#__PURE__*/ (function () {
         return Promise.resolve(
           d(
             function () {
-              var u = Math.round(Date.now() / 1e3)
-              return Promise.resolve(s.signer.getAddress()).then(function (d) {
-                var h = new t(r, c, s.signer)
-                return Promise.resolve(h.approve(d, n)).then(function () {
-                  return Promise.resolve(f(s.signer, e, u)).then(function (r) {
-                    var t = new a()
-                    return (
-                      Array.from(i).forEach(function (e, r) {
-                        t.append('file' + (r + 1), e, e.name)
-                      }),
-                      Promise.resolve(
-                        o.post(
-                          s.baseURL +
-                            '/upload?quoteId=' +
-                            e +
-                            '&nonce=' +
-                            u +
-                            '&signature=' +
-                            r,
-                          t
-                        )
+              var u = Math.round(Date.now() / 1e3),
+                d = new t(r, c, s.signer)
+              return Promise.resolve(d.approve(s.dbsAddress, n)).then(function () {
+                return Promise.resolve(f(s.signer, e, u)).then(function (r) {
+                  var t = new a()
+                  return (
+                    Array.from(i).forEach(function (e, r) {
+                      t.append('file' + (r + 1), e, e.name)
+                    }),
+                    Promise.resolve(
+                      o.post(
+                        s.baseURL +
+                          '/upload?quoteId=' +
+                          e +
+                          '&nonce=' +
+                          u +
+                          '&signature=' +
+                          r,
+                        t
                       )
                     )
-                  })
+                  )
                 })
               })
             },

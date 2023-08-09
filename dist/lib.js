@@ -6,13 +6,13 @@ var e = require('ethers'),
 function i(e) {
   return e && 'object' == typeof e && 'default' in e ? e : { default: e }
 }
-var a = /*#__PURE__*/ i(r),
-  s = /*#__PURE__*/ i(t),
+var s = /*#__PURE__*/ i(r),
+  a = /*#__PURE__*/ i(t),
   u = /*#__PURE__*/ i(n),
   c = /*#__PURE__*/ i(o)
-function f() {
+function d() {
   return (
-    (f = Object.assign
+    (d = Object.assign
       ? Object.assign.bind()
       : function (e) {
           for (var r = 1; r < arguments.length; r++) {
@@ -21,10 +21,10 @@ function f() {
           }
           return e
         }),
-    f.apply(this, arguments)
+    d.apply(this, arguments)
   )
 }
-var d = [
+var f = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
@@ -45,19 +45,21 @@ function h(e, r) {
   return t && t.then ? t.then(void 0, r) : t
 }
 ;(exports.DBSClient = /*#__PURE__*/ (function () {
-  function r(e, r) {
+  function r(e, r, t) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
+      (this.dbsAddress = void 0),
       this.validateBaseURL(e),
       (this.baseURL = e),
-      (this.signer = r)
+      (this.signer = t),
+      (this.dbsAddress = r)
   }
   var t = r.prototype
   return (
     (t.validateBaseURL = function (e) {
       if (!e || 'string' != typeof e || '' === e.trim())
         throw new Error('Invalid baseURL provided. baseURL cannot be empty or undefined.')
-      if (!s.default.isURL(e, { require_tld: !1 }))
+      if (!a.default.isURL(e, { require_tld: !1 }))
         throw new Error('Invalid baseURL format provided.')
     }),
     (t.getFileSizes = function (e) {
@@ -67,7 +69,7 @@ function h(e, r) {
     }),
     (t.getStorageInfo = function () {
       try {
-        return Promise.resolve(a.default.get(this.baseURL + '/')).then(function (e) {
+        return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
           return e.data
         })
       } catch (e) {
@@ -80,7 +82,7 @@ function h(e, r) {
           throw new Error('Either filePath or fileInfo must be provided.')
         var r = e.fileInfo || this.getFileSizes(e.filePath)
         return Promise.resolve(
-          a.default.post(this.baseURL + '/getQuote', {
+          s.default.post(this.baseURL + '/getQuote', {
             type: e.type,
             files: r,
             duration: e.duration,
@@ -100,32 +102,32 @@ function h(e, r) {
         return Promise.resolve(
           h(
             function () {
-              var i = Math.round(Date.now() / 1e3)
-              return Promise.resolve(o.signer.getAddress()).then(function (s) {
-                var h = new e.Contract(t, d, o.signer)
-                return Promise.resolve(h.approve(s, e.MaxInt256)).then(function (e) {
-                  return Promise.resolve(e.wait()).then(function () {
-                    return Promise.resolve(l(o.signer, r, i)).then(function (e) {
-                      var t = new c.default()
-                      return (
-                        n.forEach(function (e, r) {
-                          t.append('file' + (r + 1), u.default.createReadStream(e))
-                        }),
-                        Promise.resolve(
-                          a.default.post(
-                            o.baseURL +
-                              '/upload?quoteId=' +
-                              r +
-                              '&nonce=' +
-                              i +
-                              '&signature=' +
-                              e,
-                            t,
-                            { headers: f({}, t.getHeaders()) }
-                          )
+              var i = Math.round(Date.now() / 1e3),
+                a = new e.Contract(t, f, o.signer)
+              return Promise.resolve(a.approve(o.dbsAddress, e.MaxInt256)).then(function (
+                e
+              ) {
+                return Promise.resolve(e.wait()).then(function () {
+                  return Promise.resolve(l(o.signer, r, i)).then(function (e) {
+                    var t = new c.default()
+                    return (
+                      n.forEach(function (e, r) {
+                        t.append('file' + (r + 1), u.default.createReadStream(e))
+                      }),
+                      Promise.resolve(
+                        s.default.post(
+                          o.baseURL +
+                            '/upload?quoteId=' +
+                            r +
+                            '&nonce=' +
+                            i +
+                            '&signature=' +
+                            e,
+                          t,
+                          { headers: d({}, t.getHeaders()) }
                         )
                       )
-                    })
+                    )
                   })
                 })
               })
@@ -145,10 +147,10 @@ function h(e, r) {
         return Promise.resolve(
           h(
             function () {
-              var i = Math.round(Date.now() / 1e3)
-              return Promise.resolve(o.signer.getAddress()).then(function (s) {
-                var u = new e.Contract(t, d, o.signer)
-                return Promise.resolve(u.approve(s, e.MaxInt256)).then(function () {
+              var i = Math.round(Date.now() / 1e3),
+                a = new e.Contract(t, f, o.signer)
+              return Promise.resolve(a.approve(o.dbsAddress, e.MaxInt256)).then(
+                function () {
                   return Promise.resolve(l(o.signer, r, i)).then(function (e) {
                     var t = new c.default()
                     return (
@@ -156,7 +158,7 @@ function h(e, r) {
                         t.append('file' + (r + 1), e, e.name)
                       }),
                       Promise.resolve(
-                        a.default.post(
+                        s.default.post(
                           o.baseURL +
                             '/upload?quoteId=' +
                             r +
@@ -169,8 +171,8 @@ function h(e, r) {
                       )
                     )
                   })
-                })
-              })
+                }
+              )
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -184,7 +186,7 @@ function h(e, r) {
     (t.getStatus = function (e) {
       try {
         return Promise.resolve(
-          a.default.get(this.baseURL + '/getStatus', { params: { quoteId: e } })
+          s.default.get(this.baseURL + '/getStatus', { params: { quoteId: e } })
         ).then(function (e) {
           return e.data
         })
@@ -198,7 +200,7 @@ function h(e, r) {
           t = Math.round(Date.now() / 1e3)
         return Promise.resolve(l(r.signer, e, t)).then(function (n) {
           return Promise.resolve(
-            a.default.get(r.baseURL + '/getLink', {
+            s.default.get(r.baseURL + '/getLink', {
               params: { quoteId: e, nonce: t, signature: n }
             })
           ).then(function (e) {
@@ -211,7 +213,7 @@ function h(e, r) {
     }),
     (t.registerMicroservice = function (e) {
       try {
-        return Promise.resolve(a.default.post(this.baseURL + '/register', e))
+        return Promise.resolve(s.default.post(this.baseURL + '/register', e))
       } catch (e) {
         return Promise.reject(e)
       }
@@ -220,5 +222,5 @@ function h(e, r) {
   )
 })()),
   (exports.getSignedHash = l),
-  (exports.minErc20Abi = d)
+  (exports.minErc20Abi = f)
 //# sourceMappingURL=lib.js.map

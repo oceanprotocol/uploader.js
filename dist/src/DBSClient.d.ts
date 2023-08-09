@@ -14,12 +14,13 @@ import {
 export declare class DBSClient {
   private baseURL
   private signer
+  private dbsAddress
   /**
    * Creates an instance of the DBSClient.
    * @param {string} baseURL - The base URL of the DBS API.
    * @param {Signer} signer The signer object.
    */
-  constructor(baseURL: string, signer?: Signer)
+  constructor(baseURL: string, address: string, signer?: Signer)
   private validateBaseURL
   private getFileSizes
   /**
