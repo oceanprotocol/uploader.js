@@ -37,7 +37,7 @@ dotenv.config()
 
 // Set up a new instance of the DBS client
 const signer = new ethers.Wallet(process.env.PRIVATE_KEY) // Use your actual private key
-const client = new DBSClient(process.env.DBS_API_URL, signer) // Use your actual DBS API url
+const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
 
 async function runExample() {
   // Get storage info

@@ -21,16 +21,18 @@ import FormData from 'form-data'
 export class DBSClient {
   private baseURL: string
   private signer: Signer
+  private dbsAddress: string
 
   /**
    * Creates an instance of the DBSClient.
    * @param {string} baseURL - The base URL of the DBS API.
    * @param {Signer} signer The signer object.
    */
-  constructor(baseURL: string, signer?: Signer) {
+  constructor(baseURL: string, address: string, signer?: Signer) {
     this.validateBaseURL(baseURL)
     this.baseURL = baseURL
     this.signer = signer
+    this.dbsAddress = address
   }
 
   private validateBaseURL(baseURL: string): void {
@@ -99,11 +101,10 @@ export class DBSClient {
   async upload(quoteId: string, tokenAddress: string, filePaths: string[]): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
-      const address = await this.signer.getAddress()
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
-      await (await token.approve(address, MaxInt256)).wait()
+      await (await token.approve(this.dbsAddress, MaxInt256)).wait()
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
@@ -134,11 +135,10 @@ export class DBSClient {
   ): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
-      const address = await this.signer.getAddress()
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
-      await token.approve(address, MaxInt256)
+      await token.approve(this.dbsAddress, MaxInt256)
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
