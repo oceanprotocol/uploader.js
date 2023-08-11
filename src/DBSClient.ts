@@ -210,4 +210,32 @@ export class DBSClient {
     const response = await axios.post(`${this.baseURL}/register`, args)
     return response
   }
+
+  /**
+   * Retrieves the quote history for the given user address, nonce, and signature.
+   *
+   * @param {string} userAddress - The user's address.
+   * @param {number} nonce - The nonce associated with the request.
+   * @param {string} signature - The signature associated with the request.
+   * @returns {Promise<any>} A promise that resolves to the quote history data.
+   */
+  async getHistory(userAddress: string, nonce: number, signature: string): Promise<any> {
+    try {
+      // Construct the URL with the query parameters
+      const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}`
+
+      // Send a GET request
+      const response = await axios.get(url)
+
+      // Validate the response status code
+      if (response.status !== 200) {
+        throw new Error('Failed to retrieve history.')
+      }
+
+      return response.data
+    } catch (error) {
+      console.error('An error occurred while fetching history:', error)
+      throw error
+    }
+  }
 }
