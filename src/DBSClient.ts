@@ -219,8 +219,11 @@ export class DBSClient {
    * @param {string} signature - The signature associated with the request.
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  async getHistory(userAddress: string, nonce: number, signature: string): Promise<any> {
+  async getHistory(userAddress: string): Promise<any> {
     try {
+      const nonce = Math.round(Date.now() / 1000)
+      const signature = await getSignedHash(this.signer, '', nonce)
+
       // Construct the URL with the query parameters
       const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}`
 
