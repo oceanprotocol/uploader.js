@@ -214,13 +214,11 @@ export class DBSClient {
   /**
    * Retrieves the quote history for the given user address, nonce, and signature.
    *
-   * @param {string} userAddress - The user's address.
-   * @param {number} nonce - The nonce associated with the request.
-   * @param {string} signature - The signature associated with the request.
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  async getHistory(userAddress: string): Promise<any> {
+  async getHistory(): Promise<any> {
     try {
+      const userAddress = await this.signer.getAddress()
       const nonce = Math.round(Date.now() / 1000)
       const signature = await getSignedHash(this.signer, '', nonce)
 
