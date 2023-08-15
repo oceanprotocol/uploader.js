@@ -23,6 +23,7 @@
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "test": "npm run mocha 'test/**/*.test.ts'",
+    "test:history": "npm run mocha 'test/history.test.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",
