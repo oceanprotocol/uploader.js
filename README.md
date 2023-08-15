@@ -16,6 +16,25 @@ or
 yarn add @oceanprotocol/dbs
 ```
 
+## Develop and test this project
+
+To get started and run the project, follow these steps:
+
+1. **Clone the Repository**: Clone the project repository to your local machine using the following command:
+   ```bash
+   git clone https://github.com/oceanprotocol/dbs.js.git
+   ```
+2. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies using npm:
+   ```bash
+   cd dbs.js
+   npm install
+   ```
+3. **Set Environment Variables**: Configure the required environment variables by creating a `.env` file in the root directory. Refer to the `.example.env` file provided in the project for details on the required variables.
+4. **Run Tests**
+   ```bash
+   npm test
+   ```
+
 ## Node.js Usage Example
 
 ```typescript
