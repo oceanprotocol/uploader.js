@@ -24,6 +24,9 @@
   "scripts": {
     "test": "npm run mocha 'test/**/*.test.ts'",
     "test:history": "npm run mocha 'test/history.test.ts'",
+    "test:arweave": "npm run mocha 'test/arweave.test.ts'",
+    "test:filecoin": "npm run mocha 'test/filecoin.test.ts'",
+    "test:register": "npm run mocha 'test/register.test.ts'",
     "clean": "rm -rf ./dist/ ./doc/ ./.nyc_output",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx . && npm run type-check",

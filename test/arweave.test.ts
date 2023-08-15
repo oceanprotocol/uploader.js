@@ -3,81 +3,18 @@ import { assert, expect } from 'chai'
 import dotenv from 'dotenv'
 
 import { DBSClient } from '../src/index'
-import { StorageInfo, GetQuoteArgs, RegisterArgs } from '../src/@types'
+import { StorageInfo, GetQuoteArgs } from '../src/@types'
 import { getDataWithRetry, createFileList, calculateFilesLength } from './helpers'
 
 dotenv.config()
 
-describe('DBSClient', () => {
+describe('Arweave Tests', () => {
   let info: StorageInfo[]
   // Set up a new instance of the DBS client
   const provider = new JsonRpcProvider(process.env.RPC_URL, 80001)
   // Private key account needs to have both MATIC and Wrapped Matic for testing
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
   const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
-
-  describe('Initial setup', () => {})
-
-  describe('Testing the registerMicroservice endpoint', () => {
-    const args: RegisterArgs = {
-      type: 'TEST-' + String(Math.random()),
-      description: 'File storage on FileCoin',
-      url: 'http://microservice.url',
-      paymentMethods: [
-        {
-          chainId: '1',
-          acceptedTokens: [
-            {
-              title: 'OCEAN',
-              value: '0x967da4048cD07aB37855c090aAF366e4ce1b9F48'
-            },
-            {
-              title: 'USDC',
-              value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-            }
-          ]
-        },
-        {
-          chainId: '80001',
-          acceptedTokens: [
-            {
-              title: 'OCEAN',
-              value: '0xd8992Ed72C445c35Cb4A2be468568Ed1079357c8'
-            }
-          ]
-        },
-        {
-          chainId: '5',
-          acceptedTokens: [
-            {
-              title: 'OCEAN',
-              value: '0xCfDdA22C9837aE76E0faA845354f33C62E03653a'
-            }
-          ]
-        }
-      ]
-    }
-    it('should register a microservice successfully', async () => {
-      const response = await client.registerMicroservice(args)
-
-      assert(response.status === 201, 'registerMicroservice failed: Status is not 200')
-      assert(
-        response.statusText === 'Created',
-        'registerMicroservice failed: StatusText is not OK'
-      )
-      assert(response.data === 'Desired storage created.', 'Wrong register response')
-    })
-
-    it('should recieve the correct response when trying to register the same microservice again', async () => {
-      const response = await client.registerMicroservice(args)
-
-      assert(response.status === 200, 'registerMicroservice failed: Status is not 200')
-      assert(
-        response.data === 'Chosen storage type is already active and registered.',
-        'Wrong registerMicroservice response'
-      )
-    })
-  })
 
   describe('Testing getStorageInfo endpoint', () => {
     it('should return an array of storage info', async () => {
@@ -98,46 +35,6 @@ describe('DBSClient', () => {
     })
   })
   describe('Testing getQuote endpoint', () => {
-    it('should return a quote for uploading a file to Filecoin when using file paths', async () => {
-      const args: GetQuoteArgs = {
-        type: 'filecoin',
-        duration: 4353545453,
-        payment: {
-          chainId: '80001',
-          tokenAddress: '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-        },
-        userAddress: process.env.USER_ADDRESS,
-        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-      }
-      const result = await client.getQuote(args)
-      expect(result).to.be.an('object')
-      expect(result.quoteId).to.be.a('string')
-      expect(result.tokenAmount).to.be.a('number')
-      expect(result.approveAddress).to.be.a('string')
-      expect(result.chainId).to.be.a('string')
-      expect(result.tokenAddress).to.be.a('string')
-    })
-    it('should return a quote for uploading a file to Filecoin when using file sizes', async () => {
-      const args: GetQuoteArgs = {
-        type: 'filecoin',
-        duration: 4353545453,
-        payment: {
-          chainId: '80001',
-          tokenAddress: '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-        },
-        userAddress: process.env.USER_ADDRESS,
-        filePath: undefined,
-        fileInfo: [{ length: 1000 }, { length: 9999 }]
-      }
-      const result = await client.getQuote(args)
-
-      expect(result).to.be.an('object')
-      expect(result.quoteId).to.be.a('string')
-      expect(result.tokenAmount).to.be.a('number')
-      expect(result.approveAddress).to.be.a('string')
-      expect(result.chainId).to.be.a('string')
-      expect(result.tokenAddress).to.be.a('string')
-    })
     it('should return a quote for uploading a file to Arweave when using file paths', async () => {
       const args: GetQuoteArgs = {
         type: 'arweave',
@@ -182,28 +79,6 @@ describe('DBSClient', () => {
     this.timeout(2000000)
     let arweaveQuote1: any
     let arweaveQuote2: any
-
-    // it('should upload files successfully to filecoin', async () => {
-    //   const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-    //   const args: GetQuoteArgs = {
-    //     type: 'filecoin',
-    //     duration: 4353545453,
-    //     payment: {
-    //       chainId: '80001',
-    //       tokenAddress
-    //     },
-    //     userAddress: process.env.USER_ADDRESS,
-    //     filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-    //   }
-    //   const result = await client.getQuote(args)
-
-    //   const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-    //     process.env.TEST_FILE_1,
-    //     process.env.TEST_FILE_2
-    //   ])
-    //   console.log('resultFromUpload', resultFromUpload.data)
-    //   // Add more assertions based on expected response
-    // })
 
     it('should upload local files successfully to Arweave', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
