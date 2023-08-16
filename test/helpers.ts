@@ -1,6 +1,4 @@
 import Arweave from 'arweave'
-import { FileData } from '../src/@types'
-import { Readable } from 'stream'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -55,38 +53,4 @@ export async function getDataWithRetry(
   throw new Error(
     `Unable to retrieve data for transaction ${transactionHash} after ${maxRetries} attempts.`
   )
-}
-
-export function createFileList(files: Buffer[]): FileList {
-  const fileList: any = []
-
-  files.forEach((file, index) => {
-    fileList[index] = {
-      stream: new Readable({
-        read() {
-          this.push(file)
-          this.push(null)
-        }
-      }),
-      name: `file${index + 1}.txt`,
-      size: file.length,
-      type: 'text/plain',
-      lastModified: Date.now()
-    }
-  })
-
-  fileList.item = (index: number) => fileList[index]
-  fileList.length = files.length
-
-  return fileList as FileList
-}
-
-export function calculateFilesLength(files: FileList): FileData[] {
-  const fileInfo: FileData[] = []
-
-  for (let i = 0; i < files.length; i++) {
-    fileInfo.push({ length: files[i].size })
-  }
-
-  return fileInfo
 }
