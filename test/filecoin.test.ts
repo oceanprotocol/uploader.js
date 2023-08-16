@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 
 import { DBSClient } from '../src/index'
 import { StorageInfo, GetQuoteArgs } from '../src/@types'
-import { getDataWithRetry, createFileList, calculateFilesLength } from './helpers'
 
 dotenv.config()
 
