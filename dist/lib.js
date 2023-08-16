@@ -218,6 +218,41 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
+    (t.getHistory = function () {
+      try {
+        var e = this
+        return Promise.resolve(
+          h(
+            function () {
+              return Promise.resolve(e.signer.getAddress()).then(function (r) {
+                var t = Math.round(Date.now() / 1e3)
+                return Promise.resolve(l(e.signer, '', t)).then(function (n) {
+                  return Promise.resolve(
+                    s.default.get(
+                      e.baseURL +
+                        '/getHistory?userAddress=' +
+                        r +
+                        '&nonce=' +
+                        t +
+                        '&signature=' +
+                        n
+                    )
+                  ).then(function (e) {
+                    if (200 !== e.status) throw new Error('Failed to retrieve history.')
+                    return e.data
+                  })
+                })
+              })
+            },
+            function (e) {
+              throw (console.error('An error occurred while fetching history:', e), e)
+            }
+          )
+        )
+      } catch (e) {
+        return Promise.reject(e)
+      }
+    }),
     r
   )
 })()),

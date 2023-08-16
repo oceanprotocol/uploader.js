@@ -71,4 +71,10 @@ export declare class DBSClient {
    * @returns {Promise<void>}
    */
   registerMicroservice(args: RegisterArgs): Promise<AxiosResponse>
+  /**
+   * Retrieves the quote history for the given user address, nonce, and signature.
+   *
+   * @returns {Promise<any>} A promise that resolves to the quote history data.
+   */
+  getHistory(): Promise<any>
 }

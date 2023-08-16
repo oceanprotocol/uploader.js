@@ -17,15 +17,15 @@ function d() {
     d.apply(this, arguments)
   )
 }
-const u = [
+const c = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
-  c = async (r, a, s) => {
+  h = async (r, a, s) => {
     const i = t(e(a + s.toString()))
     return await r.signMessage(i)
   }
-class h {
+class u {
   constructor(t, e, r) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -62,16 +62,16 @@ class h {
   }
   async upload(t, e, i) {
     try {
-      const h = Math.round(Date.now() / 1e3),
-        p = new r(e, u, this.signer)
-      await (await p.approve(this.dbsAddress, a)).wait()
-      const f = await c(this.signer, t, h),
-        g = new o()
+      const u = Math.round(Date.now() / 1e3),
+        g = new r(e, c, this.signer)
+      await (await g.approve(this.dbsAddress, a)).wait()
+      const p = await h(this.signer, t, u),
+        w = new o()
       i.forEach((t, e) => {
-        g.append(`file${e + 1}`, n.createReadStream(t))
+        w.append(`file${e + 1}`, n.createReadStream(t))
       })
-      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${h}&signature=${f}`
-      return await s.post(l, g, { headers: d({}, g.getHeaders()) })
+      const f = `${this.baseURL}/upload?quoteId=${t}&nonce=${u}&signature=${p}`
+      return await s.post(f, w, { headers: d({}, w.getHeaders()) })
     } catch (t) {
       return console.error('Error:', t), t.data
     }
@@ -79,15 +79,15 @@ class h {
   async uploadBrowser(t, e, i) {
     try {
       const n = Math.round(Date.now() / 1e3),
-        d = new r(e, u, this.signer)
+        d = new r(e, c, this.signer)
       await d.approve(this.dbsAddress, a)
-      const h = await c(this.signer, t, n),
-        p = new o()
+      const u = await h(this.signer, t, n),
+        g = new o()
       Array.from(i).forEach((t, e) => {
-        p.append(`file${e + 1}`, t, t.name)
+        g.append(`file${e + 1}`, t, t.name)
       })
-      const f = `${this.baseURL}/upload?quoteId=${t}&nonce=${n}&signature=${h}`
-      return await s.post(f, p)
+      const p = `${this.baseURL}/upload?quoteId=${t}&nonce=${n}&signature=${u}`
+      return await s.post(p, g)
     } catch (t) {
       return console.error('Error:', t), t.data
     }
@@ -97,7 +97,7 @@ class h {
   }
   async getLink(t) {
     const e = Math.round(Date.now() / 1e3),
-      r = await c(this.signer, t, e)
+      r = await h(this.signer, t, e)
     return (
       await s.get(`${this.baseURL}/getLink`, {
         params: { quoteId: t, nonce: e, signature: r }
@@ -107,6 +107,19 @@ class h {
   async registerMicroservice(t) {
     return await s.post(`${this.baseURL}/register`, t)
   }
+  async getHistory() {
+    try {
+      const t = await this.signer.getAddress(),
+        e = Math.round(Date.now() / 1e3),
+        r = await h(this.signer, '', e),
+        a = `${this.baseURL}/getHistory?userAddress=${t}&nonce=${e}&signature=${r}`,
+        i = await s.get(a)
+      if (200 !== i.status) throw new Error('Failed to retrieve history.')
+      return i.data
+    } catch (t) {
+      throw (console.error('An error occurred while fetching history:', t), t)
+    }
+  }
 }
-export { h as DBSClient, c as getSignedHash, u as minErc20Abi }
+export { u as DBSClient, h as getSignedHash, c as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map
