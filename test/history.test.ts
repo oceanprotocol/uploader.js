@@ -1,5 +1,6 @@
 import { ethers, JsonRpcProvider } from 'ethers'
 import dotenv from 'dotenv'
+import { expect } from 'chai'
 
 import { DBSClient } from '../src/index'
 
@@ -18,6 +19,7 @@ describe('Get History test', () => {
       try {
         result = await client.getHistory()
         console.log('result', result)
+        expect(result).to.be.an('array')
       } catch (error) {
         console.log('error', error)
       }
