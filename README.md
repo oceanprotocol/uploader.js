@@ -180,6 +180,26 @@ Register a new microservice that handles a storage type.
 
 If you'd like to contribute to this library, please submit pull requests with new features or bug fixes. Make sure to follow the TypeScript and project guidelines.
 
+## ⬆️ Releases
+
+Releases are managed semi-automatically. They are always manually triggered from a developer's machine with release scripts.
+
+For the GitHub releases steps a GitHub personal access token, exported as `GITHUB_TOKEN` is required. [Setup](https://github.com/release-it/release-it#github-releases)
+
+```bash
+export GITHUB_TOKEN="ghp_abc123abc123abc123abc123abc123abc123"
+npm run release
+```
+
+The task does the following:
+
+- bumps the project version in `package.json`, `package-lock.json`
+- auto-generates and updates the CHANGELOG.md file from commit messages
+- creates a Git tag
+- commits and pushes everything
+- creates a GitHub release with commit messages as description
+- Git tag push will trigger a GitHub Action workflow to do a npm release
+
 ## License
 
 This library is licensed under the Apache 2 license.
