@@ -75,31 +75,31 @@ describe('Filecoin Tests', () => {
       expect(result.tokenAddress).to.be.a('string')
     })
   })
-  //   describe('Testing the upload, status and getLink endpoints', async function () {
-  //     this.timeout(2000000)
-  //     let arweaveQuote1: any
-  //     let arweaveQuote2: any
+  describe('Testing the upload, status and getLink endpoints', async function () {
+    this.timeout(2000000)
+    let arweaveQuote1: any
+    let arweaveQuote2: any
 
-  //     it('should upload files successfully to filecoin', async () => {
-  //       const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
-  //       const args: GetQuoteArgs = {
-  //         type: 'filecoin',
-  //         duration: 4353545453,
-  //         payment: {
-  //           chainId: '80001',
-  //           tokenAddress
-  //         },
-  //         userAddress: process.env.USER_ADDRESS,
-  //         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
-  //       }
-  //       const result = await client.getQuote(args)
+    it('should upload files successfully to filecoin', async () => {
+      const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
+      const args: GetQuoteArgs = {
+        type: 'filecoin',
+        duration: 4353545453,
+        payment: {
+          chainId: '80001',
+          tokenAddress
+        },
+        userAddress: process.env.USER_ADDRESS,
+        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+      }
+      const result = await client.getQuote(args)
 
-  //       const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-  //         process.env.TEST_FILE_1,
-  //         process.env.TEST_FILE_2
-  //       ])
-  //       console.log('resultFromUpload', resultFromUpload.data)
-  //       // Add more assertions based on expected response
-  //     })
-  //   })
+      const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
+        process.env.TEST_FILE_1,
+        process.env.TEST_FILE_2
+      ])
+      console.log('resultFromUpload', resultFromUpload.data)
+      // Add more assertions based on expected response
+    })
+  })
 })
