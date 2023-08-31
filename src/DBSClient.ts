@@ -114,6 +114,7 @@ export class DBSClient {
       })
 
       const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
+      console.log('uploadUrl', uploadUrl)
 
       const response = await axios.post(uploadUrl, formData, {
         headers: {
@@ -216,17 +217,17 @@ export class DBSClient {
    *
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  async getHistory(): Promise<any> {
+  async getHistory(page: number = 1, pageSize: number = 25): Promise<any> {
     try {
       const userAddress = await this.signer.getAddress()
       const nonce = Math.round(Date.now() / 1000)
       const signature = await getSignedHash(this.signer, '', nonce)
 
       // Construct the URL with the query parameters
-      const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}`
+      const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}&page=${page}&pageSize=${pageSize}`
 
       // Send a GET request
-      const response = await axios.get(url)
+      const response: AxiosResponse = await axios.get(url)
 
       // Validate the response status code
       if (response.status !== 200) {
