@@ -104,7 +104,16 @@ export class DBSClient {
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
-      await (await token.approve(this.dbsAddress, MaxInt256)).wait()
+      await (
+        await token.approve('0x0ff9092e55d9f6CCB0DD4C490754811bc0839866', MaxInt256)
+      ).wait()
+      // Check and log the approved amount
+      const approvedAmount = await token.allowance(
+        await this.signer.getAddress(),
+        '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+      )
+      console.log(`Approved amount for dbsAddress: ${approvedAmount.toString()}`)
+
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
@@ -115,6 +124,7 @@ export class DBSClient {
 
       const uploadUrl = `${this.baseURL}/upload?quoteId=${quoteId}&nonce=${nonce}&signature=${signature}`
       console.log('uploadUrl', uploadUrl)
+      console.log('tokenAddress', tokenAddress)
 
       const response = await axios.post(uploadUrl, formData, {
         headers: {

@@ -77,11 +77,9 @@ describe('Filecoin Tests', () => {
   })
   describe('Testing the upload, status and getLink endpoints', async function () {
     this.timeout(2000000)
-    let arweaveQuote1: any
-    let arweaveQuote2: any
 
-    it('should upload files successfully to filecoin', async () => {
-      const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
+    it('should upload local files successfully to filecoin', async () => {
+      const tokenAddress = '0x21C561e551638401b937b03fE5a0a0652B99B7DD'
       const args: GetQuoteArgs = {
         type: 'filecoin',
         duration: 4353545453,
