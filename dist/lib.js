@@ -110,22 +110,21 @@ function h(e, r) {
                 return Promise.resolve(e.wait()).then(function () {
                   return Promise.resolve(l(o.signer, r, i)).then(function (e) {
                     var t = new c.default()
+                    n.forEach(function (e, r) {
+                      t.append('file' + (r + 1), u.default.createReadStream(e))
+                    })
+                    var a =
+                      o.baseURL +
+                      '/upload?quoteId=' +
+                      r +
+                      '&nonce=' +
+                      i +
+                      '&signature=' +
+                      e
                     return (
-                      n.forEach(function (e, r) {
-                        t.append('file' + (r + 1), u.default.createReadStream(e))
-                      }),
+                      console.log('uploadUrl', a),
                       Promise.resolve(
-                        s.default.post(
-                          o.baseURL +
-                            '/upload?quoteId=' +
-                            r +
-                            '&nonce=' +
-                            i +
-                            '&signature=' +
-                            e,
-                          t,
-                          { headers: d({}, t.getHeaders()) }
-                        )
+                        s.default.post(a, t, { headers: d({}, t.getHeaders()) })
                       )
                     )
                   })
@@ -218,24 +217,29 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.getHistory = function () {
+    (t.getHistory = function (e, r) {
+      void 0 === e && (e = 1), void 0 === r && (r = 25)
       try {
-        var e = this
+        var t = this
         return Promise.resolve(
           h(
             function () {
-              return Promise.resolve(e.signer.getAddress()).then(function (r) {
-                var t = Math.round(Date.now() / 1e3)
-                return Promise.resolve(l(e.signer, '', t)).then(function (n) {
+              return Promise.resolve(t.signer.getAddress()).then(function (n) {
+                var o = Math.round(Date.now() / 1e3)
+                return Promise.resolve(l(t.signer, '', o)).then(function (i) {
                   return Promise.resolve(
                     s.default.get(
-                      e.baseURL +
+                      t.baseURL +
                         '/getHistory?userAddress=' +
-                        r +
+                        n +
                         '&nonce=' +
-                        t +
+                        o +
                         '&signature=' +
-                        n
+                        i +
+                        '&page=' +
+                        e +
+                        '&pageSize=' +
+                        r
                     )
                   ).then(function (e) {
                     if (200 !== e.status) throw new Error('Failed to retrieve history.')

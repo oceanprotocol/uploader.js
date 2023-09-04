@@ -76,5 +76,5 @@ export declare class DBSClient {
    *
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  getHistory(): Promise<any>
+  getHistory(page?: number, pageSize?: number): Promise<any>
 }

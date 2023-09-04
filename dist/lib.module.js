@@ -21,7 +21,7 @@ var c = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
-  f = function (t, n, o) {
+  d = function (t, n, o) {
     try {
       var i = e(r(n + o.toString()))
       return Promise.resolve(t.signMessage(i))
@@ -29,7 +29,7 @@ var c = [
       return Promise.reject(e)
     }
   }
-function d(e, r) {
+function f(e, r) {
   try {
     var t = e()
   } catch (e) {
@@ -93,31 +93,28 @@ var h = /*#__PURE__*/ (function () {
       try {
         var h = this
         return Promise.resolve(
-          d(
+          f(
             function () {
-              var d = Math.round(Date.now() / 1e3),
-                v = new t(r, c, h.signer)
-              return Promise.resolve(v.approve(h.dbsAddress, n)).then(function (r) {
+              var f = Math.round(Date.now() / 1e3),
+                l = new t(r, c, h.signer)
+              return Promise.resolve(l.approve(h.dbsAddress, n)).then(function (r) {
                 return Promise.resolve(r.wait()).then(function () {
-                  return Promise.resolve(f(h.signer, e, d)).then(function (r) {
+                  return Promise.resolve(d(h.signer, e, f)).then(function (r) {
                     var t = new a()
+                    i.forEach(function (e, r) {
+                      t.append('file' + (r + 1), s.createReadStream(e))
+                    })
+                    var n =
+                      h.baseURL +
+                      '/upload?quoteId=' +
+                      e +
+                      '&nonce=' +
+                      f +
+                      '&signature=' +
+                      r
                     return (
-                      i.forEach(function (e, r) {
-                        t.append('file' + (r + 1), s.createReadStream(e))
-                      }),
-                      Promise.resolve(
-                        o.post(
-                          h.baseURL +
-                            '/upload?quoteId=' +
-                            e +
-                            '&nonce=' +
-                            d +
-                            '&signature=' +
-                            r,
-                          t,
-                          { headers: u({}, t.getHeaders()) }
-                        )
-                      )
+                      console.log('uploadUrl', n),
+                      Promise.resolve(o.post(n, t, { headers: u({}, t.getHeaders()) }))
                     )
                   })
                 })
@@ -136,12 +133,12 @@ var h = /*#__PURE__*/ (function () {
       try {
         var s = this
         return Promise.resolve(
-          d(
+          f(
             function () {
               var u = Math.round(Date.now() / 1e3),
-                d = new t(r, c, s.signer)
-              return Promise.resolve(d.approve(s.dbsAddress, n)).then(function () {
-                return Promise.resolve(f(s.signer, e, u)).then(function (r) {
+                f = new t(r, c, s.signer)
+              return Promise.resolve(f.approve(s.dbsAddress, n)).then(function () {
+                return Promise.resolve(d(s.signer, e, u)).then(function (r) {
                   var t = new a()
                   return (
                     Array.from(i).forEach(function (e, r) {
@@ -187,7 +184,7 @@ var h = /*#__PURE__*/ (function () {
       try {
         var r = this,
           t = Math.round(Date.now() / 1e3)
-        return Promise.resolve(f(r.signer, e, t)).then(function (n) {
+        return Promise.resolve(d(r.signer, e, t)).then(function (n) {
           return Promise.resolve(
             o.get(r.baseURL + '/getLink', {
               params: { quoteId: e, nonce: t, signature: n }
@@ -207,24 +204,29 @@ var h = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (r.getHistory = function () {
+    (r.getHistory = function (e, r) {
+      void 0 === e && (e = 1), void 0 === r && (r = 25)
       try {
-        var e = this
+        var t = this
         return Promise.resolve(
-          d(
+          f(
             function () {
-              return Promise.resolve(e.signer.getAddress()).then(function (r) {
-                var t = Math.round(Date.now() / 1e3)
-                return Promise.resolve(f(e.signer, '', t)).then(function (n) {
+              return Promise.resolve(t.signer.getAddress()).then(function (n) {
+                var i = Math.round(Date.now() / 1e3)
+                return Promise.resolve(d(t.signer, '', i)).then(function (s) {
                   return Promise.resolve(
                     o.get(
-                      e.baseURL +
+                      t.baseURL +
                         '/getHistory?userAddress=' +
-                        r +
+                        n +
                         '&nonce=' +
-                        t +
+                        i +
                         '&signature=' +
-                        n
+                        s +
+                        '&page=' +
+                        e +
+                        '&pageSize=' +
+                        r
                     )
                   ).then(function (e) {
                     if (200 !== e.status) throw new Error('Failed to retrieve history.')
@@ -245,5 +247,5 @@ var h = /*#__PURE__*/ (function () {
     e
   )
 })()
-export { h as DBSClient, f as getSignedHash, c as minErc20Abi }
+export { h as DBSClient, d as getSignedHash, c as minErc20Abi }
 //# sourceMappingURL=lib.module.js.map

@@ -17,8 +17,8 @@
   }
   var a = /*#__PURE__*/ s(t),
     u = /*#__PURE__*/ s(n),
-    f = /*#__PURE__*/ s(o),
-    d = /*#__PURE__*/ s(i)
+    d = /*#__PURE__*/ s(o),
+    f = /*#__PURE__*/ s(i)
   function c() {
     return (
       (c = Object.assign
@@ -75,7 +75,7 @@
       }),
       (t.getFileSizes = function (e) {
         return e.map(function (e) {
-          return { length: f.default.statSync(e).size }
+          return { length: d.default.statSync(e).size }
         })
       }),
       (t.getStorageInfo = function () {
@@ -119,23 +119,22 @@
                   function (r) {
                     return Promise.resolve(r.wait()).then(function () {
                       return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                        var t = new d.default()
+                        var t = new f.default()
+                        n.forEach(function (e, r) {
+                          t.append('file' + (r + 1), d.default.createReadStream(e))
+                        })
+                        var s =
+                          o.baseURL +
+                          '/upload?quoteId=' +
+                          e +
+                          '&nonce=' +
+                          i +
+                          '&signature=' +
+                          r
                         return (
-                          n.forEach(function (e, r) {
-                            t.append('file' + (r + 1), f.default.createReadStream(e))
-                          }),
+                          console.log('uploadUrl', s),
                           Promise.resolve(
-                            a.default.post(
-                              o.baseURL +
-                                '/upload?quoteId=' +
-                                e +
-                                '&nonce=' +
-                                i +
-                                '&signature=' +
-                                r,
-                              t,
-                              { headers: c({}, t.getHeaders()) }
-                            )
+                            a.default.post(s, t, { headers: c({}, t.getHeaders()) })
                           )
                         )
                       })
@@ -163,7 +162,7 @@
                 return Promise.resolve(s.approve(o.dbsAddress, r.MaxInt256)).then(
                   function () {
                     return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                      var t = new d.default()
+                      var t = new f.default()
                       return (
                         Array.from(n).forEach(function (e, r) {
                           t.append('file' + (r + 1), e, e.name)
@@ -229,24 +228,29 @@
           return Promise.reject(e)
         }
       }),
-      (t.getHistory = function () {
+      (t.getHistory = function (e, r) {
+        void 0 === e && (e = 1), void 0 === r && (r = 25)
         try {
-          var e = this
+          var t = this
           return Promise.resolve(
             v(
               function () {
-                return Promise.resolve(e.signer.getAddress()).then(function (r) {
-                  var t = Math.round(Date.now() / 1e3)
-                  return Promise.resolve(h(e.signer, '', t)).then(function (n) {
+                return Promise.resolve(t.signer.getAddress()).then(function (n) {
+                  var o = Math.round(Date.now() / 1e3)
+                  return Promise.resolve(h(t.signer, '', o)).then(function (i) {
                     return Promise.resolve(
                       a.default.get(
-                        e.baseURL +
+                        t.baseURL +
                           '/getHistory?userAddress=' +
-                          r +
+                          n +
                           '&nonce=' +
-                          t +
+                          o +
                           '&signature=' +
-                          n
+                          i +
+                          '&page=' +
+                          e +
+                          '&pageSize=' +
+                          r
                       )
                     ).then(function (e) {
                       if (200 !== e.status) throw new Error('Failed to retrieve history.')
