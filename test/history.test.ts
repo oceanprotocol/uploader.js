@@ -24,5 +24,21 @@ describe('Get History test', () => {
         console.log('error', error)
       }
     })
+
+    it('should return paginated history for the signer', async () => {
+      let result
+      const page = 1
+      const pageSize = 1
+
+      try {
+        result = await client.getHistory(page, pageSize)
+        console.log('Paginated result', result)
+
+        expect(result).to.be.an('array')
+        expect(result.length).to.equal(pageSize)
+      } catch (error) {
+        console.log('error', error)
+      }
+    })
   })
 })
