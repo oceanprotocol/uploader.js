@@ -66,6 +66,7 @@ describe('Filecoin Tests', () => {
         fileInfo: [{ length: 1000 }, { length: 9999 }]
       }
       const result = await client.getQuote(args)
+      console.log('quote result', result)
 
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
@@ -77,8 +78,6 @@ describe('Filecoin Tests', () => {
   })
   describe('Testing the upload, status and getLink endpoints', async function () {
     this.timeout(2000000)
-    let arweaveQuote1: any
-    let arweaveQuote2: any
 
     it('should upload files successfully to filecoin', async () => {
       const tokenAddress = '0x742DfA5Aa70a8212857966D491D67B09Ce7D6ec7'
