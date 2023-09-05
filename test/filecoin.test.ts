@@ -93,10 +93,12 @@ describe('Filecoin Tests', () => {
       }
       const result = await client.getQuote(args)
 
-      const resultFromUpload = await client.upload(result.quoteId, tokenAddress, [
-        process.env.TEST_FILE_1,
-        process.env.TEST_FILE_2
-      ])
+      const resultFromUpload = await client.upload(
+        result.quoteId,
+        tokenAddress,
+        [process.env.TEST_FILE_1, process.env.TEST_FILE_2],
+        'filecoin'
+      )
       console.log('resultFromUpload', resultFromUpload.data)
       // Add more assertions based on expected response
     })
