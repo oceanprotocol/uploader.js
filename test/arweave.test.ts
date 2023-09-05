@@ -94,10 +94,12 @@ describe('Arweave Tests', () => {
       }
       arweaveQuote1 = await client.getQuote(args)
 
-      const result = await client.upload(arweaveQuote1.quoteId, tokenAddress, [
-        process.env.TEST_FILE_1,
-        process.env.TEST_FILE_2
-      ])
+      const result = await client.upload(
+        arweaveQuote1.quoteId,
+        tokenAddress,
+        [process.env.TEST_FILE_1, process.env.TEST_FILE_2],
+        'arweave'
+      )
 
       // Check that upload succeeded
       assert(result.status === 200, 'Upload failed')

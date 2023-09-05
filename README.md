@@ -171,7 +171,7 @@ Fetch information about supported storage types and payments.
 `getQuote(args: GetQuoteArgs): Promise<GetQuoteResult>`
 Fetch a quote for storing files on a specific storage.
 
-`upload(quoteId: string, nonce: number, signature: string, files: File[]): Promise<void>`
+`upload(quoteId: string, tokenAddress: string, filePaths: string[], type: string): Promise<any>`
 Upload files according to the quote request.
 
 `getStatus(quoteId: string): Promise<GetStatusResult>`
