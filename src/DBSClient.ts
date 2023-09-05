@@ -109,6 +109,7 @@ export class DBSClient {
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
+      // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
       const approveAddress =
         type === 'filecoin'
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
@@ -143,14 +144,21 @@ export class DBSClient {
   async uploadBrowser(
     quoteId: string,
     tokenAddress: string,
-    files: FileList
+    files: FileList,
+    type: string
   ): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
 
       const token = new Contract(tokenAddress, minErc20Abi, this.signer)
 
-      await token.approve(this.dbsAddress, MaxInt256)
+      // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
+      const approveAddress =
+        type === 'filecoin'
+          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+          : this.dbsAddress
+
+      await token.approve(approveAddress, MaxInt256)
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
