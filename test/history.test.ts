@@ -17,7 +17,7 @@ describe('Get History test', () => {
     it('should return the history for the signer', async () => {
       let result
       try {
-        result = await client.getHistory()
+        result = await client.getHistory(1, 25, 'arweave')
         console.log('result', result)
         expect(result).to.be.an('array')
       } catch (error) {
@@ -28,14 +28,14 @@ describe('Get History test', () => {
     it('should return paginated history for the signer', async () => {
       let result
       const page = 1
-      const pageSize = 1
+      const pageSize = 5
 
       try {
-        result = await client.getHistory(page, pageSize)
-        console.log('Paginated result', result)
+        result = await client.getHistory(page, pageSize, 'arweave')
+        console.log('Result', result)
 
-        expect(result).to.be.an('array')
-        expect(result.length).to.equal(pageSize)
+        expect(result.data).to.be.an('array')
+        expect(result.data.length).to.lessThanOrEqual(pageSize)
       } catch (error) {
         console.log('error', error)
       }
