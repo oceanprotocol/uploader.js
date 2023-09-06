@@ -43,8 +43,18 @@ export declare class DBSClient {
    * @param {Buffer[]} files - An array of files to upload.
    * @returns {Promise<void>}
    */
-  upload(quoteId: string, tokenAddress: string, filePaths: string[]): Promise<any>
-  uploadBrowser(quoteId: string, tokenAddress: string, files: FileList): Promise<any>
+  upload(
+    quoteId: string,
+    tokenAddress: string,
+    filePaths: string[],
+    type: string
+  ): Promise<any>
+  uploadBrowser(
+    quoteId: string,
+    tokenAddress: string,
+    files: FileList,
+    type: string
+  ): Promise<any>
   /**
    * Fetches a quote for storing files on a specific storage and uploads files according to the quote request.
    * @param {GetQuoteArgs} args - The arguments needed for getting a quote.
@@ -76,5 +86,5 @@ export declare class DBSClient {
    *
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  getHistory(page?: number, pageSize?: number): Promise<any>
+  getHistory(page: number, pageSize: number, storageType: string): Promise<any>
 }

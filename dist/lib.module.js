@@ -21,7 +21,7 @@ var c = [
     'function approve(address, uint256) external returns (bool)',
     'function balanceOf(address owner) external view returns (uint256)'
   ],
-  d = function (t, n, o) {
+  f = function (t, n, o) {
     try {
       var i = e(r(n + o.toString()))
       return Promise.resolve(t.signMessage(i))
@@ -29,7 +29,7 @@ var c = [
       return Promise.reject(e)
     }
   }
-function f(e, r) {
+function d(e, r) {
   try {
     var t = e()
   } catch (e) {
@@ -89,27 +89,34 @@ var h = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (r.upload = function (e, r, i) {
+    (r.upload = function (e, r, i, h) {
       try {
-        var h = this
+        var l = this
         return Promise.resolve(
-          f(
+          d(
             function () {
-              var f = Math.round(Date.now() / 1e3),
-                l = new t(r, c, h.signer)
-              return Promise.resolve(l.approve(h.dbsAddress, n)).then(function (r) {
+              var d = Math.round(Date.now() / 1e3),
+                v = new t(r, c, l.signer)
+              return Promise.resolve(
+                v.approve(
+                  'filecoin' === h
+                    ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                    : l.dbsAddress,
+                  n
+                )
+              ).then(function (r) {
                 return Promise.resolve(r.wait()).then(function () {
-                  return Promise.resolve(d(h.signer, e, f)).then(function (r) {
+                  return Promise.resolve(f(l.signer, e, d)).then(function (r) {
                     var t = new a()
                     i.forEach(function (e, r) {
                       t.append('file' + (r + 1), s.createReadStream(e))
                     })
                     var n =
-                      h.baseURL +
+                      l.baseURL +
                       '/upload?quoteId=' +
                       e +
                       '&nonce=' +
-                      f +
+                      d +
                       '&signature=' +
                       r
                     return (
@@ -129,16 +136,23 @@ var h = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (r.uploadBrowser = function (e, r, i) {
+    (r.uploadBrowser = function (e, r, i, s) {
       try {
-        var s = this
+        var u = this
         return Promise.resolve(
-          f(
+          d(
             function () {
-              var u = Math.round(Date.now() / 1e3),
-                f = new t(r, c, s.signer)
-              return Promise.resolve(f.approve(s.dbsAddress, n)).then(function () {
-                return Promise.resolve(d(s.signer, e, u)).then(function (r) {
+              var d = Math.round(Date.now() / 1e3),
+                h = new t(r, c, u.signer)
+              return Promise.resolve(
+                h.approve(
+                  'filecoin' === s
+                    ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                    : u.dbsAddress,
+                  n
+                )
+              ).then(function () {
+                return Promise.resolve(f(u.signer, e, d)).then(function (r) {
                   var t = new a()
                   return (
                     Array.from(i).forEach(function (e, r) {
@@ -146,11 +160,11 @@ var h = /*#__PURE__*/ (function () {
                     }),
                     Promise.resolve(
                       o.post(
-                        s.baseURL +
+                        u.baseURL +
                           '/upload?quoteId=' +
                           e +
                           '&nonce=' +
-                          u +
+                          d +
                           '&signature=' +
                           r,
                         t
@@ -184,7 +198,7 @@ var h = /*#__PURE__*/ (function () {
       try {
         var r = this,
           t = Math.round(Date.now() / 1e3)
-        return Promise.resolve(d(r.signer, e, t)).then(function (n) {
+        return Promise.resolve(f(r.signer, e, t)).then(function (n) {
           return Promise.resolve(
             o.get(r.baseURL + '/getLink', {
               params: { quoteId: e, nonce: t, signature: n }
@@ -204,29 +218,31 @@ var h = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (r.getHistory = function (e, r) {
+    (r.getHistory = function (e, r, t) {
       void 0 === e && (e = 1), void 0 === r && (r = 25)
       try {
-        var t = this
+        var n = this
         return Promise.resolve(
-          f(
+          d(
             function () {
-              return Promise.resolve(t.signer.getAddress()).then(function (n) {
-                var i = Math.round(Date.now() / 1e3)
-                return Promise.resolve(d(t.signer, '', i)).then(function (s) {
+              return Promise.resolve(n.signer.getAddress()).then(function (i) {
+                var s = Math.round(Date.now() / 1e3)
+                return Promise.resolve(f(n.signer, '', s)).then(function (a) {
                   return Promise.resolve(
                     o.get(
-                      t.baseURL +
+                      n.baseURL +
                         '/getHistory?userAddress=' +
-                        n +
-                        '&nonce=' +
                         i +
-                        '&signature=' +
+                        '&nonce=' +
                         s +
+                        '&signature=' +
+                        a +
                         '&page=' +
                         e +
                         '&pageSize=' +
-                        r
+                        r +
+                        '&storage=' +
+                        t
                     )
                   ).then(function (e) {
                     if (200 !== e.status) throw new Error('Failed to retrieve history.')
@@ -247,5 +263,5 @@ var h = /*#__PURE__*/ (function () {
     e
   )
 })()
-export { h as DBSClient, d as getSignedHash, c as minErc20Abi }
+export { h as DBSClient, f as getSignedHash, c as minErc20Abi }
 //# sourceMappingURL=lib.module.js.map

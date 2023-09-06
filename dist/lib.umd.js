@@ -17,8 +17,8 @@
   }
   var a = /*#__PURE__*/ s(t),
     u = /*#__PURE__*/ s(n),
-    d = /*#__PURE__*/ s(o),
-    f = /*#__PURE__*/ s(i)
+    f = /*#__PURE__*/ s(o),
+    d = /*#__PURE__*/ s(i)
   function c() {
     return (
       (c = Object.assign
@@ -75,7 +75,7 @@
       }),
       (t.getFileSizes = function (e) {
         return e.map(function (e) {
-          return { length: d.default.statSync(e).size }
+          return { length: f.default.statSync(e).size }
         })
       }),
       (t.getStorageInfo = function () {
@@ -107,40 +107,45 @@
           return Promise.reject(e)
         }
       }),
-      (t.upload = function (e, t, n) {
+      (t.upload = function (e, t, n, o) {
         try {
-          var o = this
+          var i = this
           return Promise.resolve(
             v(
               function () {
-                var i = Math.round(Date.now() / 1e3),
-                  s = new r.Contract(t, l, o.signer)
-                return Promise.resolve(s.approve(o.dbsAddress, r.MaxInt256)).then(
-                  function (r) {
-                    return Promise.resolve(r.wait()).then(function () {
-                      return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                        var t = new f.default()
-                        n.forEach(function (e, r) {
-                          t.append('file' + (r + 1), d.default.createReadStream(e))
-                        })
-                        var s =
-                          o.baseURL +
-                          '/upload?quoteId=' +
-                          e +
-                          '&nonce=' +
-                          i +
-                          '&signature=' +
-                          r
-                        return (
-                          console.log('uploadUrl', s),
-                          Promise.resolve(
-                            a.default.post(s, t, { headers: c({}, t.getHeaders()) })
-                          )
-                        )
+                var s = Math.round(Date.now() / 1e3),
+                  u = new r.Contract(t, l, i.signer)
+                return Promise.resolve(
+                  u.approve(
+                    'filecoin' === o
+                      ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                      : i.dbsAddress,
+                    r.MaxInt256
+                  )
+                ).then(function (r) {
+                  return Promise.resolve(r.wait()).then(function () {
+                    return Promise.resolve(h(i.signer, e, s)).then(function (r) {
+                      var t = new d.default()
+                      n.forEach(function (e, r) {
+                        t.append('file' + (r + 1), f.default.createReadStream(e))
                       })
+                      var o =
+                        i.baseURL +
+                        '/upload?quoteId=' +
+                        e +
+                        '&nonce=' +
+                        s +
+                        '&signature=' +
+                        r
+                      return (
+                        console.log('uploadUrl', o),
+                        Promise.resolve(
+                          a.default.post(o, t, { headers: c({}, t.getHeaders()) })
+                        )
+                      )
                     })
-                  }
-                )
+                  })
+                })
               },
               function (e) {
                 return console.error('Error:', e), e.data
@@ -151,38 +156,43 @@
           return Promise.reject(e)
         }
       }),
-      (t.uploadBrowser = function (e, t, n) {
+      (t.uploadBrowser = function (e, t, n, o) {
         try {
-          var o = this
+          var i = this
           return Promise.resolve(
             v(
               function () {
-                var i = Math.round(Date.now() / 1e3),
-                  s = new r.Contract(t, l, o.signer)
-                return Promise.resolve(s.approve(o.dbsAddress, r.MaxInt256)).then(
-                  function () {
-                    return Promise.resolve(h(o.signer, e, i)).then(function (r) {
-                      var t = new f.default()
-                      return (
-                        Array.from(n).forEach(function (e, r) {
-                          t.append('file' + (r + 1), e, e.name)
-                        }),
-                        Promise.resolve(
-                          a.default.post(
-                            o.baseURL +
-                              '/upload?quoteId=' +
-                              e +
-                              '&nonce=' +
-                              i +
-                              '&signature=' +
-                              r,
-                            t
-                          )
+                var s = Math.round(Date.now() / 1e3),
+                  u = new r.Contract(t, l, i.signer)
+                return Promise.resolve(
+                  u.approve(
+                    'filecoin' === o
+                      ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                      : i.dbsAddress,
+                    r.MaxInt256
+                  )
+                ).then(function () {
+                  return Promise.resolve(h(i.signer, e, s)).then(function (r) {
+                    var t = new d.default()
+                    return (
+                      Array.from(n).forEach(function (e, r) {
+                        t.append('file' + (r + 1), e, e.name)
+                      }),
+                      Promise.resolve(
+                        a.default.post(
+                          i.baseURL +
+                            '/upload?quoteId=' +
+                            e +
+                            '&nonce=' +
+                            s +
+                            '&signature=' +
+                            r,
+                          t
                         )
                       )
-                    })
-                  }
-                )
+                    )
+                  })
+                })
               },
               function (e) {
                 return console.error('Error:', e), e.data
@@ -228,29 +238,31 @@
           return Promise.reject(e)
         }
       }),
-      (t.getHistory = function (e, r) {
+      (t.getHistory = function (e, r, t) {
         void 0 === e && (e = 1), void 0 === r && (r = 25)
         try {
-          var t = this
+          var n = this
           return Promise.resolve(
             v(
               function () {
-                return Promise.resolve(t.signer.getAddress()).then(function (n) {
-                  var o = Math.round(Date.now() / 1e3)
-                  return Promise.resolve(h(t.signer, '', o)).then(function (i) {
+                return Promise.resolve(n.signer.getAddress()).then(function (o) {
+                  var i = Math.round(Date.now() / 1e3)
+                  return Promise.resolve(h(n.signer, '', i)).then(function (s) {
                     return Promise.resolve(
                       a.default.get(
-                        t.baseURL +
+                        n.baseURL +
                           '/getHistory?userAddress=' +
-                          n +
-                          '&nonce=' +
                           o +
-                          '&signature=' +
+                          '&nonce=' +
                           i +
+                          '&signature=' +
+                          s +
                           '&page=' +
                           e +
                           '&pageSize=' +
-                          r
+                          r +
+                          '&storage=' +
+                          t
                       )
                     ).then(function (e) {
                       if (200 !== e.status) throw new Error('Failed to retrieve history.')

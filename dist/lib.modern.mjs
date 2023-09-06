@@ -60,37 +60,45 @@ class h {
       }
     return (await s.post(`${this.baseURL}/getQuote`, r)).data
   }
-  async upload(t, e, i) {
+  async upload(t, e, i, h) {
     try {
-      const h = Math.round(Date.now() / 1e3),
-        g = new r(e, c, this.signer)
-      await (await g.approve(this.dbsAddress, a)).wait()
-      const p = await u(this.signer, t, h),
-        l = new o()
+      const f = Math.round(Date.now() / 1e3),
+        g = new r(e, c, this.signer),
+        p =
+          'filecoin' === h
+            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+            : this.dbsAddress
+      await (await g.approve(p, a)).wait()
+      const l = await u(this.signer, t, f),
+        w = new o()
       i.forEach((t, e) => {
-        l.append(`file${e + 1}`, n.createReadStream(t))
+        w.append(`file${e + 1}`, n.createReadStream(t))
       })
-      const w = `${this.baseURL}/upload?quoteId=${t}&nonce=${h}&signature=${p}`
+      const b = `${this.baseURL}/upload?quoteId=${t}&nonce=${f}&signature=${l}`
       return (
-        console.log('uploadUrl', w),
-        await s.post(w, l, { headers: d({}, l.getHeaders()) })
+        console.log('uploadUrl', b),
+        await s.post(b, w, { headers: d({}, w.getHeaders()) })
       )
     } catch (t) {
       return console.error('Error:', t), t.data
     }
   }
-  async uploadBrowser(t, e, i) {
+  async uploadBrowser(t, e, i, n) {
     try {
-      const n = Math.round(Date.now() / 1e3),
-        d = new r(e, c, this.signer)
-      await d.approve(this.dbsAddress, a)
-      const h = await u(this.signer, t, n),
-        g = new o()
+      const d = Math.round(Date.now() / 1e3),
+        h = new r(e, c, this.signer),
+        f =
+          'filecoin' === n
+            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+            : this.dbsAddress
+      await h.approve(f, a)
+      const g = await u(this.signer, t, d),
+        p = new o()
       Array.from(i).forEach((t, e) => {
-        g.append(`file${e + 1}`, t, t.name)
+        p.append(`file${e + 1}`, t, t.name)
       })
-      const p = `${this.baseURL}/upload?quoteId=${t}&nonce=${n}&signature=${h}`
-      return await s.post(p, g)
+      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${d}&signature=${g}`
+      return await s.post(l, p)
     } catch (t) {
       return console.error('Error:', t), t.data
     }
@@ -110,15 +118,15 @@ class h {
   async registerMicroservice(t) {
     return await s.post(`${this.baseURL}/register`, t)
   }
-  async getHistory(t = 1, e = 25) {
+  async getHistory(t = 1, e = 25, r) {
     try {
-      const r = await this.signer.getAddress(),
-        a = Math.round(Date.now() / 1e3),
-        i = await u(this.signer, '', a),
-        n = `${this.baseURL}/getHistory?userAddress=${r}&nonce=${a}&signature=${i}&page=${t}&pageSize=${e}`,
-        o = await s.get(n)
-      if (200 !== o.status) throw new Error('Failed to retrieve history.')
-      return o.data
+      const a = await this.signer.getAddress(),
+        i = Math.round(Date.now() / 1e3),
+        n = await u(this.signer, '', i),
+        o = `${this.baseURL}/getHistory?userAddress=${a}&nonce=${i}&signature=${n}&page=${t}&pageSize=${e}&storage=${r}`,
+        d = await s.get(o)
+      if (200 !== d.status) throw new Error('Failed to retrieve history.')
+      return d.data
     } catch (t) {
       throw (console.error('An error occurred while fetching history:', t), t)
     }
