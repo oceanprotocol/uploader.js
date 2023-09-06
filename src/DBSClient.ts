@@ -236,14 +236,18 @@ export class DBSClient {
    *
    * @returns {Promise<any>} A promise that resolves to the quote history data.
    */
-  async getHistory(page: number = 1, pageSize: number = 25): Promise<any> {
+  async getHistory(
+    page: number = 1,
+    pageSize: number = 25,
+    storageType: string
+  ): Promise<any> {
     try {
       const userAddress = await this.signer.getAddress()
       const nonce = Math.round(Date.now() / 1000)
       const signature = await getSignedHash(this.signer, '', nonce)
 
       // Construct the URL with the query parameters
-      const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}&page=${page}&pageSize=${pageSize}`
+      const url = `${this.baseURL}/getHistory?userAddress=${userAddress}&nonce=${nonce}&signature=${signature}&page=${page}&pageSize=${pageSize}&storage=${storageType}`
 
       // Send a GET request
       const response: AxiosResponse = await axios.get(url)
