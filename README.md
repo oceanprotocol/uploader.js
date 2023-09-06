@@ -124,7 +124,7 @@ async function runExample() {
   const page = 1
   const = pageSize = 25
 
-  const history = await client.getHistory(page, pageSize)
+  const history = await client.getHistory(page, pageSize, 'arweave')
   console.log('Paginated result', history)
 }
 
@@ -183,7 +183,7 @@ Fetch the DDO files object for a job.
 `registerMicroservice(args: RegisterArgs): Promise<void>`
 Register a new microservice that handles a storage type.
 
-`getHistory(page: number = 1, pageSize: number = 25): Promise<any>`
+`getHistory(page: number = 1, pageSize: number = 25, storageType: string): Promise<any>`
 Retrieves the quote history for the given user address, nonce, and signature.
 
 ## Contributing
