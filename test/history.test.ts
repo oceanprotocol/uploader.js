@@ -14,12 +14,33 @@ describe('Get History test', () => {
   const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
 
   describe('Testing the getHistory endpoint', async function () {
-    it('should return the history for the signer', async () => {
+    it('should return paginated history for the signer', async () => {
       let result
+      const page = 1
+      const pageSize = 5
+
       try {
-        result = await client.getHistory(1, 25, 'arweave')
-        console.log('result', result)
-        expect(result).to.be.an('array')
+        result = await client.getHistory(page, pageSize, 'arweave')
+        console.log('Result', result)
+
+        expect(result.data).to.be.an('array')
+        expect(result.data.length).to.lessThanOrEqual(pageSize)
+      } catch (error) {
+        console.log('error', error)
+      }
+    })
+
+    it('should return paginated history for the signer', async () => {
+      let result
+      const page = 2
+      const pageSize = 5
+
+      try {
+        result = await client.getHistory(page, pageSize, 'arweave')
+        console.log('Result', result)
+
+        expect(result.data).to.be.an('array')
+        expect(result.data.length).to.lessThanOrEqual(pageSize)
       } catch (error) {
         console.log('error', error)
       }
@@ -28,10 +49,26 @@ describe('Get History test', () => {
     it('should return paginated history for the signer', async () => {
       let result
       const page = 1
-      const pageSize = 5
+      const pageSize = 10
 
       try {
-        result = await client.getHistory(page, pageSize, 'arweave')
+        result = await client.getHistory(page, pageSize, 'filecoin')
+        console.log('Result', result)
+
+        expect(result.data).to.be.an('array')
+        expect(result.data.length).to.lessThanOrEqual(pageSize)
+      } catch (error) {
+        console.log('error', error)
+      }
+    })
+
+    it('should return paginated history for the signer', async () => {
+      let result
+      const page = 20
+      const pageSize = 12
+
+      try {
+        result = await client.getHistory(page, pageSize, 'filecoin')
         console.log('Result', result)
 
         expect(result.data).to.be.an('array')
