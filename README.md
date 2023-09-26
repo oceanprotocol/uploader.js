@@ -1,19 +1,19 @@
-# Decentralised Backend Storage Javascript Library
+# Ocean Uploader Library
 
-This is a TypeScript library for interacting with the DBS API. It provides a simple interface to call the API endpoints in Ocean Decentralised backend storage for managing file storage uploads, quotes, and more.
+This is a TypeScript library for interacting with the Ocean Uploader API. It provides a simple interface to call the API endpoints in Ocean uploader for managing file storage uploads, quotes, and more.
 
 ## Installation
 
 Install the library using npm or yarn:
 
 ```bash
-npm install @oceanprotocol/dbs
+npm install @oceanprotocol/uploader
 ```
 
 or
 
 ```bash
-yarn add @oceanprotocol/dbs
+yarn add @oceanprotocol/uploader
 ```
 
 ## Develop and test this project
@@ -22,11 +22,11 @@ To get started and run the project, follow these steps:
 
 1. **Clone the Repository**: Clone the project repository to your local machine using the following command:
    ```bash
-   git clone https://github.com/oceanprotocol/dbs.js.git
+   git clone https://github.com/oceanprotocol/uploader.js.git
    ```
 2. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies using npm:
    ```bash
-   cd dbs.js
+   cd uploader.js
    npm install
    ```
 3. **Set Environment Variables**: Configure the required environment variables by creating a `.env` file in the root directory. Refer to the `.example.env` file provided in the project for details on the required variables.
@@ -49,12 +49,12 @@ import {
   GetQuoteResult,
   GetStatusResult,
   GetLinkResult
-} from '@oceanprotocol/dbs'
+} from '@oceanprotocol/uploader'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-// Set up a new instance of the DBS client
+// Set up a new instance of the Uploader client
 const signer = new ethers.Wallet(process.env.PRIVATE_KEY) // Use your actual private key
 const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
 
@@ -142,7 +142,7 @@ const provider = new Web3Provider(window.ethereum)
 const signer = provider.getSigner()
 ```
 
-2. Initialize DBSClient:
+2. Initialize Uploader Client:
 1. HTML Setup: Provide a file input for users to select multiple files.
 
 ```html
