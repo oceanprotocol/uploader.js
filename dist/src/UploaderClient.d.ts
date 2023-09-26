@@ -46,14 +46,14 @@ export declare class UploaderClient {
   upload(
     quoteId: string,
     tokenAddress: string,
-    quoteFee: number,
+    quoteFee: string,
     filePaths: string[],
     type: string
   ): Promise<any>
   uploadBrowser(
     quoteId: string,
     tokenAddress: string,
-    quoteFee: number,
+    quoteFee: string,
     files: FileList,
     type: string
   ): Promise<any>
