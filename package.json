@@ -1,8 +1,8 @@
 {
-  "name": "@oceanprotocol/dbs",
+  "name": "@oceanprotocol/uploader",
   "source": "./src/index.ts",
   "version": "0.0.2-alpha.27",
-  "description": "Javascript library for calling the decentralised backend storage ",
+  "description": "Javascript library for uploading files to decentralised storage",
   "files": [
     "dist/**"
   ],
