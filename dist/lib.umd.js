@@ -53,15 +53,15 @@
     }
     return t && t.then ? t.then(void 0, r) : t
   }
-  ;(e.Client = /*#__PURE__*/ (function () {
+  ;(e.UploaderClient = /*#__PURE__*/ (function () {
     function e(e, r, t) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),
-        (this.dbsAddress = void 0),
+        (this.uploaderAddress = void 0),
         this.validateBaseURL(e),
         (this.baseURL = e),
         (this.signer = t),
-        (this.dbsAddress = r)
+        (this.uploaderAddress = r)
     }
     var t = e.prototype
     return (
@@ -119,7 +119,7 @@
                   v.approve(
                     'filecoin' === i
                       ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                      : s.dbsAddress,
+                      : s.uploaderAddress,
                     n
                   )
                 ).then(function (r) {
@@ -168,7 +168,7 @@
                   f.approve(
                     'filecoin' === i
                       ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                      : s.dbsAddress,
+                      : s.uploaderAddress,
                     n
                   )
                 ).then(function () {

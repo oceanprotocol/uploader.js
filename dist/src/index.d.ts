@@ -1,3 +1,3 @@
 export * from './@types'
-export * from './Client'
+export * from './UploaderClient'
 export * from './utils'
