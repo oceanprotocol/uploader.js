@@ -44,7 +44,7 @@ function h(e, r) {
   }
   return t && t.then ? t.then(void 0, r) : t
 }
-;(exports.DBSClient = /*#__PURE__*/ (function () {
+;(exports.Client = /*#__PURE__*/ (function () {
   function r(e, r, t) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),

@@ -30,7 +30,7 @@ export interface GetQuoteArgs {
   fileInfo?: FileData[]
 }
 
-export interface DBSGetQuoteArgs {
+export interface UploaderGetQuoteArgs {
   type: string
   files: FileData[]
   duration: number

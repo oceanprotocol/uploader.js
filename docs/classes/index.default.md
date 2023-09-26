@@ -4,7 +4,7 @@
 
 [index](../modules/index.md).default
 
-DBSClient is a TypeScript library for interacting with the DBS API.
+Client is a TypeScript library for interacting with the DBS API.
 
 ## Table of contents
 
@@ -31,7 +31,7 @@ DBSClient is a TypeScript library for interacting with the DBS API.
 
 • **new default**(`baseURL`)
 
-Creates an instance of the DBSClient.
+Creates an instance of the Client.
 
 #### Parameters
 

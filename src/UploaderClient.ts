@@ -7,7 +7,7 @@ import {
   GetStatusResult,
   GetLinkResult,
   RegisterArgs,
-  DBSGetQuoteArgs,
+  UploaderGetQuoteArgs,
   FileData
 } from './@types'
 import { getSignedHash, minErc20Abi } from './utils'
@@ -16,23 +16,23 @@ import fs from 'fs'
 import FormData from 'form-data'
 
 /**
- * DBSClient is a TypeScript library for interacting with the DBS API.
+ * Client is a TypeScript library for interacting with the Uploader API.
  */
-export class DBSClient {
+export class UploaderClient {
   private baseURL: string
   private signer: Signer
-  private dbsAddress: string
+  private uploaderAddress: string
 
   /**
-   * Creates an instance of the DBSClient.
-   * @param {string} baseURL - The base URL of the DBS API.
+   * Creates an instance of the Client.
+   * @param {string} baseURL - The base URL of the Uploader API.
    * @param {Signer} signer The signer object.
    */
   constructor(baseURL: string, address: string, signer?: Signer) {
     this.validateBaseURL(baseURL)
     this.baseURL = baseURL
     this.signer = signer
-    this.dbsAddress = address
+    this.uploaderAddress = address
   }
 
   private validateBaseURL(baseURL: string): void {
@@ -78,7 +78,7 @@ export class DBSClient {
     }
     const fileSizes: FileData[] = args.fileInfo || this.getFileSizes(args.filePath)
 
-    const payload: DBSGetQuoteArgs = {
+    const payload: UploaderGetQuoteArgs = {
       type: args.type,
       files: fileSizes,
       duration: args.duration,
@@ -114,7 +114,7 @@ export class DBSClient {
       const approveAddress =
         type === 'filecoin'
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-          : this.dbsAddress
+          : this.uploaderAddress
 
       await (await token.approve(approveAddress, quoteFee)).wait()
 
@@ -158,7 +158,7 @@ export class DBSClient {
       const approveAddress =
         type === 'filecoin'
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-          : this.dbsAddress
+          : this.uploaderAddress
 
       await token.approve(approveAddress, quoteFee)
       const signature = await getSignedHash(this.signer, quoteId, nonce)

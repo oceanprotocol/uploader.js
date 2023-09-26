@@ -14,8 +14,8 @@
       "require": "./dist/lib.js",
       "default": "./dist/lib.modern.mjs"
     },
-    "./dbs": {
-      "require": "./dist/src/DBSClient.d.ts",
+    "./uploader": {
+      "require": "./dist/src/Client.d.ts",
       "default": "./dist/src/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -40,14 +40,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oceanprotocol/dbs.js.git"
+    "url": "git+https://github.com/oceanprotocol/uploader.js.git"
   },
   "author": "Ocean Protocol Foundation <devops@oceanprotocol.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/oceanprotocol/dbs.js/issues"
+    "url": "https://github.com/oceanprotocol/uploader.js/issues"
   },
-  "homepage": "https://github.com/oceanprotocol/dbs.js#readme",
+  "homepage": "https://github.com/oceanprotocol/uploader.js#readme",
   "devDependencies": {
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",

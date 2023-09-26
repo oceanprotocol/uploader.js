@@ -2,17 +2,21 @@ import { ethers, JsonRpcProvider } from 'ethers'
 import { assert } from 'chai'
 import dotenv from 'dotenv'
 
-import { DBSClient } from '../src/index'
+import { UploaderClient } from '../src/index'
 import { RegisterArgs } from '../src/@types'
 
 dotenv.config()
 
 describe('Register a new Microservice Tests', () => {
-  // Set up a new instance of the DBS client
+  // Set up a new instance of the Uploader client
   const provider = new JsonRpcProvider(process.env.RPC_URL, 80001)
   // Private key account needs to have both MATIC and Wrapped Matic for testing
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
-  const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
+  const client = new UploaderClient(
+    process.env.UPLOADER_API_URL,
+    process.env.UPLOADER_ACCOUNT,
+    signer
+  )
 
   describe('Testing the registerMicroservice endpoint', () => {
     const args: RegisterArgs = {

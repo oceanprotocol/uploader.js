@@ -132,5 +132,5 @@ class u {
     }
   }
 }
-export { u as DBSClient, c as getSignedHash, d as minErc20Abi }
+export { u as Client, c as getSignedHash, d as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map

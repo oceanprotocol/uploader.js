@@ -53,7 +53,7 @@
     }
     return t && t.then ? t.then(void 0, r) : t
   }
-  ;(e.DBSClient = /*#__PURE__*/ (function () {
+  ;(e.Client = /*#__PURE__*/ (function () {
     function e(e, r, t) {
       ;(this.baseURL = void 0),
         (this.signer = void 0),

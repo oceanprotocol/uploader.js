@@ -263,5 +263,5 @@ var d = /*#__PURE__*/ (function () {
     e
   )
 })()
-export { d as DBSClient, c as getSignedHash, u as minErc20Abi }
+export { d as Client, c as getSignedHash, u as minErc20Abi }
 //# sourceMappingURL=lib.module.js.map
