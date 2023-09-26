@@ -96,40 +96,40 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.upload = function (r, t, n, o) {
+    (t.upload = function (r, t, n, o, i) {
       try {
-        var i = this
+        var a = this
         return Promise.resolve(
           h(
             function () {
-              var a = Math.round(Date.now() / 1e3),
-                h = new e.Contract(t, d, i.signer)
+              var h = Math.round(Date.now() / 1e3),
+                v = new e.Contract(t, d, a.signer)
               return Promise.resolve(
-                h.approve(
-                  'filecoin' === o
+                v.approve(
+                  'filecoin' === i
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : i.dbsAddress,
-                  e.MaxInt256
+                    : a.dbsAddress,
+                  n
                 )
               ).then(function (e) {
                 return Promise.resolve(e.wait()).then(function () {
-                  return Promise.resolve(l(i.signer, r, a)).then(function (e) {
+                  return Promise.resolve(l(a.signer, r, h)).then(function (e) {
                     var t = new c.default()
-                    n.forEach(function (e, r) {
+                    o.forEach(function (e, r) {
                       t.append('file' + (r + 1), u.default.createReadStream(e))
                     })
-                    var o =
-                      i.baseURL +
+                    var n =
+                      a.baseURL +
                       '/upload?quoteId=' +
                       r +
                       '&nonce=' +
-                      a +
+                      h +
                       '&signature=' +
                       e
                     return (
-                      console.log('uploadUrl', o),
+                      console.log('uploadUrl', n),
                       Promise.resolve(
-                        s.default.post(o, t, { headers: f({}, t.getHeaders()) })
+                        s.default.post(n, t, { headers: f({}, t.getHeaders()) })
                       )
                     )
                   })
@@ -145,35 +145,35 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.uploadBrowser = function (r, t, n, o) {
+    (t.uploadBrowser = function (r, t, n, o, i) {
       try {
-        var i = this
+        var a = this
         return Promise.resolve(
           h(
             function () {
-              var a = Math.round(Date.now() / 1e3),
-                u = new e.Contract(t, d, i.signer)
+              var u = Math.round(Date.now() / 1e3),
+                f = new e.Contract(t, d, a.signer)
               return Promise.resolve(
-                u.approve(
-                  'filecoin' === o
+                f.approve(
+                  'filecoin' === i
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : i.dbsAddress,
-                  e.MaxInt256
+                    : a.dbsAddress,
+                  n
                 )
               ).then(function () {
-                return Promise.resolve(l(i.signer, r, a)).then(function (e) {
+                return Promise.resolve(l(a.signer, r, u)).then(function (e) {
                   var t = new c.default()
                   return (
-                    Array.from(n).forEach(function (e, r) {
+                    Array.from(o).forEach(function (e, r) {
                       t.append('file' + (r + 1), e, e.name)
                     }),
                     Promise.resolve(
                       s.default.post(
-                        i.baseURL +
+                        a.baseURL +
                           '/upload?quoteId=' +
                           r +
                           '&nonce=' +
-                          a +
+                          u +
                           '&signature=' +
                           e,
                         t

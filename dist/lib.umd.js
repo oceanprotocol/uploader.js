@@ -10,7 +10,7 @@
       )
     : 'function' == typeof define && define.amd
     ? define(['exports', 'ethers', 'axios', 'validator', 'fs', 'form-data'], r)
-    : r(((e || self).dbs = {}), e.ethers, e.axios, e.validator, e.fs, e.formData)
+    : r(((e || self).uploader = {}), e.ethers, e.axios, e.validator, e.fs, e.formData)
 })(this, function (e, r, t, n, o, i) {
   function s(e) {
     return e && 'object' == typeof e && 'default' in e ? e : { default: e }
@@ -107,40 +107,40 @@
           return Promise.reject(e)
         }
       }),
-      (t.upload = function (e, t, n, o) {
+      (t.upload = function (e, t, n, o, i) {
         try {
-          var i = this
+          var s = this
           return Promise.resolve(
             v(
               function () {
-                var s = Math.round(Date.now() / 1e3),
-                  u = new r.Contract(t, l, i.signer)
+                var u = Math.round(Date.now() / 1e3),
+                  v = new r.Contract(t, l, s.signer)
                 return Promise.resolve(
-                  u.approve(
-                    'filecoin' === o
+                  v.approve(
+                    'filecoin' === i
                       ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                      : i.dbsAddress,
-                    r.MaxInt256
+                      : s.dbsAddress,
+                    n
                   )
                 ).then(function (r) {
                   return Promise.resolve(r.wait()).then(function () {
-                    return Promise.resolve(h(i.signer, e, s)).then(function (r) {
+                    return Promise.resolve(h(s.signer, e, u)).then(function (r) {
                       var t = new d.default()
-                      n.forEach(function (e, r) {
+                      o.forEach(function (e, r) {
                         t.append('file' + (r + 1), f.default.createReadStream(e))
                       })
-                      var o =
-                        i.baseURL +
+                      var n =
+                        s.baseURL +
                         '/upload?quoteId=' +
                         e +
                         '&nonce=' +
-                        s +
+                        u +
                         '&signature=' +
                         r
                       return (
-                        console.log('uploadUrl', o),
+                        console.log('uploadUrl', n),
                         Promise.resolve(
-                          a.default.post(o, t, { headers: c({}, t.getHeaders()) })
+                          a.default.post(n, t, { headers: c({}, t.getHeaders()) })
                         )
                       )
                     })
@@ -156,35 +156,35 @@
           return Promise.reject(e)
         }
       }),
-      (t.uploadBrowser = function (e, t, n, o) {
+      (t.uploadBrowser = function (e, t, n, o, i) {
         try {
-          var i = this
+          var s = this
           return Promise.resolve(
             v(
               function () {
-                var s = Math.round(Date.now() / 1e3),
-                  u = new r.Contract(t, l, i.signer)
+                var u = Math.round(Date.now() / 1e3),
+                  f = new r.Contract(t, l, s.signer)
                 return Promise.resolve(
-                  u.approve(
-                    'filecoin' === o
+                  f.approve(
+                    'filecoin' === i
                       ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                      : i.dbsAddress,
-                    r.MaxInt256
+                      : s.dbsAddress,
+                    n
                   )
                 ).then(function () {
-                  return Promise.resolve(h(i.signer, e, s)).then(function (r) {
+                  return Promise.resolve(h(s.signer, e, u)).then(function (r) {
                     var t = new d.default()
                     return (
-                      Array.from(n).forEach(function (e, r) {
+                      Array.from(o).forEach(function (e, r) {
                         t.append('file' + (r + 1), e, e.name)
                       }),
                       Promise.resolve(
                         a.default.post(
-                          i.baseURL +
+                          s.baseURL +
                             '/upload?quoteId=' +
                             e +
                             '&nonce=' +
-                            s +
+                            u +
                             '&signature=' +
                             r,
                           t

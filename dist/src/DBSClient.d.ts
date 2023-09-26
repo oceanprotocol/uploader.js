@@ -46,12 +46,14 @@ export declare class DBSClient {
   upload(
     quoteId: string,
     tokenAddress: string,
+    quoteFee: number,
     filePaths: string[],
     type: string
   ): Promise<any>
   uploadBrowser(
     quoteId: string,
     tokenAddress: string,
+    quoteFee: number,
     files: FileList,
     type: string
   ): Promise<any>
