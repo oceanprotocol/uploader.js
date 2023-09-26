@@ -101,6 +101,7 @@ export class DBSClient {
   async upload(
     quoteId: string,
     tokenAddress: string,
+    quoteFee: number,
     filePaths: string[],
     type: string
   ): Promise<any> {
@@ -115,7 +116,7 @@ export class DBSClient {
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
           : this.dbsAddress
 
-      await (await token.approve(approveAddress, MaxInt256)).wait()
+      await (await token.approve(approveAddress, quoteFee)).wait()
 
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
@@ -144,6 +145,7 @@ export class DBSClient {
   async uploadBrowser(
     quoteId: string,
     tokenAddress: string,
+    quoteFee: number,
     files: FileList,
     type: string
   ): Promise<any> {
@@ -158,7 +160,7 @@ export class DBSClient {
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
           : this.dbsAddress
 
-      await token.approve(approveAddress, MaxInt256)
+      await token.approve(approveAddress, quoteFee)
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()

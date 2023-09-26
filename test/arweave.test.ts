@@ -97,6 +97,7 @@ describe('Arweave Tests', () => {
       const result = await client.upload(
         arweaveQuote1.quoteId,
         tokenAddress,
+        arweaveQuote1.tokenAmount,
         [process.env.TEST_FILE_1, process.env.TEST_FILE_2],
         'arweave'
       )
