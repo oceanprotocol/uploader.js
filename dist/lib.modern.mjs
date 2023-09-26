@@ -1,20 +1,20 @@
-import { sha256 as t, toUtf8Bytes as e, Contract as r } from 'ethers'
+import { sha256 as e, toUtf8Bytes as t, Contract as r } from 'ethers'
 import a from 'axios'
 import s from 'validator'
 import i from 'fs'
-import n from 'form-data'
-function o() {
+import o from 'form-data'
+function n() {
   return (
-    (o = Object.assign
+    (n = Object.assign
       ? Object.assign.bind()
-      : function (t) {
-          for (var e = 1; e < arguments.length; e++) {
-            var r = arguments[e]
-            for (var a in r) Object.prototype.hasOwnProperty.call(r, a) && (t[a] = r[a])
+      : function (e) {
+          for (var t = 1; t < arguments.length; t++) {
+            var r = arguments[t]
+            for (var a in r) Object.prototype.hasOwnProperty.call(r, a) && (e[a] = r[a])
           }
-          return t
+          return e
         }),
-    o.apply(this, arguments)
+    n.apply(this, arguments)
   )
 }
 const d = [
@@ -22,115 +22,115 @@ const d = [
     'function balanceOf(address owner) external view returns (uint256)'
   ],
   c = async (r, a, s) => {
-    const i = t(e(a + s.toString()))
+    const i = e(t(a + s.toString()))
     return await r.signMessage(i)
   }
 class u {
-  constructor(t, e, r) {
+  constructor(e, t, r) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
-      (this.dbsAddress = void 0),
-      this.validateBaseURL(t),
-      (this.baseURL = t),
+      (this.uploaderAddress = void 0),
+      this.validateBaseURL(e),
+      (this.baseURL = e),
       (this.signer = r),
-      (this.dbsAddress = e)
+      (this.uploaderAddress = t)
   }
-  validateBaseURL(t) {
-    if (!t || 'string' != typeof t || '' === t.trim())
+  validateBaseURL(e) {
+    if (!e || 'string' != typeof e || '' === e.trim())
       throw new Error('Invalid baseURL provided. baseURL cannot be empty or undefined.')
-    if (!s.isURL(t, { require_tld: !1 }))
+    if (!s.isURL(e, { require_tld: !1 }))
       throw new Error('Invalid baseURL format provided.')
   }
-  getFileSizes(t) {
-    return t.map((t) => ({ length: i.statSync(t).size }))
+  getFileSizes(e) {
+    return e.map((e) => ({ length: i.statSync(e).size }))
   }
   async getStorageInfo() {
     return (await a.get(`${this.baseURL}/`)).data
   }
-  async getQuote(t) {
-    if (!t.filePath && !t.fileInfo)
+  async getQuote(e) {
+    if (!e.filePath && !e.fileInfo)
       throw new Error('Either filePath or fileInfo must be provided.')
-    const e = t.fileInfo || this.getFileSizes(t.filePath),
+    const t = e.fileInfo || this.getFileSizes(e.filePath),
       r = {
-        type: t.type,
-        files: e,
-        duration: t.duration,
-        payment: t.payment,
-        userAddress: t.userAddress
+        type: e.type,
+        files: t,
+        duration: e.duration,
+        payment: e.payment,
+        userAddress: e.userAddress
       }
     return (await a.post(`${this.baseURL}/getQuote`, r)).data
   }
-  async upload(t, e, s, u, h) {
+  async upload(e, t, s, u, h) {
     try {
-      const f = Math.round(Date.now() / 1e3),
-        g = new r(e, d, this.signer),
-        p =
+      const p = Math.round(Date.now() / 1e3),
+        f = new r(t, d, this.signer),
+        g =
           'filecoin' === h
             ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-            : this.dbsAddress
-      await (await g.approve(p, s)).wait()
-      const l = await c(this.signer, t, f),
-        w = new n()
-      u.forEach((t, e) => {
-        w.append(`file${e + 1}`, i.createReadStream(t))
+            : this.uploaderAddress
+      await (await f.approve(g, s)).wait()
+      const l = await c(this.signer, e, p),
+        w = new o()
+      u.forEach((e, t) => {
+        w.append(`file${t + 1}`, i.createReadStream(e))
       })
-      const b = `${this.baseURL}/upload?quoteId=${t}&nonce=${f}&signature=${l}`
+      const y = `${this.baseURL}/upload?quoteId=${e}&nonce=${p}&signature=${l}`
       return (
-        console.log('uploadUrl', b),
-        await a.post(b, w, { headers: o({}, w.getHeaders()) })
+        console.log('uploadUrl', y),
+        await a.post(y, w, { headers: n({}, w.getHeaders()) })
       )
-    } catch (t) {
-      return console.error('Error:', t), t.data
+    } catch (e) {
+      return console.error('Error:', e), e.data
     }
   }
-  async uploadBrowser(t, e, s, i, o) {
+  async uploadBrowser(e, t, s, i, n) {
     try {
       const u = Math.round(Date.now() / 1e3),
-        h = new r(e, d, this.signer),
-        f =
-          'filecoin' === o
+        h = new r(t, d, this.signer),
+        p =
+          'filecoin' === n
             ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-            : this.dbsAddress
-      await h.approve(f, s)
-      const g = await c(this.signer, t, u),
-        p = new n()
-      Array.from(i).forEach((t, e) => {
-        p.append(`file${e + 1}`, t, t.name)
+            : this.uploaderAddress
+      await h.approve(p, s)
+      const f = await c(this.signer, e, u),
+        g = new o()
+      Array.from(i).forEach((e, t) => {
+        g.append(`file${t + 1}`, e, e.name)
       })
-      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${u}&signature=${g}`
-      return await a.post(l, p)
-    } catch (t) {
-      return console.error('Error:', t), t.data
+      const l = `${this.baseURL}/upload?quoteId=${e}&nonce=${u}&signature=${f}`
+      return await a.post(l, g)
+    } catch (e) {
+      return console.error('Error:', e), e.data
     }
   }
-  async getStatus(t) {
-    return (await a.get(`${this.baseURL}/getStatus`, { params: { quoteId: t } })).data
+  async getStatus(e) {
+    return (await a.get(`${this.baseURL}/getStatus`, { params: { quoteId: e } })).data
   }
-  async getLink(t) {
-    const e = Math.round(Date.now() / 1e3),
-      r = await c(this.signer, t, e)
+  async getLink(e) {
+    const t = Math.round(Date.now() / 1e3),
+      r = await c(this.signer, e, t)
     return (
       await a.get(`${this.baseURL}/getLink`, {
-        params: { quoteId: t, nonce: e, signature: r }
+        params: { quoteId: e, nonce: t, signature: r }
       })
     ).data
   }
-  async registerMicroservice(t) {
-    return await a.post(`${this.baseURL}/register`, t)
+  async registerMicroservice(e) {
+    return await a.post(`${this.baseURL}/register`, e)
   }
-  async getHistory(t = 1, e = 25, r) {
+  async getHistory(e = 1, t = 25, r) {
     try {
       const s = await this.signer.getAddress(),
         i = Math.round(Date.now() / 1e3),
-        n = await c(this.signer, '', i),
-        o = `${this.baseURL}/getHistory?userAddress=${s}&nonce=${i}&signature=${n}&page=${t}&pageSize=${e}&storage=${r}`,
-        d = await a.get(o)
+        o = await c(this.signer, '', i),
+        n = `${this.baseURL}/getHistory?userAddress=${s}&nonce=${i}&signature=${o}&page=${e}&pageSize=${t}&storage=${r}`,
+        d = await a.get(n)
       if (200 !== d.status) throw new Error('Failed to retrieve history.')
       return d.data
-    } catch (t) {
-      throw (console.error('An error occurred while fetching history:', t), t)
+    } catch (e) {
+      throw (console.error('An error occurred while fetching history:', e), e)
     }
   }
 }
-export { u as DBSClient, c as getSignedHash, d as minErc20Abi }
+export { u as UploaderClient, c as getSignedHash, d as minErc20Abi }
 //# sourceMappingURL=lib.modern.mjs.map

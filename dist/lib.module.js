@@ -41,11 +41,11 @@ var d = /*#__PURE__*/ (function () {
   function e(e, r, t) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
-      (this.dbsAddress = void 0),
+      (this.uploaderAddress = void 0),
       this.validateBaseURL(e),
       (this.baseURL = e),
       (this.signer = t),
-      (this.dbsAddress = r)
+      (this.uploaderAddress = r)
   }
   var r = e.prototype
   return (
@@ -101,7 +101,7 @@ var d = /*#__PURE__*/ (function () {
                 v.approve(
                   'filecoin' === h
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : l.dbsAddress,
+                    : l.uploaderAddress,
                   o
                 )
               ).then(function (r) {
@@ -148,7 +148,7 @@ var d = /*#__PURE__*/ (function () {
                 h.approve(
                   'filecoin' === a
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : d.dbsAddress,
+                    : d.uploaderAddress,
                   o
                 )
               ).then(function () {
@@ -263,5 +263,5 @@ var d = /*#__PURE__*/ (function () {
     e
   )
 })()
-export { d as DBSClient, c as getSignedHash, u as minErc20Abi }
+export { d as UploaderClient, c as getSignedHash, u as minErc20Abi }
 //# sourceMappingURL=lib.module.js.map

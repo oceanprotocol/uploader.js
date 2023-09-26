@@ -40,7 +40,7 @@ To get started and run the project, follow these steps:
 ```typescript
 import { ethers } from 'ethers'
 import {
-  DBSClient,
+  UploaderClient,
   GetQuoteArgs,
   File,
   RegisterArgs,
@@ -56,7 +56,7 @@ dotenv.config()
 
 // Set up a new instance of the Uploader client
 const signer = new ethers.Wallet(process.env.PRIVATE_KEY) // Use your actual private key
-const client = new DBSClient(process.env.DBS_API_URL, process.env.DBS_ACCOUNT, signer)
+const client = new UploaderClient(process.env.UPLOADER_API_URL, process.env.UPLOADER_ACCOUNT, signer)
 
 async function runExample() {
   // Get storage info
@@ -163,7 +163,7 @@ document.getElementById('fileInput').addEventListener('change', async function (
 The library provides the following methods:
 
 `constructor(baseURL: string)`
-Create a new instance of the DBSClient.
+Create a new instance of the Client.
 
 `getStorageInfo(): Promise<StorageInfo[]>`
 Fetch information about supported storage types and payments.

@@ -9,15 +9,15 @@ import {
   RegisterArgs
 } from './@types'
 /**
- * DBSClient is a TypeScript library for interacting with the DBS API.
+ * Client is a TypeScript library for interacting with the Uploader API.
  */
-export declare class DBSClient {
+export declare class UploaderClient {
   private baseURL
   private signer
-  private dbsAddress
+  private uploaderAddress
   /**
-   * Creates an instance of the DBSClient.
-   * @param {string} baseURL - The base URL of the DBS API.
+   * Creates an instance of the Client.
+   * @param {string} baseURL - The base URL of the Uploader API.
    * @param {Signer} signer The signer object.
    */
   constructor(baseURL: string, address: string, signer?: Signer)
