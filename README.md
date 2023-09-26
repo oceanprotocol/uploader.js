@@ -1,4 +1,6 @@
-# Ocean Uploader Library
+[![banner](https://raw.githubusercontent.com/oceanprotocol/art/master/github/repo-banner%402x.png)](https://oceanprotocol.com)
+
+<h1 align="center">Ocean Uploader.js</h1>
 
 This is a TypeScript library for interacting with the Ocean Uploader API. It provides a simple interface to call the API endpoints in Ocean uploader for managing file storage uploads, quotes, and more.
 
