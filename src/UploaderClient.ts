@@ -1,4 +1,4 @@
-import { Signer, MaxInt256, Contract } from 'ethers'
+import { Signer, Contract } from 'ethers'
 import axios, { AxiosResponse } from 'axios'
 import {
   StorageInfo,
@@ -101,7 +101,7 @@ export class UploaderClient {
   async upload(
     quoteId: string,
     tokenAddress: string,
-    quoteFee: number,
+    quoteFee: string,
     filePaths: string[],
     type: string
   ): Promise<any> {
@@ -145,7 +145,7 @@ export class UploaderClient {
   async uploadBrowser(
     quoteId: string,
     tokenAddress: string,
-    quoteFee: number,
+    quoteFee: string,
     files: FileList,
     type: string
   ): Promise<any> {
