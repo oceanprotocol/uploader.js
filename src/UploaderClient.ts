@@ -160,7 +160,10 @@ export class UploaderClient {
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
           : this.uploaderAddress
 
-      await token.approve(approveAddress, quoteFee)
+      const tx = await token.approve(approveAddress, quoteFee)
+      const receipt = await tx.wait(3)
+      console.log('transaction receipt', receipt)
+
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
       const formData = new FormData()
