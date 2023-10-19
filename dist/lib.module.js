@@ -89,30 +89,30 @@ var d = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (r.upload = function (e, r, o, d, h) {
+    (r.upload = function (e, r, o, d, l) {
       try {
-        var l = this
+        var h = this
         return Promise.resolve(
           f(
             function () {
               var f = Math.round(Date.now() / 1e3),
-                v = new t(r, u, l.signer)
+                v = new t(r, u, h.signer)
               return Promise.resolve(
                 v.approve(
-                  'filecoin' === h
+                  'filecoin' === l
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : l.uploaderAddress,
+                    : h.uploaderAddress,
                   o
                 )
               ).then(function (r) {
                 return Promise.resolve(r.wait()).then(function () {
-                  return Promise.resolve(c(l.signer, e, f)).then(function (r) {
+                  return Promise.resolve(c(h.signer, e, f)).then(function (r) {
                     var t = new s()
                     d.forEach(function (e, r) {
                       t.append('file' + (r + 1), i.createReadStream(e))
                     })
                     var o =
-                      l.baseURL +
+                      h.baseURL +
                       '/upload?quoteId=' +
                       e +
                       '&nonce=' +
@@ -143,33 +143,38 @@ var d = /*#__PURE__*/ (function () {
           f(
             function () {
               var f = Math.round(Date.now() / 1e3),
-                h = new t(r, u, d.signer)
+                l = new t(r, u, d.signer)
               return Promise.resolve(
-                h.approve(
+                l.approve(
                   'filecoin' === a
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
                     : d.uploaderAddress,
                   o
                 )
-              ).then(function () {
-                return Promise.resolve(c(d.signer, e, f)).then(function (r) {
-                  var t = new s()
+              ).then(function (r) {
+                return Promise.resolve(r.wait(3)).then(function (r) {
                   return (
-                    Array.from(i).forEach(function (e, r) {
-                      t.append('file' + (r + 1), e, e.name)
-                    }),
-                    Promise.resolve(
-                      n.post(
-                        d.baseURL +
-                          '/upload?quoteId=' +
-                          e +
-                          '&nonce=' +
-                          f +
-                          '&signature=' +
-                          r,
-                        t
+                    console.log('transaction receipt', r),
+                    Promise.resolve(c(d.signer, e, f)).then(function (r) {
+                      var t = new s()
+                      return (
+                        Array.from(i).forEach(function (e, r) {
+                          t.append('file' + (r + 1), e, e.name)
+                        }),
+                        Promise.resolve(
+                          n.post(
+                            d.baseURL +
+                              '/upload?quoteId=' +
+                              e +
+                              '&nonce=' +
+                              f +
+                              '&signature=' +
+                              r,
+                            t
+                          )
+                        )
                       )
-                    )
+                    })
                   )
                 })
               })

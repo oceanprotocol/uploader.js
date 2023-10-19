@@ -18,10 +18,10 @@
   var a = /*#__PURE__*/ s(t),
     u = /*#__PURE__*/ s(n),
     f = /*#__PURE__*/ s(o),
-    d = /*#__PURE__*/ s(i)
-  function c() {
+    c = /*#__PURE__*/ s(i)
+  function d() {
     return (
-      (c = Object.assign
+      (d = Object.assign
         ? Object.assign.bind()
         : function (e) {
             for (var r = 1; r < arguments.length; r++) {
@@ -30,7 +30,7 @@
             }
             return e
           }),
-      c.apply(this, arguments)
+      d.apply(this, arguments)
     )
   }
   var l = [
@@ -125,7 +125,7 @@
                 ).then(function (r) {
                   return Promise.resolve(r.wait()).then(function () {
                     return Promise.resolve(h(s.signer, e, u)).then(function (r) {
-                      var t = new d.default()
+                      var t = new c.default()
                       o.forEach(function (e, r) {
                         t.append('file' + (r + 1), f.default.createReadStream(e))
                       })
@@ -140,7 +140,7 @@
                       return (
                         console.log('uploadUrl', n),
                         Promise.resolve(
-                          a.default.post(n, t, { headers: c({}, t.getHeaders()) })
+                          a.default.post(n, t, { headers: d({}, t.getHeaders()) })
                         )
                       )
                     })
@@ -171,25 +171,30 @@
                       : s.uploaderAddress,
                     n
                   )
-                ).then(function () {
-                  return Promise.resolve(h(s.signer, e, u)).then(function (r) {
-                    var t = new d.default()
+                ).then(function (r) {
+                  return Promise.resolve(r.wait(3)).then(function (r) {
                     return (
-                      Array.from(o).forEach(function (e, r) {
-                        t.append('file' + (r + 1), e, e.name)
-                      }),
-                      Promise.resolve(
-                        a.default.post(
-                          s.baseURL +
-                            '/upload?quoteId=' +
-                            e +
-                            '&nonce=' +
-                            u +
-                            '&signature=' +
-                            r,
-                          t
+                      console.log('transaction receipt', r),
+                      Promise.resolve(h(s.signer, e, u)).then(function (r) {
+                        var t = new c.default()
+                        return (
+                          Array.from(o).forEach(function (e, r) {
+                            t.append('file' + (r + 1), e, e.name)
+                          }),
+                          Promise.resolve(
+                            a.default.post(
+                              s.baseURL +
+                                '/upload?quoteId=' +
+                                e +
+                                '&nonce=' +
+                                u +
+                                '&signature=' +
+                                r,
+                              t
+                            )
+                          )
                         )
-                      )
+                      })
                     )
                   })
                 })

@@ -63,18 +63,18 @@ class u {
   async upload(e, t, s, u, h) {
     try {
       const p = Math.round(Date.now() / 1e3),
-        f = new r(t, d, this.signer),
+        l = new r(t, d, this.signer),
         g =
           'filecoin' === h
             ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
             : this.uploaderAddress
-      await (await f.approve(g, s)).wait()
-      const l = await c(this.signer, e, p),
+      await (await l.approve(g, s)).wait()
+      const f = await c(this.signer, e, p),
         w = new o()
       u.forEach((e, t) => {
         w.append(`file${t + 1}`, i.createReadStream(e))
       })
-      const y = `${this.baseURL}/upload?quoteId=${e}&nonce=${p}&signature=${l}`
+      const y = `${this.baseURL}/upload?quoteId=${e}&nonce=${p}&signature=${f}`
       return (
         console.log('uploadUrl', y),
         await a.post(y, w, { headers: n({}, w.getHeaders()) })
@@ -90,15 +90,17 @@ class u {
         p =
           'filecoin' === n
             ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-            : this.uploaderAddress
-      await h.approve(p, s)
+            : this.uploaderAddress,
+        l = await h.approve(p, s),
+        g = await l.wait(3)
+      console.log('transaction receipt', g)
       const f = await c(this.signer, e, u),
-        g = new o()
+        w = new o()
       Array.from(i).forEach((e, t) => {
-        g.append(`file${t + 1}`, e, e.name)
+        w.append(`file${t + 1}`, e, e.name)
       })
-      const l = `${this.baseURL}/upload?quoteId=${e}&nonce=${u}&signature=${f}`
-      return await a.post(l, g)
+      const y = `${this.baseURL}/upload?quoteId=${e}&nonce=${u}&signature=${f}`
+      return await a.post(y, w)
     } catch (e) {
       return console.error('Error:', e), e.data
     }

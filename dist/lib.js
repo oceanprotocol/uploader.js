@@ -160,25 +160,30 @@ function h(e, r) {
                     : a.uploaderAddress,
                   n
                 )
-              ).then(function () {
-                return Promise.resolve(l(a.signer, r, u)).then(function (e) {
-                  var t = new c.default()
+              ).then(function (e) {
+                return Promise.resolve(e.wait(3)).then(function (e) {
                   return (
-                    Array.from(o).forEach(function (e, r) {
-                      t.append('file' + (r + 1), e, e.name)
-                    }),
-                    Promise.resolve(
-                      s.default.post(
-                        a.baseURL +
-                          '/upload?quoteId=' +
-                          r +
-                          '&nonce=' +
-                          u +
-                          '&signature=' +
-                          e,
-                        t
+                    console.log('transaction receipt', e),
+                    Promise.resolve(l(a.signer, r, u)).then(function (e) {
+                      var t = new c.default()
+                      return (
+                        Array.from(o).forEach(function (e, r) {
+                          t.append('file' + (r + 1), e, e.name)
+                        }),
+                        Promise.resolve(
+                          s.default.post(
+                            a.baseURL +
+                              '/upload?quoteId=' +
+                              r +
+                              '&nonce=' +
+                              u +
+                              '&signature=' +
+                              e,
+                            t
+                          )
+                        )
                       )
-                    )
+                    })
                   )
                 })
               })
