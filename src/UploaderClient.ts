@@ -172,7 +172,7 @@ export class UploaderClient {
       const balance = await token.balanceOf(this.signer.getAddress())
       console.log(`User balance of WMATIC: ${balance}`)
 
-      if (balance.lt(quoteFee)) {
+      if (balance < quoteFee) {
         console.log(
           `User balance of ${balance} WMATIC is less than quote fee of ${quoteFee}`
         )
