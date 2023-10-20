@@ -1,73 +1,222 @@
 var e = require('ethers'),
-  r = require('axios'),
-  t = require('validator'),
-  n = require('fs'),
-  o = require('form-data')
-function i(e) {
+  t = require('axios'),
+  n = require('validator'),
+  r = require('fs'),
+  a = require('form-data')
+function o(e) {
   return e && 'object' == typeof e && 'default' in e ? e : { default: e }
 }
-var s = /*#__PURE__*/ i(r),
-  a = /*#__PURE__*/ i(t),
-  u = /*#__PURE__*/ i(n),
-  c = /*#__PURE__*/ i(o)
-function f() {
+var s = /*#__PURE__*/ o(t),
+  i = /*#__PURE__*/ o(n),
+  u = /*#__PURE__*/ o(r),
+  d = /*#__PURE__*/ o(a)
+function p() {
   return (
-    (f = Object.assign
+    (p = Object.assign
       ? Object.assign.bind()
       : function (e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = arguments[r]
-            for (var n in t) Object.prototype.hasOwnProperty.call(t, n) && (e[n] = t[n])
+          for (var t = 1; t < arguments.length; t++) {
+            var n = arguments[t]
+            for (var r in n) Object.prototype.hasOwnProperty.call(n, r) && (e[r] = n[r])
           }
           return e
         }),
-    f.apply(this, arguments)
+    p.apply(this, arguments)
   )
 }
-var d = [
-    'function approve(address, uint256) external returns (bool)',
-    'function balanceOf(address owner) external view returns (uint256)'
-  ],
-  l = function (r, t, n) {
+var l = function (t, n, r) {
     try {
-      var o = e.sha256(e.toUtf8Bytes(t + n.toString()))
-      return Promise.resolve(r.signMessage(o))
+      var a = e.sha256(e.toUtf8Bytes(n + r.toString()))
+      return Promise.resolve(t.signMessage(a))
     } catch (e) {
       return Promise.reject(e)
     }
-  }
-function h(e, r) {
+  },
+  c = [
+    {
+      constant: !0,
+      inputs: [],
+      name: 'name',
+      outputs: [{ name: '', type: 'string' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    {
+      constant: !1,
+      inputs: [
+        { name: 'guy', type: 'address' },
+        { name: 'wad', type: 'uint256' }
+      ],
+      name: 'approve',
+      outputs: [{ name: '', type: 'bool' }],
+      payable: !1,
+      stateMutability: 'nonpayable',
+      type: 'function'
+    },
+    {
+      constant: !0,
+      inputs: [],
+      name: 'totalSupply',
+      outputs: [{ name: '', type: 'uint256' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    {
+      constant: !1,
+      inputs: [
+        { name: 'src', type: 'address' },
+        { name: 'dst', type: 'address' },
+        { name: 'wad', type: 'uint256' }
+      ],
+      name: 'transferFrom',
+      outputs: [{ name: '', type: 'bool' }],
+      payable: !1,
+      stateMutability: 'nonpayable',
+      type: 'function'
+    },
+    {
+      constant: !1,
+      inputs: [{ name: 'wad', type: 'uint256' }],
+      name: 'withdraw',
+      outputs: [],
+      payable: !1,
+      stateMutability: 'nonpayable',
+      type: 'function'
+    },
+    {
+      constant: !0,
+      inputs: [],
+      name: 'decimals',
+      outputs: [{ name: '', type: 'uint8' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    {
+      constant: !0,
+      inputs: [{ name: '', type: 'address' }],
+      name: 'balanceOf',
+      outputs: [{ name: '', type: 'uint256' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    {
+      constant: !0,
+      inputs: [],
+      name: 'symbol',
+      outputs: [{ name: '', type: 'string' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    {
+      constant: !1,
+      inputs: [
+        { name: 'dst', type: 'address' },
+        { name: 'wad', type: 'uint256' }
+      ],
+      name: 'transfer',
+      outputs: [{ name: '', type: 'bool' }],
+      payable: !1,
+      stateMutability: 'nonpayable',
+      type: 'function'
+    },
+    {
+      constant: !1,
+      inputs: [],
+      name: 'deposit',
+      outputs: [],
+      payable: !0,
+      stateMutability: 'payable',
+      type: 'function'
+    },
+    {
+      constant: !0,
+      inputs: [
+        { name: '', type: 'address' },
+        { name: '', type: 'address' }
+      ],
+      name: 'allowance',
+      outputs: [{ name: '', type: 'uint256' }],
+      payable: !1,
+      stateMutability: 'view',
+      type: 'function'
+    },
+    { payable: !0, stateMutability: 'payable', type: 'fallback' },
+    {
+      anonymous: !1,
+      inputs: [
+        { indexed: !0, name: 'src', type: 'address' },
+        { indexed: !0, name: 'guy', type: 'address' },
+        { indexed: !1, name: 'wad', type: 'uint256' }
+      ],
+      name: 'Approval',
+      type: 'event'
+    },
+    {
+      anonymous: !1,
+      inputs: [
+        { indexed: !0, name: 'src', type: 'address' },
+        { indexed: !0, name: 'dst', type: 'address' },
+        { indexed: !1, name: 'wad', type: 'uint256' }
+      ],
+      name: 'Transfer',
+      type: 'event'
+    },
+    {
+      anonymous: !1,
+      inputs: [
+        { indexed: !0, name: 'dst', type: 'address' },
+        { indexed: !1, name: 'wad', type: 'uint256' }
+      ],
+      name: 'Deposit',
+      type: 'event'
+    },
+    {
+      anonymous: !1,
+      inputs: [
+        { indexed: !0, name: 'src', type: 'address' },
+        { indexed: !1, name: 'wad', type: 'uint256' }
+      ],
+      name: 'Withdrawal',
+      type: 'event'
+    }
+  ]
+function f(e, t) {
   try {
-    var t = e()
+    var n = e()
   } catch (e) {
-    return r(e)
+    return t(e)
   }
-  return t && t.then ? t.then(void 0, r) : t
+  return n && n.then ? n.then(void 0, t) : n
 }
 ;(exports.UploaderClient = /*#__PURE__*/ (function () {
-  function r(e, r, t) {
+  function t(e, t, n) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
       (this.uploaderAddress = void 0),
       this.validateBaseURL(e),
       (this.baseURL = e),
-      (this.signer = t),
-      (this.uploaderAddress = r)
+      (this.signer = n),
+      (this.uploaderAddress = t)
   }
-  var t = r.prototype
+  var n = t.prototype
   return (
-    (t.validateBaseURL = function (e) {
+    (n.validateBaseURL = function (e) {
       if (!e || 'string' != typeof e || '' === e.trim())
         throw new Error('Invalid baseURL provided. baseURL cannot be empty or undefined.')
-      if (!a.default.isURL(e, { require_tld: !1 }))
+      if (!i.default.isURL(e, { require_tld: !1 }))
         throw new Error('Invalid baseURL format provided.')
     }),
-    (t.getFileSizes = function (e) {
+    (n.getFileSizes = function (e) {
       return e.map(function (e) {
         return { length: u.default.statSync(e).size }
       })
     }),
-    (t.getStorageInfo = function () {
+    (n.getStorageInfo = function () {
       try {
         return Promise.resolve(s.default.get(this.baseURL + '/')).then(function (e) {
           return e.data
@@ -76,15 +225,15 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.getQuote = function (e) {
+    (n.getQuote = function (e) {
       try {
         if (!e.filePath && !e.fileInfo)
           throw new Error('Either filePath or fileInfo must be provided.')
-        var r = e.fileInfo || this.getFileSizes(e.filePath)
+        var t = e.fileInfo || this.getFileSizes(e.filePath)
         return Promise.resolve(
           s.default.post(this.baseURL + '/getQuote', {
             type: e.type,
-            files: r,
+            files: t,
             duration: e.duration,
             payment: e.payment,
             userAddress: e.userAddress
@@ -96,40 +245,40 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.upload = function (r, t, n, o, i) {
+    (n.upload = function (t, n, r, a, o) {
       try {
-        var a = this
+        var i = this
         return Promise.resolve(
-          h(
+          f(
             function () {
-              var h = Math.round(Date.now() / 1e3),
-                v = new e.Contract(t, d, a.signer)
+              var f = Math.round(Date.now() / 1e3),
+                y = new e.Contract(n, c, i.signer)
               return Promise.resolve(
-                v.approve(
-                  'filecoin' === i
+                y.approve(
+                  'filecoin' === o
                     ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : a.uploaderAddress,
-                  n
+                    : i.uploaderAddress,
+                  r
                 )
               ).then(function (e) {
                 return Promise.resolve(e.wait()).then(function () {
-                  return Promise.resolve(l(a.signer, r, h)).then(function (e) {
-                    var t = new c.default()
-                    o.forEach(function (e, r) {
-                      t.append('file' + (r + 1), u.default.createReadStream(e))
+                  return Promise.resolve(l(i.signer, t, f)).then(function (e) {
+                    var n = new d.default()
+                    a.forEach(function (e, t) {
+                      n.append('file' + (t + 1), u.default.createReadStream(e))
                     })
-                    var n =
-                      a.baseURL +
+                    var r =
+                      i.baseURL +
                       '/upload?quoteId=' +
-                      r +
+                      t +
                       '&nonce=' +
-                      h +
+                      f +
                       '&signature=' +
                       e
                     return (
-                      console.log('uploadUrl', n),
+                      console.log('uploadUrl', r),
                       Promise.resolve(
-                        s.default.post(n, t, { headers: f({}, t.getHeaders()) })
+                        s.default.post(r, n, { headers: p({}, n.getHeaders()) })
                       )
                     )
                   })
@@ -145,48 +294,63 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.uploadBrowser = function (r, t, n, o, i) {
+    (n.uploadBrowser = function (t, n, r, a, o) {
       try {
-        var a = this
+        var i = this
         return Promise.resolve(
-          h(
+          f(
             function () {
               var u = Math.round(Date.now() / 1e3),
-                f = new e.Contract(t, d, a.signer)
-              return Promise.resolve(
-                f.approve(
-                  'filecoin' === i
-                    ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : a.uploaderAddress,
-                  n
-                )
-              ).then(function (e) {
-                return Promise.resolve(e.wait(3)).then(function (e) {
-                  return (
-                    console.log('transaction receipt', e),
-                    Promise.resolve(l(a.signer, r, u)).then(function (e) {
-                      var t = new c.default()
-                      return (
-                        Array.from(o).forEach(function (e, r) {
-                          t.append('file' + (r + 1), e, e.name)
-                        }),
-                        Promise.resolve(
-                          s.default.post(
-                            a.baseURL +
-                              '/upload?quoteId=' +
-                              r +
-                              '&nonce=' +
-                              u +
-                              '&signature=' +
-                              e,
-                            t
+                p = new e.Contract(n, c, i.signer)
+              console.log('quote fee: ' + r)
+              var f =
+                'filecoin' === o
+                  ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                  : i.uploaderAddress
+              return (
+                console.log('Calling approval with address: ' + f + ' and amount: ' + r),
+                Promise.resolve(p.approve(f, r)).then(function (e) {
+                  return Promise.resolve(e.wait(6)).then(function (e) {
+                    return (
+                      console.log('transaction receipt', e),
+                      Promise.resolve(p.balanceOf(i.signer.getAddress())).then(function (
+                        e
+                      ) {
+                        if ((console.log('User balance of WMATIC: ' + e), e.lt(r)))
+                          throw (
+                            (console.log(
+                              'User balance of ' +
+                                e +
+                                ' WMATIC is less than quote fee of ' +
+                                r
+                            ),
+                            new Error('Insufficient WMATIC balance'))
                           )
-                        )
-                      )
-                    })
-                  )
+                        return Promise.resolve(l(i.signer, t, u)).then(function (e) {
+                          var n = new d.default()
+                          return (
+                            Array.from(a).forEach(function (e, t) {
+                              n.append('file' + (t + 1), e, e.name)
+                            }),
+                            Promise.resolve(
+                              s.default.post(
+                                i.baseURL +
+                                  '/upload?quoteId=' +
+                                  t +
+                                  '&nonce=' +
+                                  u +
+                                  '&signature=' +
+                                  e,
+                                n
+                              )
+                            )
+                          )
+                        })
+                      })
+                    )
+                  })
                 })
-              })
+              )
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -197,7 +361,7 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.getStatus = function (e) {
+    (n.getStatus = function (e) {
       try {
         return Promise.resolve(
           s.default.get(this.baseURL + '/getStatus', { params: { quoteId: e } })
@@ -208,14 +372,14 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.getLink = function (e) {
+    (n.getLink = function (e) {
       try {
-        var r = this,
-          t = Math.round(Date.now() / 1e3)
-        return Promise.resolve(l(r.signer, e, t)).then(function (n) {
+        var t = this,
+          n = Math.round(Date.now() / 1e3)
+        return Promise.resolve(l(t.signer, e, n)).then(function (r) {
           return Promise.resolve(
-            s.default.get(r.baseURL + '/getLink', {
-              params: { quoteId: e, nonce: t, signature: n }
+            s.default.get(t.baseURL + '/getLink', {
+              params: { quoteId: e, nonce: n, signature: r }
             })
           ).then(function (e) {
             return e.data
@@ -225,38 +389,38 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    (t.registerMicroservice = function (e) {
+    (n.registerMicroservice = function (e) {
       try {
         return Promise.resolve(s.default.post(this.baseURL + '/register', e))
       } catch (e) {
         return Promise.reject(e)
       }
     }),
-    (t.getHistory = function (e, r, t) {
-      void 0 === e && (e = 1), void 0 === r && (r = 25)
+    (n.getHistory = function (e, t, n) {
+      void 0 === e && (e = 1), void 0 === t && (t = 25)
       try {
-        var n = this
+        var r = this
         return Promise.resolve(
-          h(
+          f(
             function () {
-              return Promise.resolve(n.signer.getAddress()).then(function (o) {
-                var i = Math.round(Date.now() / 1e3)
-                return Promise.resolve(l(n.signer, '', i)).then(function (a) {
+              return Promise.resolve(r.signer.getAddress()).then(function (a) {
+                var o = Math.round(Date.now() / 1e3)
+                return Promise.resolve(l(r.signer, '', o)).then(function (i) {
                   return Promise.resolve(
                     s.default.get(
-                      n.baseURL +
+                      r.baseURL +
                         '/getHistory?userAddress=' +
-                        o +
-                        '&nonce=' +
-                        i +
-                        '&signature=' +
                         a +
+                        '&nonce=' +
+                        o +
+                        '&signature=' +
+                        i +
                         '&page=' +
                         e +
                         '&pageSize=' +
-                        r +
+                        t +
                         '&storage=' +
-                        t
+                        n
                     )
                   ).then(function (e) {
                     if (200 !== e.status) throw new Error('Failed to retrieve history.')
@@ -274,9 +438,8 @@ function h(e, r) {
         return Promise.reject(e)
       }
     }),
-    r
+    t
   )
 })()),
-  (exports.getSignedHash = l),
-  (exports.minErc20Abi = d)
+  (exports.getSignedHash = l)
 //# sourceMappingURL=lib.js.map
