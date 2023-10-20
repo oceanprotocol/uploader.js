@@ -10,7 +10,8 @@ import {
   UploaderGetQuoteArgs,
   FileData
 } from './@types'
-import { getSignedHash, minErc20Abi } from './utils'
+import { getSignedHash } from './utils'
+import wMaticAbi from './utils/wMaticAbi.json'
 import validator from 'validator'
 import fs from 'fs'
 import FormData from 'form-data'
@@ -108,7 +109,7 @@ export class UploaderClient {
     try {
       const nonce = Math.round(Date.now() / 1000)
 
-      const token = new Contract(tokenAddress, minErc20Abi, this.signer)
+      const token = new Contract(tokenAddress, wMaticAbi, this.signer)
 
       // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
       const approveAddress =
@@ -151,8 +152,8 @@ export class UploaderClient {
   ): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
-
-      const token = new Contract(tokenAddress, minErc20Abi, this.signer)
+      const token = new Contract(tokenAddress, wMaticAbi, this.signer)
+      console.log(`quote fee: ${quoteFee}`)
 
       // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
       const approveAddress =
@@ -160,9 +161,23 @@ export class UploaderClient {
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
           : this.uploaderAddress
 
+      console.log(
+        `Calling approval with address: ${approveAddress} and amount: ${quoteFee}`
+      )
       const tx = await token.approve(approveAddress, quoteFee)
-      const receipt = await tx.wait(3)
+      const receipt = await tx.wait(6)
       console.log('transaction receipt', receipt)
+
+      // check user has sufficient balance
+      const balance = await token.balanceOf(this.signer.getAddress())
+      console.log(`User balance of WMATIC: ${balance}`)
+
+      if (balance.lt(quoteFee)) {
+        console.log(
+          `User balance of ${balance} WMATIC is less than quote fee of ${quoteFee}`
+        )
+        throw new Error('Insufficient WMATIC balance')
+      }
 
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 

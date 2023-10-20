@@ -1,10 +1,5 @@
 import { Signer, sha256, toUtf8Bytes } from 'ethers'
 
-export const minErc20Abi = [
-  'function approve(address, uint256) external returns (bool)',
-  'function balanceOf(address owner) external view returns (uint256)'
-]
-
 /**
  * @param {string} quoteId - The quote ID.
  * @param {Signer} signer The signer object.
