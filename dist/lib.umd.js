@@ -328,7 +328,7 @@
                         console.log('transaction receipt', t),
                         Promise.resolve(d.balanceOf(s.signer.getAddress())).then(
                           function (t) {
-                            if ((console.log('User balance of WMATIC: ' + t), t.lt(r)))
+                            if ((console.log('User balance of WMATIC: ' + t), t < r))
                               throw (
                                 (console.log(
                                   'User balance of ' +

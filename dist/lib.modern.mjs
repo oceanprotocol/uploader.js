@@ -246,7 +246,7 @@ class u {
         m = await c.wait(6)
       console.log('transaction receipt', m)
       const f = await y.balanceOf(this.signer.getAddress())
-      if ((console.log(`User balance of WMATIC: ${f}`), f.lt(s)))
+      if ((console.log(`User balance of WMATIC: ${f}`), f < s))
         throw (
           (console.log(`User balance of ${f} WMATIC is less than quote fee of ${s}`),
           new Error('Insufficient WMATIC balance'))

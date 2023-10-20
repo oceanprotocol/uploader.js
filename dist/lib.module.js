@@ -307,7 +307,7 @@ var c = /*#__PURE__*/ (function () {
                       Promise.resolve(l.balanceOf(c.signer.getAddress())).then(function (
                         t
                       ) {
-                        if ((console.log('User balance of WMATIC: ' + t), t.lt(a)))
+                        if ((console.log('User balance of WMATIC: ' + t), t < a))
                           throw (
                             (console.log(
                               'User balance of ' +

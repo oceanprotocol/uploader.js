@@ -316,7 +316,7 @@ function f(e, t) {
                       Promise.resolve(p.balanceOf(i.signer.getAddress())).then(function (
                         e
                       ) {
-                        if ((console.log('User balance of WMATIC: ' + e), e.lt(r)))
+                        if ((console.log('User balance of WMATIC: ' + e), e < r))
                           throw (
                             (console.log(
                               'User balance of ' +
