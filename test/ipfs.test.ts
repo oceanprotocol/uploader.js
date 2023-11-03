@@ -26,26 +26,24 @@ describe('IPFS Tests', () => {
       expect(info).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
       expect(info[0].payment).to.be.an('array')
-      assert(info[0].type === 'filecoin' || info[1].type === 'filecoin')
       assert(
-        info[0].description === 'File storage on FileCoin' ||
-          info[1].description === 'File storage on FileCoin'
+        info[0].type === 'ipfs' || info[1].type === 'ipfs' || info[2].type === 'ipfs'
       )
-      assert(info[0].type === 'arweave' || info[1].type === 'arweave')
       assert(
-        info[0].description === 'File storage on Arweave' ||
-          info[1].description === 'File storage on Arweave'
+        info[0].description === 'File storage on IPFS' ||
+          info[1].description === 'File storage on IPFS' ||
+          info[2].description === 'File storage on IPFS'
       )
     })
   })
   describe('Testing getQuote endpoint', () => {
-    it('should return a quote for uploading a file to Arweave when using file paths', async () => {
+    it('should return a quote for uploading a file to IPFS when using file paths', async () => {
       const args: GetQuoteArgs = {
-        type: 'arweave',
+        type: 'ipfs',
         duration: 4353545453,
         payment: {
-          chainId: '80001',
-          tokenAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+          chainId: '1',
+          tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
@@ -58,13 +56,13 @@ describe('IPFS Tests', () => {
       expect(result.chainId).to.be.a('string')
       expect(result.tokenAddress).to.be.a('string')
     })
-    it('should return a quote for uploading a file to Arweave when using file sizes', async () => {
+    it('should return a quote for uploading a file to IPFS when using file sizes', async () => {
       const args: GetQuoteArgs = {
-        type: 'arweave',
+        type: 'ipfs',
         duration: 4353545453,
         payment: {
-          chainId: '80001',
-          tokenAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+          chainId: '1',
+          tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         },
         userAddress: process.env.USER_ADDRESS,
         filePath: undefined,
@@ -81,13 +79,13 @@ describe('IPFS Tests', () => {
   })
   describe('Testing the upload, status and getLink endpoints', async function () {
     this.timeout(2000000)
-    let arweaveQuote1: any
+    let ipfsQuote1: any
 
-    it('should upload local files successfully to Arweave', async () => {
+    it('should upload local files successfully to IPFS', async () => {
       const tokenAddress = '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
 
       const args: GetQuoteArgs = {
-        type: 'arweave',
+        type: 'ipfs',
         duration: 4353545453,
         payment: {
           chainId: '80001',
@@ -96,14 +94,14 @@ describe('IPFS Tests', () => {
         userAddress: process.env.USER_ADDRESS,
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
       }
-      arweaveQuote1 = await client.getQuote(args)
+      ipfsQuote1 = await client.getQuote(args)
 
       const result = await client.upload(
-        arweaveQuote1.quoteId,
+        ipfsQuote1.quoteId,
         tokenAddress,
-        arweaveQuote1.tokenAmount,
+        ipfsQuote1.tokenAmount,
         [process.env.TEST_FILE_1, process.env.TEST_FILE_2],
-        'arweave'
+        'ipfs'
       )
 
       // Check that upload succeeded
@@ -123,10 +121,10 @@ describe('IPFS Tests', () => {
       // )
     })
 
-    it('Arweave local file upload should return 400 status', async () => {
+    it('IPFS local file upload should return 400 status', async () => {
       let status
       while (status !== 400) {
-        status = (await client.getStatus(arweaveQuote1.quoteId)).status
+        status = (await client.getStatus(ipfsQuote1.quoteId)).status
         console.log('status', status)
         assert(
           status !== 200,
@@ -161,10 +159,10 @@ describe('IPFS Tests', () => {
       assert(status === 400, 'Upload succeeded with status: QUOTE_STATUS_UPLOAD_END')
     })
 
-    it('should return a link for arweave local file upload', async () => {
+    it('should return a link for IPFS local file upload', async () => {
       let result
       try {
-        result = await client.getLink(arweaveQuote1.quoteId)
+        result = await client.getLink(ipfsQuote1.quoteId)
         console.log('result', result)
       } catch (error) {
         console.log('error', error)
@@ -172,8 +170,8 @@ describe('IPFS Tests', () => {
 
       assert(result, 'No response returned from getLink request')
       expect(result).to.be.an('array', 'Response is not an array')
-      assert(result[0].type === 'arweave', 'Wrong type')
-      assert(result[1].type === 'arweave', 'Wrong type')
+      assert(result[0].type === 'ipfs', 'Wrong type')
+      assert(result[1].type === 'ipfs', 'Wrong type')
       assert(result[0].transactionHash, 'Missing the first transaction hash')
       assert(result[1].transactionHash, 'Missing the second transaction hash')
       console.log('1 tests passed')
