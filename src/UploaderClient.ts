@@ -168,7 +168,7 @@ export class UploaderClient {
           `Calling approval with address: ${approveAddress} and amount: ${quoteFee}`
         )
         const tx = await token.approve(approveAddress, quoteFee)
-        const receipt = await tx.wait(6)
+        const receipt = await tx.wait(1)
         console.log('transaction receipt', receipt)
 
         // check user has sufficient balance
