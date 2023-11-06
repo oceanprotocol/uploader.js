@@ -109,15 +109,17 @@ export class UploaderClient {
     try {
       const nonce = Math.round(Date.now() / 1000)
 
-      const token = new Contract(tokenAddress, wMaticAbi, this.signer)
+      if (type !== 'ipfs') {
+        const token = new Contract(tokenAddress, wMaticAbi, this.signer)
 
-      // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
-      const approveAddress =
-        type === 'filecoin'
-          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-          : this.uploaderAddress
+        // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
+        const approveAddress =
+          type === 'filecoin'
+            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+            : this.uploaderAddress
 
-      await (await token.approve(approveAddress, quoteFee)).wait()
+        await (await token.approve(approveAddress, quoteFee)).wait()
+      }
 
       const signature = await getSignedHash(this.signer, quoteId, nonce)
 
@@ -152,31 +154,33 @@ export class UploaderClient {
   ): Promise<any> {
     try {
       const nonce = Math.round(Date.now() / 1000)
-      const token = new Contract(tokenAddress, wMaticAbi, this.signer)
-      console.log(`quote fee: ${quoteFee}`)
+      if (type !== 'ipfs') {
+        const token = new Contract(tokenAddress, wMaticAbi, this.signer)
+        console.log(`quote fee: ${quoteFee}`)
 
-      // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
-      const approveAddress =
-        type === 'filecoin'
-          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-          : this.uploaderAddress
+        // This needs to be updated to include other addresses once we have the deposit contract deployed on other networks
+        const approveAddress =
+          type === 'filecoin'
+            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+            : this.uploaderAddress
 
-      console.log(
-        `Calling approval with address: ${approveAddress} and amount: ${quoteFee}`
-      )
-      const tx = await token.approve(approveAddress, quoteFee)
-      const receipt = await tx.wait(6)
-      console.log('transaction receipt', receipt)
-
-      // check user has sufficient balance
-      const balance = await token.balanceOf(this.signer.getAddress())
-      console.log(`User balance of WMATIC: ${balance}`)
-
-      if (balance < quoteFee) {
         console.log(
-          `User balance of ${balance} WMATIC is less than quote fee of ${quoteFee}`
+          `Calling approval with address: ${approveAddress} and amount: ${quoteFee}`
         )
-        throw new Error('Insufficient WMATIC balance')
+        const tx = await token.approve(approveAddress, quoteFee)
+        const receipt = await tx.wait(1)
+        console.log('transaction receipt', receipt)
+
+        // check user has sufficient balance
+        const balance = await token.balanceOf(this.signer.getAddress())
+        console.log(`User balance of WMATIC: ${balance}`)
+
+        if (balance < quoteFee) {
+          console.log(
+            `User balance of ${balance} WMATIC is less than quote fee of ${quoteFee}`
+          )
+          throw new Error('Insufficient WMATIC balance')
+        }
       }
 
       const signature = await getSignedHash(this.signer, quoteId, nonce)
