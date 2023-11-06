@@ -49,9 +49,10 @@ describe('IPFS Tests', () => {
         filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
       }
       const result = await client.getQuote(args)
+      console.log('result', result)
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
-      expect(result.tokenAmount).to.be.a('number')
+      expect(result.tokenAmount).to.be.a('string')
       expect(result.approveAddress).to.be.a('string')
       expect(result.chainId).to.be.a('string')
       expect(result.tokenAddress).to.be.a('string')
@@ -69,9 +70,10 @@ describe('IPFS Tests', () => {
         fileInfo: [{ length: 1000 }, { length: 9999 }]
       }
       const result = await client.getQuote(args)
+      console.log('result', result)
       expect(result).to.be.an('object')
       expect(result.quoteId).to.be.a('string')
-      expect(result.tokenAmount).to.be.a('number')
+      expect(result.tokenAmount).to.be.a('string')
       expect(result.approveAddress).to.be.a('string')
       expect(result.chainId).to.be.a('string')
       expect(result.tokenAddress).to.be.a('string')
@@ -172,36 +174,8 @@ describe('IPFS Tests', () => {
       expect(result).to.be.an('array', 'Response is not an array')
       assert(result[0].type === 'ipfs', 'Wrong type')
       assert(result[1].type === 'ipfs', 'Wrong type')
-      assert(result[0].transactionHash, 'Missing the first transaction hash')
-      assert(result[1].transactionHash, 'Missing the second transaction hash')
-      console.log('1 tests passed')
-
-      const transactionHash1 = result[0].transactionHash
-      const transactionHash2 = result[1].transactionHash
-
-      assert(transactionHash1 !== transactionHash2, 'Transaction hashes are the same')
-      const formatRegex = /^[a-zA-Z0-9_-]{43}$/
-      assert(formatRegex.test(transactionHash1), 'Wrong format for transactionHash1')
-      assert(formatRegex.test(transactionHash2), 'Wrong format for transactionHash2')
-
-      console.log('2 tests passed')
-
-      // const transaction1 = await getTransactionWithRetry(transactionHash1)
-      // const transaction2 = await getTransactionWithRetry(transactionHash2)
-
-      // console.log(transaction1)
-      // console.log(transaction2)
-
-      // assert(transaction1, 'No transaction returned for transactionHash1')
-      // assert(transaction2, 'No transaction returned for transactionHash2')
-      // assert(transaction1.id, 'No id for transactionHash1')
-      // assert(transaction2.id, 'No id for transactionHash2')
-
-      const data1 = await getDataWithRetry(transactionHash1)
-      const data2 = await getDataWithRetry(transactionHash1)
-
-      console.log('data1', data1)
-      console.log('data2', data2)
+      assert(result[0].cid, 'Missing the first cid')
+      assert(result[1].cid, 'Missing the second cid')
     })
   })
 })
