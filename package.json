@@ -1,7 +1,7 @@
 {
   "name": "@oceanprotocol/uploader",
   "source": "./src/index.ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Javascript library for uploading files to decentralised storage",
   "files": [
     "dist/**"
