@@ -117,9 +117,56 @@ export class UploaderClient {
           ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
           : this.uploaderAddress
 
-      await (await token.approve(approveAddress, quoteFee)).wait()
+      // check user has sufficient balance
+      const balance = await token.balanceOf(this.signer.getAddress())
+      console.log(`User balance of payment token: ${balance}`)
+
+      if (balance < quoteFee) {
+        console.log(`User balance of ${balance} is less than quote fee of ${quoteFee}`)
+        throw new Error('Insufficient token balance')
+      }
+      console.log(
+        `Calling approval with address: ${approveAddress} and amount: ${quoteFee}`
+      )
+      try {
+        console.log(
+          `Attempting to approve address: ${approveAddress} with amount: ${quoteFee}`
+        )
+
+        const approvalTransaction = await token.approve(approveAddress, quoteFee, {
+          gasPrice: 5367220921 // Use the adjusted gas price
+        })
+        console.log(
+          `Approval transaction sent with adjusted gas price. Transaction hash: ${approvalTransaction.hash}`
+        )
+
+        console.log(
+          `Approval transaction sent. Transaction hash: ${approvalTransaction.hash}`
+        )
+
+        // Listen for the transaction to be mined
+        const receipt = await approvalTransaction.wait()
+        if (receipt.status === 0) {
+          console.error(
+            `Approval transaction failed. Transaction hash: ${approvalTransaction.hash}`
+          )
+          throw new Error('Approval transaction failed')
+        }
+
+        console.log(
+          `Approval transaction confirmed. Transaction hash: ${approvalTransaction.hash}`
+        )
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(`Error during approval: ${error.message}`)
+        } else {
+          console.error(`Unknown error during approval: ${error}`)
+        }
+        throw new Error('Error during approval process')
+      }
 
       const signature = await getSignedHash(this.signer, quoteId, nonce)
+      console.log('signature', signature)
 
       const formData = new FormData()
       // Add each file to the form data
@@ -136,6 +183,7 @@ export class UploaderClient {
         }
       })
 
+      console.log('response', response)
       return response
     } catch (error) {
       console.error('Error:', error)

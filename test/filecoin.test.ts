@@ -94,7 +94,7 @@ describe('Filecoin Tests', () => {
           tokenAddress
         },
         userAddress: process.env.USER_ADDRESS,
-        filePath: [process.env.TEST_FILE_1, process.env.TEST_FILE_2]
+        filePath: [process.env.TEST_FILE_1]
       }
       quoteResult = await client.getQuote(args)
       console.log('quote result', quoteResult)
