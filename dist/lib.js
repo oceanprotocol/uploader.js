@@ -24,7 +24,7 @@ function p() {
     p.apply(this, arguments)
   )
 }
-var l = function (t, n, r) {
+var c = function (t, n, r) {
     try {
       var a = e.sha256(e.toUtf8Bytes(n + r.toString()))
       return Promise.resolve(t.signMessage(a))
@@ -32,7 +32,7 @@ var l = function (t, n, r) {
       return Promise.reject(e)
     }
   },
-  c = [
+  l = [
     {
       constant: !0,
       inputs: [],
@@ -251,39 +251,39 @@ function f(e, t) {
         return Promise.resolve(
           f(
             function () {
-              var f = Math.round(Date.now() / 1e3),
-                y = new e.Contract(n, c, i.signer)
-              return Promise.resolve(
-                y.approve(
-                  'filecoin' === o
-                    ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : i.uploaderAddress,
-                  r
-                )
-              ).then(function (e) {
-                return Promise.resolve(e.wait()).then(function () {
-                  return Promise.resolve(l(i.signer, t, f)).then(function (e) {
-                    var n = new d.default()
-                    a.forEach(function (e, t) {
-                      n.append('file' + (t + 1), u.default.createReadStream(e))
-                    })
-                    var r =
-                      i.baseURL +
-                      '/upload?quoteId=' +
-                      t +
-                      '&nonce=' +
-                      f +
-                      '&signature=' +
-                      e
-                    return (
-                      console.log('uploadUrl', r),
-                      Promise.resolve(
-                        s.default.post(r, n, { headers: p({}, n.getHeaders()) })
-                      )
-                    )
+              function f() {
+                return Promise.resolve(c(i.signer, t, y)).then(function (e) {
+                  var n = new d.default()
+                  a.forEach(function (e, t) {
+                    n.append('file' + (t + 1), u.default.createReadStream(e))
                   })
+                  var r =
+                    i.baseURL + '/upload?quoteId=' + t + '&nonce=' + y + '&signature=' + e
+                  return (
+                    console.log('uploadUrl', r),
+                    Promise.resolve(
+                      s.default.post(r, n, { headers: p({}, n.getHeaders()) })
+                    )
+                  )
                 })
-              })
+              }
+              var y = Math.round(Date.now() / 1e3),
+                m = (function () {
+                  if ('ipfs' !== o) {
+                    var t = new e.Contract(n, l, i.signer)
+                    return Promise.resolve(
+                      t.approve(
+                        'filecoin' === o
+                          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                          : i.uploaderAddress,
+                        r
+                      )
+                    ).then(function (e) {
+                      return Promise.resolve(e.wait()).then(function () {})
+                    })
+                  }
+                })()
+              return m && m.then ? m.then(f) : f()
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -300,57 +300,66 @@ function f(e, t) {
         return Promise.resolve(
           f(
             function () {
-              var u = Math.round(Date.now() / 1e3),
-                p = new e.Contract(n, c, i.signer)
-              console.log('quote fee: ' + r)
-              var f =
-                'filecoin' === o
-                  ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                  : i.uploaderAddress
-              return (
-                console.log('Calling approval with address: ' + f + ' and amount: ' + r),
-                Promise.resolve(p.approve(f, r)).then(function (e) {
-                  return Promise.resolve(e.wait(6)).then(function (e) {
+              function u(e) {
+                return Promise.resolve(c(i.signer, t, p)).then(function (e) {
+                  var n = new d.default()
+                  return (
+                    Array.from(a).forEach(function (e, t) {
+                      n.append('file' + (t + 1), e, e.name)
+                    }),
+                    Promise.resolve(
+                      s.default.post(
+                        i.baseURL +
+                          '/upload?quoteId=' +
+                          t +
+                          '&nonce=' +
+                          p +
+                          '&signature=' +
+                          e,
+                        n
+                      )
+                    )
+                  )
+                })
+              }
+              var p = Math.round(Date.now() / 1e3),
+                f = (function () {
+                  if ('ipfs' !== o) {
+                    var t = new e.Contract(n, l, i.signer)
+                    console.log('quote fee: ' + r)
+                    var a =
+                      'filecoin' === o
+                        ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                        : i.uploaderAddress
                     return (
-                      console.log('transaction receipt', e),
-                      Promise.resolve(p.balanceOf(i.signer.getAddress())).then(function (
-                        e
-                      ) {
-                        if ((console.log('User balance of WMATIC: ' + e), e < r))
-                          throw (
-                            (console.log(
-                              'User balance of ' +
-                                e +
-                                ' WMATIC is less than quote fee of ' +
-                                r
-                            ),
-                            new Error('Insufficient WMATIC balance'))
-                          )
-                        return Promise.resolve(l(i.signer, t, u)).then(function (e) {
-                          var n = new d.default()
+                      console.log(
+                        'Calling approval with address: ' + a + ' and amount: ' + r
+                      ),
+                      Promise.resolve(t.approve(a, r)).then(function (e) {
+                        return Promise.resolve(e.wait(1)).then(function (e) {
                           return (
-                            Array.from(a).forEach(function (e, t) {
-                              n.append('file' + (t + 1), e, e.name)
-                            }),
-                            Promise.resolve(
-                              s.default.post(
-                                i.baseURL +
-                                  '/upload?quoteId=' +
-                                  t +
-                                  '&nonce=' +
-                                  u +
-                                  '&signature=' +
-                                  e,
-                                n
-                              )
+                            console.log('transaction receipt', e),
+                            Promise.resolve(t.balanceOf(i.signer.getAddress())).then(
+                              function (e) {
+                                if ((console.log('User balance of WMATIC: ' + e), e < r))
+                                  throw (
+                                    (console.log(
+                                      'User balance of ' +
+                                        e +
+                                        ' WMATIC is less than quote fee of ' +
+                                        r
+                                    ),
+                                    new Error('Insufficient WMATIC balance'))
+                                  )
+                              }
                             )
                           )
                         })
                       })
                     )
-                  })
-                })
-              )
+                  }
+                })()
+              return f && f.then ? f.then(u) : u()
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -376,7 +385,7 @@ function f(e, t) {
       try {
         var t = this,
           n = Math.round(Date.now() / 1e3)
-        return Promise.resolve(l(t.signer, e, n)).then(function (r) {
+        return Promise.resolve(c(t.signer, e, n)).then(function (r) {
           return Promise.resolve(
             s.default.get(t.baseURL + '/getLink', {
               params: { quoteId: e, nonce: n, signature: r }
@@ -405,7 +414,7 @@ function f(e, t) {
             function () {
               return Promise.resolve(r.signer.getAddress()).then(function (a) {
                 var o = Math.round(Date.now() / 1e3)
-                return Promise.resolve(l(r.signer, '', o)).then(function (i) {
+                return Promise.resolve(c(r.signer, '', o)).then(function (i) {
                   return Promise.resolve(
                     s.default.get(
                       r.baseURL +
@@ -441,5 +450,5 @@ function f(e, t) {
     t
   )
 })()),
-  (exports.getSignedHash = l)
+  (exports.getSignedHash = c)
 //# sourceMappingURL=lib.js.map

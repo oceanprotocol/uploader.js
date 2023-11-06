@@ -2,10 +2,10 @@ import { sha256 as e, toUtf8Bytes as t, Contract as n } from 'ethers'
 import r from 'axios'
 import a from 'validator'
 import o from 'fs'
-import s from 'form-data'
-function i() {
+import i from 'form-data'
+function s() {
   return (
-    (i = Object.assign
+    (s = Object.assign
       ? Object.assign.bind()
       : function (e) {
           for (var t = 1; t < arguments.length; t++) {
@@ -14,7 +14,7 @@ function i() {
           }
           return e
         }),
-    i.apply(this, arguments)
+    s.apply(this, arguments)
   )
 }
 var u = function (n, r, a) {
@@ -178,7 +178,7 @@ var u = function (n, r, a) {
       type: 'event'
     }
   ]
-function d(e, t) {
+function c(e, t) {
   try {
     var n = e()
   } catch (e) {
@@ -186,7 +186,7 @@ function d(e, t) {
   }
   return n && n.then ? n.then(void 0, t) : n
 }
-var c = /*#__PURE__*/ (function () {
+var d = /*#__PURE__*/ (function () {
   function e(e, t, n) {
     ;(this.baseURL = void 0),
       (this.signer = void 0),
@@ -238,43 +238,43 @@ var c = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (t.upload = function (e, t, a, c, l) {
+    (t.upload = function (e, t, a, d, l) {
       try {
-        var y = this
+        var f = this
         return Promise.resolve(
-          d(
+          c(
             function () {
-              var d = Math.round(Date.now() / 1e3),
-                m = new n(t, p, y.signer)
-              return Promise.resolve(
-                m.approve(
-                  'filecoin' === l
-                    ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                    : y.uploaderAddress,
-                  a
-                )
-              ).then(function (t) {
-                return Promise.resolve(t.wait()).then(function () {
-                  return Promise.resolve(u(y.signer, e, d)).then(function (t) {
-                    var n = new s()
-                    c.forEach(function (e, t) {
-                      n.append('file' + (t + 1), o.createReadStream(e))
-                    })
-                    var a =
-                      y.baseURL +
-                      '/upload?quoteId=' +
-                      e +
-                      '&nonce=' +
-                      d +
-                      '&signature=' +
-                      t
-                    return (
-                      console.log('uploadUrl', a),
-                      Promise.resolve(r.post(a, n, { headers: i({}, n.getHeaders()) }))
-                    )
+              function c() {
+                return Promise.resolve(u(f.signer, e, y)).then(function (t) {
+                  var n = new i()
+                  d.forEach(function (e, t) {
+                    n.append('file' + (t + 1), o.createReadStream(e))
                   })
+                  var a =
+                    f.baseURL + '/upload?quoteId=' + e + '&nonce=' + y + '&signature=' + t
+                  return (
+                    console.log('uploadUrl', a),
+                    Promise.resolve(r.post(a, n, { headers: s({}, n.getHeaders()) }))
+                  )
                 })
-              })
+              }
+              var y = Math.round(Date.now() / 1e3),
+                m = (function () {
+                  if ('ipfs' !== l) {
+                    var e = new n(t, p, f.signer)
+                    return Promise.resolve(
+                      e.approve(
+                        'filecoin' === l
+                          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                          : f.uploaderAddress,
+                        a
+                      )
+                    ).then(function (e) {
+                      return Promise.resolve(e.wait()).then(function () {})
+                    })
+                  }
+                })()
+              return m && m.then ? m.then(c) : c()
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -285,63 +285,72 @@ var c = /*#__PURE__*/ (function () {
         return Promise.reject(e)
       }
     }),
-    (t.uploadBrowser = function (e, t, a, o, i) {
+    (t.uploadBrowser = function (e, t, a, o, s) {
       try {
-        var c = this
+        var d = this
         return Promise.resolve(
-          d(
+          c(
             function () {
-              var d = Math.round(Date.now() / 1e3),
-                l = new n(t, p, c.signer)
-              console.log('quote fee: ' + a)
-              var y =
-                'filecoin' === i
-                  ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-                  : c.uploaderAddress
-              return (
-                console.log('Calling approval with address: ' + y + ' and amount: ' + a),
-                Promise.resolve(l.approve(y, a)).then(function (t) {
-                  return Promise.resolve(t.wait(6)).then(function (t) {
+              function c(t) {
+                return Promise.resolve(u(d.signer, e, l)).then(function (t) {
+                  var n = new i()
+                  return (
+                    Array.from(o).forEach(function (e, t) {
+                      n.append('file' + (t + 1), e, e.name)
+                    }),
+                    Promise.resolve(
+                      r.post(
+                        d.baseURL +
+                          '/upload?quoteId=' +
+                          e +
+                          '&nonce=' +
+                          l +
+                          '&signature=' +
+                          t,
+                        n
+                      )
+                    )
+                  )
+                })
+              }
+              var l = Math.round(Date.now() / 1e3),
+                f = (function () {
+                  if ('ipfs' !== s) {
+                    var e = new n(t, p, d.signer)
+                    console.log('quote fee: ' + a)
+                    var r =
+                      'filecoin' === s
+                        ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+                        : d.uploaderAddress
                     return (
-                      console.log('transaction receipt', t),
-                      Promise.resolve(l.balanceOf(c.signer.getAddress())).then(function (
-                        t
-                      ) {
-                        if ((console.log('User balance of WMATIC: ' + t), t < a))
-                          throw (
-                            (console.log(
-                              'User balance of ' +
-                                t +
-                                ' WMATIC is less than quote fee of ' +
-                                a
-                            ),
-                            new Error('Insufficient WMATIC balance'))
-                          )
-                        return Promise.resolve(u(c.signer, e, d)).then(function (t) {
-                          var n = new s()
+                      console.log(
+                        'Calling approval with address: ' + r + ' and amount: ' + a
+                      ),
+                      Promise.resolve(e.approve(r, a)).then(function (t) {
+                        return Promise.resolve(t.wait(1)).then(function (t) {
                           return (
-                            Array.from(o).forEach(function (e, t) {
-                              n.append('file' + (t + 1), e, e.name)
-                            }),
-                            Promise.resolve(
-                              r.post(
-                                c.baseURL +
-                                  '/upload?quoteId=' +
-                                  e +
-                                  '&nonce=' +
-                                  d +
-                                  '&signature=' +
-                                  t,
-                                n
-                              )
+                            console.log('transaction receipt', t),
+                            Promise.resolve(e.balanceOf(d.signer.getAddress())).then(
+                              function (e) {
+                                if ((console.log('User balance of WMATIC: ' + e), e < a))
+                                  throw (
+                                    (console.log(
+                                      'User balance of ' +
+                                        e +
+                                        ' WMATIC is less than quote fee of ' +
+                                        a
+                                    ),
+                                    new Error('Insufficient WMATIC balance'))
+                                  )
+                              }
                             )
                           )
                         })
                       })
                     )
-                  })
-                })
-              )
+                  }
+                })()
+              return f && f.then ? f.then(c) : c()
             },
             function (e) {
               return console.error('Error:', e), e.data
@@ -392,20 +401,20 @@ var c = /*#__PURE__*/ (function () {
       try {
         var a = this
         return Promise.resolve(
-          d(
+          c(
             function () {
               return Promise.resolve(a.signer.getAddress()).then(function (o) {
-                var s = Math.round(Date.now() / 1e3)
-                return Promise.resolve(u(a.signer, '', s)).then(function (i) {
+                var i = Math.round(Date.now() / 1e3)
+                return Promise.resolve(u(a.signer, '', i)).then(function (s) {
                   return Promise.resolve(
                     r.get(
                       a.baseURL +
                         '/getHistory?userAddress=' +
                         o +
                         '&nonce=' +
-                        s +
-                        '&signature=' +
                         i +
+                        '&signature=' +
+                        s +
                         '&page=' +
                         e +
                         '&pageSize=' +
@@ -432,5 +441,5 @@ var c = /*#__PURE__*/ (function () {
     e
   )
 })()
-export { c as UploaderClient, u as getSignedHash }
+export { d as UploaderClient, u as getSignedHash }
 //# sourceMappingURL=lib.module.js.map

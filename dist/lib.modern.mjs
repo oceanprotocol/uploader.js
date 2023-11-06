@@ -211,22 +211,24 @@ class u {
   }
   async upload(t, e, s, u, y) {
     try {
-      const l = Math.round(Date.now() / 1e3),
-        c = new a(e, d, this.signer),
-        m =
-          'filecoin' === y
-            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-            : this.uploaderAddress
-      await (await c.approve(m, s)).wait()
-      const f = await p(this.signer, t, l),
-        w = new o()
+      const c = Math.round(Date.now() / 1e3)
+      if ('ipfs' !== y) {
+        const t = new a(e, d, this.signer),
+          n =
+            'filecoin' === y
+              ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+              : this.uploaderAddress
+        await (await t.approve(n, s)).wait()
+      }
+      const l = await p(this.signer, t, c),
+        m = new o()
       u.forEach((t, e) => {
-        w.append(`file${e + 1}`, i.createReadStream(t))
+        m.append(`file${e + 1}`, i.createReadStream(t))
       })
-      const b = `${this.baseURL}/upload?quoteId=${t}&nonce=${l}&signature=${f}`
+      const f = `${this.baseURL}/upload?quoteId=${t}&nonce=${c}&signature=${l}`
       return (
-        console.log('uploadUrl', b),
-        await n.post(b, w, { headers: r({}, w.getHeaders()) })
+        console.log('uploadUrl', f),
+        await n.post(f, m, { headers: r({}, m.getHeaders()) })
       )
     } catch (t) {
       return console.error('Error:', t), t.data
@@ -234,30 +236,32 @@ class u {
   }
   async uploadBrowser(t, e, s, i, r) {
     try {
-      const u = Math.round(Date.now() / 1e3),
-        y = new a(e, d, this.signer)
-      console.log(`quote fee: ${s}`)
-      const l =
-        'filecoin' === r
-          ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
-          : this.uploaderAddress
-      console.log(`Calling approval with address: ${l} and amount: ${s}`)
-      const c = await y.approve(l, s),
-        m = await c.wait(6)
-      console.log('transaction receipt', m)
-      const f = await y.balanceOf(this.signer.getAddress())
-      if ((console.log(`User balance of WMATIC: ${f}`), f < s))
-        throw (
-          (console.log(`User balance of ${f} WMATIC is less than quote fee of ${s}`),
-          new Error('Insufficient WMATIC balance'))
-        )
-      const w = await p(this.signer, t, u),
-        b = new o()
+      const u = Math.round(Date.now() / 1e3)
+      if ('ipfs' !== r) {
+        const t = new a(e, d, this.signer)
+        console.log(`quote fee: ${s}`)
+        const n =
+          'filecoin' === r
+            ? '0x0ff9092e55d9f6CCB0DD4C490754811bc0839866'
+            : this.uploaderAddress
+        console.log(`Calling approval with address: ${n} and amount: ${s}`)
+        const i = await t.approve(n, s),
+          o = await i.wait(1)
+        console.log('transaction receipt', o)
+        const p = await t.balanceOf(this.signer.getAddress())
+        if ((console.log(`User balance of WMATIC: ${p}`), p < s))
+          throw (
+            (console.log(`User balance of ${p} WMATIC is less than quote fee of ${s}`),
+            new Error('Insufficient WMATIC balance'))
+          )
+      }
+      const y = await p(this.signer, t, u),
+        c = new o()
       Array.from(i).forEach((t, e) => {
-        b.append(`file${e + 1}`, t, t.name)
+        c.append(`file${e + 1}`, t, t.name)
       })
-      const h = `${this.baseURL}/upload?quoteId=${t}&nonce=${u}&signature=${w}`
-      return await n.post(h, b)
+      const l = `${this.baseURL}/upload?quoteId=${t}&nonce=${u}&signature=${y}`
+      return await n.post(l, c)
     } catch (t) {
       return console.error('Error:', t), t.data
     }
