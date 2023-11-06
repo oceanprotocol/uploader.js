@@ -52,6 +52,7 @@ export interface GetStatusResult {
 
 export interface GetLinkResult {
   type: string
+  cid?: string
   CID?: string
   dealIDs?: string[]
   transactionHash?: string
